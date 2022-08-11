@@ -2,6 +2,7 @@ import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from '@/theme'
+import 'reset-css/reset.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
