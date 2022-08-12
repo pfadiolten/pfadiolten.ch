@@ -1,8 +1,9 @@
+import PageView from '@/components/Page/View/PageView'
 import theme from '@/theme-utils'
 import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import React from 'react'
+import React, { useState } from 'react'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { defaultTheme } from '@/theme'
 import 'reset-css/reset.css'
@@ -15,9 +16,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
         <GlobalStyle />
-        <main>
+        <PageView>
           <Component {...pageProps} />
-        </main>
+        </PageView>
       </ThemeProvider>
     </SessionProvider>
   )
