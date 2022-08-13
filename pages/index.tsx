@@ -1,17 +1,17 @@
 import Page from '@/components/Page/Page'
 import UiButton from '@/components/Ui/UiButton'
-import UiContainer from '@/components/Ui/UiContainer'
-import UiGrid from '@/components/Ui/UiGrid'
+import UiDrawer from '@/components/Ui/UiDrawer'
 import UiTitle from '@/components/Ui/UiTitle'
-import useUser from '@/hooks/useUser'
+import logo from '@/public/logo/pfadi_olten-textless.svg'
 import theme from '@/theme-utils'
 import { NextPage } from 'next'
-import { signIn, signOut } from 'next-auth/react'
 import Image from 'next/image'
+import { useState } from 'react'
 import styled from 'styled-components'
-import logo from '@/public/logo/pfadi_olten-textless.svg'
 
 const Home: NextPage = () => {
+  const [isNoticeFormOpen, setNoticeFormOpen] = useState(false)
+
   return (
     <Page title="Home" noBackground>
       <Background>
@@ -33,6 +33,12 @@ const Home: NextPage = () => {
             Die nächsten Aktivitäten werden aber wie immer hier zu finden sein!.
           </MainText>
         </HeadingArticle>
+
+        <UiButton onClick={() => setNoticeFormOpen(!isNoticeFormOpen)}>Open Form!</UiButton>
+
+        <UiDrawer size="auto" isOpen={isNoticeFormOpen} onClose={() => setNoticeFormOpen(false)}>
+          Hello!
+        </UiDrawer>
       </Content>
     </Page>
   )
