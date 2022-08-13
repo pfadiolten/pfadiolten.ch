@@ -2,6 +2,7 @@ import PageContext, { PageState } from '@/components/Page/Context/PageContext'
 import PageFooter from '@/components/Page/Footer/PageFooter'
 import PageNav from '@/components/Page/Nav/PageNav'
 import UiContainer from '@/components/Ui/UiContainer'
+import theme from '@/theme-utils'
 import Head from 'next/head'
 import React, { ReactNode, useState } from 'react'
 import styled from 'styled-components'
@@ -51,6 +52,6 @@ const Container = styled.div`
 
 const Main = styled.main`
   width: 100vw;
-  margin-top: 8rem;
-  padding-bottom: 8rem;
+  margin-top: ${theme.spacing(16)};
+  padding-bottom: ${theme.spacing(16)};
 `

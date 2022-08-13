@@ -94,7 +94,7 @@ const Nav = styled.nav<{ isOpaque: boolean }>`
   font-family: ${theme.fonts.serif};
   font-size: 1.2em;
   
-  padding: 1.5rem 4rem;
+  padding: ${theme.spacing(3)} ${theme.spacing(8)};
   
   transition: 250ms ease-out;
 `

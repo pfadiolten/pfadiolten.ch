@@ -4,3 +4,5 @@ export default interface Person {
   lastName: string
   scoutName: string | null
 }
+
+export const parsePerson = (data: Person): Person => data

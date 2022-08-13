@@ -1,6 +1,7 @@
 import Page from '@/components/Page/Page'
 import UiButton from '@/components/Ui/UiButton'
 import UiContainer from '@/components/Ui/UiContainer'
+import UiGrid from '@/components/Ui/UiGrid'
 import UiTitle from '@/components/Ui/UiTitle'
 import useUser from '@/hooks/useUser'
 import theme from '@/theme-utils'
@@ -70,8 +71,12 @@ const BackgroundOverlay = styled.div`
 `
 const Content = styled.div`
   position: relative;
-  color: ${theme.colors.primary.contrast};
+  color: ${theme.colors.secondary.contrast};
+  background-color: ${theme.colors.secondary};
   z-index: 5;
+  padding: ${theme.spacing(4)};
+  min-height: calc(100vh - ${theme.spacing(16)});
+  margin-top: ${theme.spacing(-8)};
 `
 const HeadingArticle = styled.article`
   margin-bottom: ${theme.spacing(2)};
