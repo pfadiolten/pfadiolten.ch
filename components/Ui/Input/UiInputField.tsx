@@ -1,7 +1,6 @@
 import theme from '@/theme-utils'
 import React, { ChangeEvent, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
-import { InputProps } from '@daniel-va/react-form'
 
 interface Props extends MappedInputProps, LookAndFeelProps, BehaviourProps {}
 

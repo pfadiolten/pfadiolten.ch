@@ -21,7 +21,7 @@ const UiDrawer: React.FC<Props> = ({ isOpen, size = 'auto', position = 'left', c
   useClickAway(elementRef, () => {
     pushClose()
   })
-  
+
   const [_isLockedBody, setLockedBody] = useLockedBody()
   useEffect(() => {
     setLockedBody(isOpen)

@@ -1,35 +1,23 @@
 import { StyleProps } from '@/utils/props'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import {
-  faAt,
   faBars,
   faBold,
-  faCalendarAlt,
-  faCampground,
   faCheck,
-  faChevronLeft,
-  faChevronRight,
   faClock,
-  faCloudRain,
-  faCompass,
   faEdit,
-  faExternalLinkAlt,
   faFan,
   faItalic,
   faListOl,
-  faListUl, faLocationDot,
-  faLongArrowAltLeft,
-  faLongArrowAltRight,
-  faMapMarker, faPhone,
+  faListUl,
+  faLocationDot,
   faPlus,
   faRedoAlt,
   faSignInAlt,
   faSignOutAlt,
   faTimes,
   faTrashAlt,
-  faUnderline,
   faUndoAlt,
-  faUpload,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { useMemo } from 'react'
 import styled, { css, keyframes } from 'styled-components'

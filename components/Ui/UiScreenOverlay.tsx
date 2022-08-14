@@ -1,6 +1,5 @@
-import { Theme } from '@/theme'
 import theme from '@/theme-utils'
-import React, { ReactNode, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { ReactNode, useRef } from 'react'
 import { useEffectOnce, useIsomorphicLayoutEffect } from 'react-use'
 import styled, { css, useTheme } from 'styled-components'
 

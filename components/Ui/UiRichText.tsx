@@ -2,8 +2,7 @@ import RichText from '@/models/base/RichText'
 import { generateHTML } from '@tiptap/core'
 import { Link } from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
-import React, { useEffect, useMemo, useState } from 'react'
-import { useEffectOnce, useMountedState } from 'react-use'
+import React, { useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 interface Props {

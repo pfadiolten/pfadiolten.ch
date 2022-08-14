@@ -41,6 +41,7 @@ const UiRichTextInput = <T extends RichText | null>({
       pushChangeRef.current(editor.getJSON() as T)
     },
     autofocus: hasAutoFocus ?? false,
+    editable: !isDisabled,
   })
 
   useUpdateEffect(() => {
@@ -48,6 +49,10 @@ const UiRichTextInput = <T extends RichText | null>({
       editor.commands.setContent(value)
     }
   }, [value])
+
+  useUpdateEffect(() => {
+    editor?.setEditable(!isDisabled)
+  }, [isDisabled])
 
   const countRef = useRef(0)
   countRef.current++

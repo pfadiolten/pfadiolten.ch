@@ -11,8 +11,7 @@ import FetchService from '@/services/FetchService'
 import { noop } from '@/utils/fns'
 import DateHelper, { Weekday } from '@/utils/helpers/DateHelper'
 import { Form, FormField, useCancel, useForm, useSubmit, useValidate } from '@daniel-va/react-form'
-import React, { useRef } from 'react'
-import { useUpdateEffect } from 'react-use'
+import React from 'react'
 
 interface Props {
   onSave?: (notice: Notice) => void
