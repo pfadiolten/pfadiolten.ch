@@ -1,5 +1,6 @@
 import UiDate from '@/components/Ui/UiDate'
 import UiIcon from '@/components/Ui/UiIcon'
+import UiRichText from '@/components/Ui/UiRichText'
 import UiTitle from '@/components/Ui/UiTitle'
 import Notice from '@/models/Notice'
 import theme from '@/theme-utils'
@@ -43,7 +44,7 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
       </InfoBox>
       <Divider />
       <Description>
-        {notice.description}
+        <UiRichText value={notice.description} />
       </Description>
     </Box>
   )

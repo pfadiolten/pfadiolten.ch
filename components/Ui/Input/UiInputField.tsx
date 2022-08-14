@@ -80,7 +80,7 @@ const UiInputField: React.FC<Props> = ({
 }
 export default UiInputField
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   display: block;
 `
 
@@ -105,13 +105,13 @@ const Input = styled.input<{ isInvalid: boolean }>`
   `}
 `
 
-const Label = styled.span`
+export const Label = styled.span`
   display: block;
   font-size: 0.9em;
   font-weight: bold;
 `
 
-const Error = styled.div`
+export const Error = styled.div`
   min-height: 0.75em;
   font-size: 0.75em;
   width: 100%;

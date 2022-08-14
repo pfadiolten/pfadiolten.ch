@@ -1,9 +1,11 @@
 import UiDateInput from '@/components/Ui/Input/UiDateInput'
+import UiRichTextInput from '@/components/Ui/Input/UiRichTextInput'
 import UiTextInput from '@/components/Ui/Input/UiTextInput'
 import UiGrid from '@/components/Ui/UiGrid'
 import UiSubmit from '@/components/Ui/UiSubmit'
 import { useRequiredUser } from '@/hooks/useUser'
 import { ModelData } from '@/models/base/Model'
+import { emptyRichText } from '@/models/base/RichText'
 import Notice, { parseNotice, validateNotice } from '@/models/Notice'
 import FetchService from '@/services/FetchService'
 import { noop } from '@/utils/fns'
@@ -24,7 +26,7 @@ const NoticeForm: React.FC<Props> = ({
   const user = useRequiredUser()
   const form = useForm<ModelData<Notice>>(() => ({
     title: '',
-    description: '',
+    description: emptyRichText(),
     startLocation: '',
     endLocation: null,
     startsAt: NEXT_SATURDAY_START,
@@ -50,7 +52,7 @@ const NoticeForm: React.FC<Props> = ({
         <UiTextInput {...inputProps} label="Titel" hasAutoFocus />
       )}</FormField>
       <FormField field={form.description}>{(inputProps) => (
-        <UiTextInput {...inputProps} label="Beschreibung" />
+        <UiRichTextInput {...inputProps} label="Beschreibung" />
       )}</FormField>
       <UiGrid gap={1}>
         <UiGrid.Col size="auto">

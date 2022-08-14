@@ -5,7 +5,7 @@ import useLockedBody from '@/hooks/useLockedBody'
 import theme from '@/theme-utils'
 import React, { ReactNode, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
-import { useClickAway } from 'react-use'
+import { useClickAway, useUpdateEffect } from 'react-use'
 import styled, { css } from 'styled-components'
 
 interface Props {
@@ -22,10 +22,20 @@ const UiDrawer: React.FC<Props> = ({ isOpen, size = 'auto', position = 'left', c
     pushClose()
   })
 
-  const [isLockedBody, setLockedBody] = useLockedBody()
+  const [_isLockedBody, setLockedBody] = useLockedBody()
   useEffect(() => {
     setLockedBody(isOpen)
   }, [setLockedBody, isOpen])
+
+  const isHiddenRef = useRef(!isOpen)
+  isHiddenRef.current = !isOpen && isHiddenRef.current
+  useUpdateEffect(() => {
+    if (!isOpen) {
+      setTimeout(() => {
+        isHiddenRef.current = false
+      }, 700)
+    }
+  }, [isOpen])
 
   return (
     <UiScreenOverlay isOpen={isOpen}>
@@ -33,7 +43,7 @@ const UiDrawer: React.FC<Props> = ({ isOpen, size = 'auto', position = 'left', c
         ReactDOM.createPortal((
           <Box ref={elementRef} role="dialog" isOpen={isOpen} size={size} position={position}>
             <UiContainer>
-              {children}
+              {(isOpen || !isHiddenRef.current) && children}
             </UiContainer>
           </Box>
         ), document.body)

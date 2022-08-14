@@ -1,11 +1,12 @@
 import Id from '@/models/base/Id'
 import Model, { ModelData } from '@/models/base/Model'
+import RichText from '@/models/base/RichText'
 import User from '@/models/User'
 import { createValidator, validate } from '@daniel-va/validate'
 
 export default interface Notice extends Model {
   title: string
-  description: string
+  description: RichText
   startLocation: string
   endLocation: string | null
   startsAt: Date,
@@ -23,9 +24,7 @@ export const validateNotice = createValidator<ModelData<Notice>>({
   title: [
     validate.notBlank(),
   ],
-  description: [
-    validate.notBlank(),
-  ],
+  description: [],
   startLocation: [
     validate.notBlank(),
   ],

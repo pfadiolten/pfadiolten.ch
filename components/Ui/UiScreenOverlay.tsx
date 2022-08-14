@@ -11,7 +11,6 @@ interface Props {
 
 const UiScreenOverlay: React.FC<Props> = ({ isOpen, children }) => {
   const elementRef = useRef<HTMLDivElement | null>(null)
-
   const theme = useTheme()
   useEffectOnce(() => {
     const { current: element } = elementRef
