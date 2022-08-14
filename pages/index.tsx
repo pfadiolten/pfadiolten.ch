@@ -1,10 +1,13 @@
+import NoticeCard from '@/components/Notice/NoticeCard'
+import NoticeCardList from '@/components/Notice/NoticeCardList'
 import NoticeForm from '@/components/Notice/NoticeForm'
 import Page from '@/components/Page/Page'
 import UiDrawer from '@/components/Ui/UiDrawer'
 import UiButton from '@/components/Ui/UiButton'
+import UiIcon from '@/components/Ui/UiIcon'
 import UiTitle from '@/components/Ui/UiTitle'
 import useUser from '@/hooks/useUser'
-import Notice from '@/models/Notice'
+import Notice, { parseNotice } from '@/models/Notice'
 import logo from '@/public/logo/pfadi_olten-textless.svg'
 import FetchService from '@/services/FetchService'
 import theme from '@/theme-utils'
@@ -32,7 +35,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
 const Home: NextPage<Props> = ({ notices: noticesData }) => {
   const [isNoticeFormOpen, setNoticeFormOpen] = useState(false)
 
-  const [notices, setNotices] = useState(noticesData)
+  const [notices, setNotices] = useState(noticesData.map(parseNotice))
 
   const user = useUser()
   return (
@@ -42,27 +45,36 @@ const Home: NextPage<Props> = ({ notices: noticesData }) => {
         <BackgroundOverlay />
       </Background>
       <Content>
-        <HeadingArticle>
-          <Image src={logo} alt="Logo der Pfadi Olten" width={128} height={128} />
-          <UiTitle level={1}>
-            Willkommen bei der <span>Pfadi Olten!</span>
-          </UiTitle>
-          <Subtitle>
-            Hier entsteht unsere neue Homepage.
-          </Subtitle>
-          <MainText>
-            Während wir uns noch im Aufbau befinden, werden die Funktionen der Website stark eingeschränkt sein.
-            <br />
-            Die nächsten Aktivitäten werden aber wie immer hier zu finden sein!.
-          </MainText>
-        </HeadingArticle>
+        <ContentCard>
+          <HeadingArticle>
+            <Image src={logo} alt="Logo der Pfadi Olten" width={128} height={128} />
+            <UiTitle level={1}>
+              Willkommen bei der <span>Pfadi Olten!</span>
+            </UiTitle>
+            <Subtitle>
+              Hier entsteht unsere neue Homepage.
+            </Subtitle>
+            <MainText>
+              Während wir uns noch im Aufbau befinden, werden die Funktionen der Website stark eingeschränkt sein.
+              <br />
+              Die nächsten Aktivitäten werden aber wie immer hier zu finden sein!.
+            </MainText>
+          </HeadingArticle>
+        </ContentCard>
 
-        {JSON.stringify(notices)}
+        <NoticeCardList>
+          {user !== null && (
+            <NoticeCreateButton color="secondary" onClick={() => setNoticeFormOpen(true)} title="Neue Aktivität erfassen">
+              <UiIcon name="recordAdd" size={1.5} />
+            </NoticeCreateButton>
+          )}
+          {notices.map((notice) => (
+            <NoticeCard key={notice.id} notice={notice} />
+          ))}
+        </NoticeCardList>
 
         {user !== null && (
           <>
-            <UiButton onClick={() => setNoticeFormOpen(!isNoticeFormOpen)}>Open Form!</UiButton>
-
             <UiDrawer size="auto" isOpen={isNoticeFormOpen} onClose={() => setNoticeFormOpen(false)}>
               <UiTitle level={2}>
                 Neue Aktivität erfassen
@@ -108,13 +120,18 @@ const BackgroundOverlay = styled.div`
   z-index: -1;
 `
 const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(2)};
   position: relative;
-  color: ${theme.colors.secondary.contrast};
-  background-color: ${theme.colors.secondary};
   z-index: 5;
-  padding: ${theme.spacing(4)};
   min-height: calc(100vh - ${theme.spacing(16)});
   margin-top: ${theme.spacing(-8)};
+`
+const ContentCard = styled.div`
+  color: ${theme.colors.secondary.contrast};
+  background-color: ${theme.colors.secondary};
+  padding: ${theme.spacing(4)};
 `
 const HeadingArticle = styled.article`
   margin-bottom: ${theme.spacing(2)};
@@ -129,4 +146,7 @@ const Subtitle = styled.em`
 const MainText = styled.p`
   font-family: ${theme.fonts.serif};
   margin-top: ${theme.spacing(0.5)};
+`
+const NoticeCreateButton = styled(UiButton)`
+  border: 2px solid ${theme.colors.secondary.contrast};
 `

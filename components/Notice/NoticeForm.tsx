@@ -4,12 +4,13 @@ import UiGrid from '@/components/Ui/UiGrid'
 import UiSubmit from '@/components/Ui/UiSubmit'
 import { useRequiredUser } from '@/hooks/useUser'
 import { ModelData } from '@/models/base/Model'
-import Notice, { validateNotice } from '@/models/Notice'
+import Notice, { parseNotice, validateNotice } from '@/models/Notice'
 import FetchService from '@/services/FetchService'
 import { noop } from '@/utils/fns'
 import DateHelper, { Weekday } from '@/utils/helpers/DateHelper'
 import { Form, FormField, useCancel, useForm, useSubmit, useValidate } from '@daniel-va/react-form'
-import React from 'react'
+import React, { useRef } from 'react'
+import { useUpdateEffect } from 'react-use'
 
 interface Props {
   onSave?: (notice: Notice) => void
@@ -24,6 +25,8 @@ const NoticeForm: React.FC<Props> = ({
   const form = useForm<ModelData<Notice>>(() => ({
     title: '',
     description: '',
+    startLocation: '',
+    endLocation: null,
     startsAt: NEXT_SATURDAY_START,
     endsAt: NEXT_SATURDAY_END,
     authorId: user.id,
@@ -36,7 +39,7 @@ const NoticeForm: React.FC<Props> = ({
     if (error !== null) {
       throw error
     }
-    pushSave(notice)
+    pushSave(parseNotice(notice))
     pushClose()
   })
   useCancel(form, pushClose)
@@ -50,14 +53,26 @@ const NoticeForm: React.FC<Props> = ({
         <UiTextInput {...inputProps} label="Beschreibung" />
       )}</FormField>
       <UiGrid gap={1}>
-        <UiGrid.Col>
+        <UiGrid.Col size="auto">
           <FormField field={form.startsAt}>{(inputProps) => (
             <UiDateInput {...inputProps} label="Beginn" />
           )}</FormField>
         </UiGrid.Col>
         <UiGrid.Col>
+          <FormField field={form.startLocation}>{(inputProps) => (
+            <UiTextInput {...inputProps} label="Treffpunkt" />
+          )}</FormField>
+        </UiGrid.Col>
+      </UiGrid>
+      <UiGrid gap={1}>
+        <UiGrid.Col size="auto">
           <FormField field={form.endsAt}>{(inputProps) => (
             <UiDateInput {...inputProps} label="Ende" />
+          )}</FormField>
+        </UiGrid.Col>
+        <UiGrid.Col>
+          <FormField field={form.endLocation}>{(inputProps) => (
+            <UiTextInput {...inputProps} label="Schlusspunkt" placeholder={form.startLocation.value} />
           )}</FormField>
         </UiGrid.Col>
       </UiGrid>

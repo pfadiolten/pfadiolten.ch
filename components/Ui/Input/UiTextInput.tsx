@@ -4,7 +4,8 @@ import { InputProps } from '@daniel-va/react-form'
 import React, { ChangeEvent, useCallback } from 'react'
 
 interface Props<T extends string | null> extends InputProps<T>, LookAndFeelProps {
-  type?: 'text' | 'password'
+  type?: 'text' | 'password',
+  placeholder?: string
 }
 
 type NullProps<T extends string | null> = null extends Extract<T, null>

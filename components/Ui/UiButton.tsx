@@ -8,6 +8,7 @@ interface Props {
   isFull?: boolean
   isDisabled?: boolean
   children: ReactNode
+  title?: string
   onClick?: (e: React.MouseEvent) => void
 }
 

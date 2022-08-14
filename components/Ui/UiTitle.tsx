@@ -31,21 +31,21 @@ const Heading = styled.h1`
   }
 
   h3& {
-    font-weight: 600;
+    font-weight: 500;
     font-size: 32px;
     line-height: 40px;
     letter-spacing: 0.1px;
   }
 
   h4& {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 26px;
     line-height: 32px;
     letter-spacing: 0.2px;
   }
 
   h5& {
-    font-weight: 600;
+    font-weight: 500;
     font-size: 20px;
     line-height: 26px;
     letter-spacing: 0.2px;
