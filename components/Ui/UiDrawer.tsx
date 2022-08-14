@@ -3,10 +3,10 @@ import UiContainer from '@/components/Ui/UiContainer'
 import UiScreenOverlay from '@/components/Ui/UiScreenOverlay'
 import useLockedBody from '@/hooks/useLockedBody'
 import theme from '@/theme-utils'
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { useClickAway, useUpdateEffect } from 'react-use'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 
 interface Props {
   isOpen: boolean
@@ -21,19 +21,21 @@ const UiDrawer: React.FC<Props> = ({ isOpen, size = 'auto', position = 'left', c
   useClickAway(elementRef, () => {
     pushClose()
   })
-
+  
   const [_isLockedBody, setLockedBody] = useLockedBody()
   useEffect(() => {
     setLockedBody(isOpen)
   }, [setLockedBody, isOpen])
 
-  const isHiddenRef = useRef(!isOpen)
-  isHiddenRef.current = !isOpen && isHiddenRef.current
+  const [isHidden, setHidden] = useState(!isOpen)
+  const theme = useTheme()
   useUpdateEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      setHidden(false)
+    } else {
       setTimeout(() => {
-        isHiddenRef.current = false
-      }, 700)
+        setHidden(true)
+      }, theme.transitions.slideOut.duration)
     }
   }, [isOpen])
 
@@ -43,7 +45,7 @@ const UiDrawer: React.FC<Props> = ({ isOpen, size = 'auto', position = 'left', c
         ReactDOM.createPortal((
           <Box ref={elementRef} role="dialog" isOpen={isOpen} size={size} position={position}>
             <UiContainer>
-              {(isOpen || !isHiddenRef.current) && children}
+              {(isOpen || !isHidden) && children}
             </UiContainer>
           </Box>
         ), document.body)
