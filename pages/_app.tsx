@@ -1,14 +1,15 @@
 import PageView from '@/components/Page/View/PageView'
 import theme from '@/theme-utils'
+import { localeDE, setLocale as setValidateLocale } from '@daniel-va/validate'
 import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import React, { useState } from 'react'
+import React from 'react'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { defaultTheme } from '@/theme'
 import 'reset-css/reset.css'
 
-function MyApp({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps) => {
   return (
     <SessionProvider session={pageProps.session} refetchInterval={0}>
       <ThemeProvider theme={defaultTheme}>
@@ -23,9 +24,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     </SessionProvider>
   )
 }
+export default App
 
-export default MyApp
-
+setValidateLocale(localeDE)
 
 const GlobalStyle = createGlobalStyle`
   :root {

@@ -6,6 +6,7 @@ services:
     working_dir: /app
     environment:
       - NODE_ENV=development
+      - GITHUB_NPM_ACCESS_TOKEN
     ports:
       - "3000:3000"
       - "3035:3035"

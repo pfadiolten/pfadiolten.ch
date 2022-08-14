@@ -1,17 +1,40 @@
+import NoticeForm from '@/components/Notice/NoticeForm'
 import Page from '@/components/Page/Page'
-import UiButton from '@/components/Ui/UiButton'
 import UiDrawer from '@/components/Ui/UiDrawer'
+import UiButton from '@/components/Ui/UiButton'
 import UiTitle from '@/components/Ui/UiTitle'
+import useUser from '@/hooks/useUser'
+import Notice from '@/models/Notice'
 import logo from '@/public/logo/pfadi_olten-textless.svg'
+import FetchService from '@/services/FetchService'
 import theme from '@/theme-utils'
-import { NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import Image from 'next/image'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-const Home: NextPage = () => {
+interface Props {
+  notices: Notice[]
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  const [notices, error] = await FetchService.get<Notice[]>('notices')
+  if (error !== null) {
+    throw error
+  }
+  return {
+    props: {
+      notices,
+    },
+  }
+}
+
+const Home: NextPage<Props> = ({ notices: noticesData }) => {
   const [isNoticeFormOpen, setNoticeFormOpen] = useState(false)
 
+  const [notices, setNotices] = useState(noticesData)
+
+  const user = useUser()
   return (
     <Page title="Home" noBackground>
       <Background>
@@ -34,11 +57,20 @@ const Home: NextPage = () => {
           </MainText>
         </HeadingArticle>
 
-        <UiButton onClick={() => setNoticeFormOpen(!isNoticeFormOpen)}>Open Form!</UiButton>
+        {JSON.stringify(notices)}
 
-        <UiDrawer size="auto" isOpen={isNoticeFormOpen} onClose={() => setNoticeFormOpen(false)}>
-          Hello!
-        </UiDrawer>
+        {user !== null && (
+          <>
+            <UiButton onClick={() => setNoticeFormOpen(!isNoticeFormOpen)}>Open Form!</UiButton>
+
+            <UiDrawer size="auto" isOpen={isNoticeFormOpen} onClose={() => setNoticeFormOpen(false)}>
+              <UiTitle level={2}>
+                Neue Aktivität erfassen
+              </UiTitle>
+              <NoticeForm onSave={(notice) => setNotices((notices) => [...notices, notice])} onClose={() => setNoticeFormOpen(false)} />
+            </UiDrawer>
+          </>
+        )}
       </Content>
     </Page>
   )

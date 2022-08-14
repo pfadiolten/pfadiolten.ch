@@ -6,3 +6,11 @@ const useUser = (): User | null => {
   return (data?.user ?? null) as User | null
 }
 export default useUser
+
+export const useRequiredUser = (): User => {
+  const user = useUser()
+  if (user === null) {
+    throw new Error('user must be present')
+  }
+  return user
+}

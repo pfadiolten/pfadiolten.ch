@@ -165,7 +165,7 @@ class ThemeAccess {
       only: ({ theme }) => {
         const min = buildBreakpointMin(theme.breakpoints[breakpointName].min)
         const max = buildBreakpointMax(theme.breakpoints[breakpointName].max)
-        return `@media(min-width: ${min}, max-width: ${max})`
+        return `@media(min-width: ${min}) and (max-width: ${max})`
       },
     }
     return access

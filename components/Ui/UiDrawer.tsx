@@ -1,8 +1,9 @@
 import UiClientOnly from '@/components/Ui/UiClientOnly'
 import UiContainer from '@/components/Ui/UiContainer'
 import UiScreenOverlay from '@/components/Ui/UiScreenOverlay'
+import useLockedBody from '@/hooks/useLockedBody'
 import theme from '@/theme-utils'
-import React, { ReactNode, useRef } from 'react'
+import React, { ReactNode, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { useClickAway } from 'react-use'
 import styled, { css } from 'styled-components'
@@ -17,10 +18,14 @@ interface Props {
 
 const UiDrawer: React.FC<Props> = ({ isOpen, size = 'auto', position = 'left', children, onClose: pushClose }) => {
   const elementRef = useRef<HTMLDivElement | null>(null)
-
   useClickAway(elementRef, () => {
     pushClose()
   })
+
+  const [isLockedBody, setLockedBody] = useLockedBody()
+  useEffect(() => {
+    setLockedBody(isOpen)
+  }, [setLockedBody, isOpen])
 
   return (
     <UiScreenOverlay isOpen={isOpen}>
