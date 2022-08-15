@@ -1,3 +1,4 @@
+/* eslint-disable array-bracket-spacing */
 import Id from '@/models/base/Id'
 import Group, { GroupId } from '@/models/Group'
 import { ListOptions, ReadRepo } from '@/repos/Repo'
@@ -19,31 +20,46 @@ const groups: Group[] = [
     id: 'biber',
     name: 'Biberstufe',
     shortName: 'Biber',
-    color: defaultTheme.colors.primary,
+    color: {
+      value:    [255, 193,   7],
+      contrast: [ 56,  54,  89],
+    },
   },
   {
     id: 'woelfli',
     name: 'Wolfsstufe',
     shortName: 'Wölfe',
-    color: defaultTheme.colors.primary,
+    color: {
+      value:    [  0, 130, 165],
+      contrast: [220, 215, 209],
+    },
   },
   {
     id: 'pfadis',
     name: 'Pfadistufe',
     shortName: 'Pfadis',
-    color: defaultTheme.colors.primary,
+    color: {
+      value:    [115,  98,  91],
+      contrast: [220, 215, 209],
+    },
   },
   {
     id: 'pios',
     name: 'Piostufe',
     shortName: 'Pios',
-    color: defaultTheme.colors.primary,
+    color: {
+      value:    [215,  46,  23],
+      contrast: [220, 215, 209],
+    },
   },
   {
     id: 'rover',
     name: 'Roverstufe',
     shortName: 'Rover',
-    color: defaultTheme.colors.primary,
+    color: {
+      value:    [ 10,  93,  65],
+      contrast: [220, 215, 209],
+    },
   },
 ]
 

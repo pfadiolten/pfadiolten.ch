@@ -25,7 +25,7 @@ const NoticeCard: React.FC<Props> = ({ notice, allGroups }) => {
       </UiTitle>
       <GroupRow>
         {groups.map((group) => (
-          <GroupName key={group.id} color={group.color}>
+          <GroupName key={group.id} groupColor={group.color}>
             {group.shortName}
           </GroupName>
         ))}
@@ -87,13 +87,13 @@ const GroupRow = styled.div`
   gap: ${theme.spacing(1)};
   margin-block: ${theme.spacing(0.75)};
 `
-const GroupName = styled.span<{ color: Color }>`
+const GroupName = styled.span<{ groupColor: Color }>`
   padding: ${theme.spacing(0.25)} ${theme.spacing(0.5)};
-  ${({ color }) => {
-    const groupColor = createColorAccess(color)
+  ${({ groupColor }) => {
+    const color = createColorAccess(groupColor)
     return css`
-      color: ${groupColor.contrast};
-      background-color: ${groupColor};
+      color: ${color.contrast};
+      background-color: ${color};
     `
   }}
 `
