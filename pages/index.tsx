@@ -2,7 +2,7 @@ import NoticeCard from '@/components/Notice/NoticeCard'
 import NoticeCardList from '@/components/Notice/NoticeCardList'
 import NoticeForm from '@/components/Notice/NoticeForm'
 import Page from '@/components/Page/Page'
-import UiButton from '@/components/Ui/UiButton'
+import UiButton from '@/components/Ui/Button/UiButton'
 import UiDrawer from '@/components/Ui/UiDrawer'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiTitle from '@/components/Ui/UiTitle'
@@ -12,6 +12,7 @@ import Notice, { parseNotice } from '@/models/Notice'
 import logo from '@/public/logo/pfadi_olten-textless.svg'
 import FetchService from '@/services/FetchService'
 import theme from '@/theme-utils'
+import { noop } from '@/utils/fns'
 import { GetServerSideProps, NextPage } from 'next'
 import Image from 'next/image'
 import { useMemo, useState } from 'react'
@@ -44,9 +45,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
 }
 
 const Home: NextPage<Props> = ({ data }) => {
-  const [isNoticeFormOpen, setNoticeFormOpen] = useState(false)
+  const [isNoticeCreationOpen, setNoticeCreationOpen] = useState(false)
+  const [editNotice, setEditNotice] = useState(null as Notice | null)
 
-  const [notices, setNotices] = useState(data.notices.map(parseNotice))
+  const [notices, setNotices] = typeof window === 'undefined'
+    ? [data.notices.map(parseNotice), noop]
+    : useState(data.notices.map(parseNotice))
   const groups = useMemo(() => data.groups.map(parseGroup), [data.groups])
 
   const user = useUser()
@@ -76,22 +80,58 @@ const Home: NextPage<Props> = ({ data }) => {
 
         <NoticeCardList>
           {user !== null && (
-            <NoticeCreateButton color="secondary" onClick={() => setNoticeFormOpen(true)} title="Neue Aktivität erfassen">
+            <NoticeCreateButton color="secondary" onClick={() => setNoticeCreationOpen(true)} title="Neue Aktivität erfassen">
               <UiIcon name="recordAdd" size={1.5} />
             </NoticeCreateButton>
           )}
           {notices.map((notice) => (
-            <NoticeCard key={notice.id} notice={notice} allGroups={groups} />
+            <NoticeCard
+              key={notice.id}
+              notice={notice}
+              allGroups={groups}
+              onEdit={setEditNotice}
+            />
           ))}
+          {user !== null && (
+            <>
+              <UiDrawer
+                isOpen={editNotice !== null}
+                onClose={() => { setEditNotice(null) }}
+              >
+                <UiTitle level={2}>
+                  Aktivität bearbeiten
+                </UiTitle>
+                <NoticeForm
+                  notice={editNotice}
+                  groups={groups}
+                  onSave={(notice) => {
+                    setNotices((notices) => {
+                      notices = [...notices]
+                      notices[notices.indexOf(editNotice!)!] = notice
+                      return notices
+                    })
+                  }}
+                  onClose={() => setEditNotice(null)}
+                />
+              </UiDrawer>
+            </>
+          )}
         </NoticeCardList>
 
         {user !== null && (
           <>
-            <UiDrawer size="auto" isOpen={isNoticeFormOpen} onClose={() => setNoticeFormOpen(false)}>
+            <UiDrawer
+              isOpen={isNoticeCreationOpen}
+              onClose={() => { setNoticeCreationOpen(false) }}
+            >
               <UiTitle level={2}>
                 Neue Aktivität erfassen
               </UiTitle>
-              <NoticeForm groups={groups} onSave={(notice) => setNotices((notices) => [...notices, notice])} onClose={() => setNoticeFormOpen(false)} />
+              <NoticeForm
+                groups={groups}
+                onSave={(notice) => setNotices((notices) => [...notices, notice])}
+                onClose={() => setNoticeCreationOpen(false)}
+              />
             </UiDrawer>
           </>
         )}

@@ -1,4 +1,4 @@
-import UiButton from '@/components/Ui/UiButton'
+import UiButton from '@/components/Ui/Button/UiButton'
 import UiIcon from '@/components/Ui/UiIcon'
 import { useFormState } from '@daniel-va/react-form'
 import React from 'react'

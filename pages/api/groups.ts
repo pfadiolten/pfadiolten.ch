@@ -8,7 +8,7 @@ export default ApiService.handleResource(GroupRepo, {
 
 // export default ApiService.handleREST({
 //   async get(req, res) {
-//     const response = await fetch('https://db.scout.ch/de/groups/6.json?token=YzFM_o7ZQbLDF8ihBHdjkH99gitdj9Mkdz6Tg3Pi8NSy5s56YA')
+//     const response = await fetch('https://db.scout.ch/de/groups/6.json?token=')
 //     let data: any = await response.json()
 //     console.log(data.linked.groups)
 //

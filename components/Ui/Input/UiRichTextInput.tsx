@@ -1,5 +1,5 @@
 import { LookAndFeelProps } from '@/components/Ui/Input/UiInputField'
-import UiButton from '@/components/Ui/UiButton'
+import UiButton from '@/components/Ui/Button/UiButton'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiRichText from '@/components/Ui/UiRichText'
 import RichText from '@/models/base/RichText'

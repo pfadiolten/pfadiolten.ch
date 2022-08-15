@@ -37,7 +37,7 @@ const UiIcon: React.VFC<Props> = ({
 }) => {
   const icon = icons[name]
   const [width, height, _ligatures, _unicode, svgPathData] = icon.icon
-  const pixelSize = `${16 * size}px`
+  const pixelSize = 16 * size
 
   const path = useMemo(() => (
     Array.isArray(svgPathData)
@@ -48,14 +48,13 @@ const UiIcon: React.VFC<Props> = ({
   return (
     <Container
       isSpinner={isSpinner}
-      style={{ ...style, width: pixelSize, height: pixelSize }}
+      style={style}
       className={className}
+      pixelSize={pixelSize}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox={`0 0 ${width} ${height}`}
-        height={pixelSize} // 1rem * 1.2 * size
-        width={pixelSize}
       >
         <path d={path} fill="currentColor" />
       </svg>
@@ -97,14 +96,15 @@ const SpinAnimation = keyframes`
     transform: rotate(360deg);
   }
 `
-export const Container = styled.span<{ isSpinner: boolean }>`
+export const Container = styled.span<{ isSpinner: boolean, pixelSize: number }>`
   position: relative;
   display: inline-block;
+  width: ${({ pixelSize }) => pixelSize}px;
+  height: ${({ pixelSize }) => pixelSize}px;
 
   svg {
     position: absolute;
     left: 0;
-    bottom: -1px;
   }
 
   ${({ isSpinner }) => isSpinner && css`

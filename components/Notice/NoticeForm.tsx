@@ -16,18 +16,20 @@ import { Form, FormField, useCancel, useForm, useSubmit, useValidate } from '@da
 import React from 'react'
 
 interface Props {
+  notice?: Notice | null
   groups: Group[]
   onSave?: (notice: Notice) => void
   onClose?: () => void
 }
 
 const NoticeForm: React.FC<Props> = ({
+  notice = null,
   groups,
   onSave: pushSave = noop,
   onClose: pushClose = noop,
 }) => {
   const user = useRequiredUser()
-  const form = useForm<ModelData<Notice>>(() => ({
+  const form = useForm<ModelData<Notice>>(notice, () => ({
     title: '',
     description: emptyRichText(),
     groupIds: [],
@@ -41,11 +43,14 @@ const NoticeForm: React.FC<Props> = ({
   useValidate(form, validateNotice)
 
   useSubmit(form, async (data) => {
-    const [notice, error] = await FetchService.post<Notice>('notices', data)
+    const [newNotice, error] = await (notice === null
+      ? FetchService.post<Notice>('notices', data)
+      : FetchService.put<Notice>(`notices/${notice.id}`, data)
+    )
     if (error !== null) {
       throw error
     }
-    pushSave(parseNotice(notice))
+    pushSave(parseNotice(newNotice))
     pushClose()
   })
   useCancel(form, pushClose)
