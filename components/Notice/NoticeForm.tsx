@@ -1,11 +1,13 @@
 import UiDateInput from '@/components/Ui/Input/UiDateInput'
 import UiRichTextInput from '@/components/Ui/Input/UiRichTextInput'
+import UiSelectInput from '@/components/Ui/Input/UiSelectInput'
 import UiTextInput from '@/components/Ui/Input/UiTextInput'
 import UiGrid from '@/components/Ui/UiGrid'
 import UiSubmit from '@/components/Ui/UiSubmit'
 import { useRequiredUser } from '@/hooks/useUser'
 import { ModelData } from '@/models/base/Model'
 import { emptyRichText } from '@/models/base/RichText'
+import Group from '@/models/Group'
 import Notice, { parseNotice, validateNotice } from '@/models/Notice'
 import FetchService from '@/services/FetchService'
 import { noop } from '@/utils/fns'
@@ -14,11 +16,13 @@ import { Form, FormField, useCancel, useForm, useSubmit, useValidate } from '@da
 import React from 'react'
 
 interface Props {
+  groups: Group[]
   onSave?: (notice: Notice) => void
   onClose?: () => void
 }
 
 const NoticeForm: React.FC<Props> = ({
+  groups,
   onSave: pushSave = noop,
   onClose: pushClose = noop,
 }) => {
@@ -26,6 +30,7 @@ const NoticeForm: React.FC<Props> = ({
   const form = useForm<ModelData<Notice>>(() => ({
     title: '',
     description: emptyRichText(),
+    groupIds: [],
     startLocation: '',
     endLocation: null,
     startsAt: NEXT_SATURDAY_START,
@@ -49,6 +54,16 @@ const NoticeForm: React.FC<Props> = ({
     <Form state={form}>
       <FormField field={form.title}>{(inputProps) => (
         <UiTextInput {...inputProps} label="Titel" hasAutoFocus />
+      )}</FormField>
+      <FormField field={form.groupIds}>{(inputProps) => (
+        <UiSelectInput
+          {...inputProps}
+          label="Stufen"
+          options={groups}
+          optionValue={(group) => group.id}
+          optionName={(group) => group.name}
+          hasMultiple
+        />
       )}</FormField>
       <FormField field={form.description}>{(inputProps) => (
         <UiRichTextInput {...inputProps} label="Beschreibung" />

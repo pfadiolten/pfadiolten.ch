@@ -74,8 +74,11 @@ const UiRichTextInput = <T extends RichText | null>({
     return null
   }
 
+  // The tag for the element wrapping all the components elements.
+  const wrapperTag = label === null ? 'div' : 'label'
+
   return (
-    <Wrapper onClick={() => editor.chain().focus().run()}>
+    <Wrapper as={wrapperTag} onClick={() => editor.chain().focus().run()}>
       {label && (
         <Label>{label}</Label>
       )}

@@ -7,35 +7,47 @@ import UiDrawer from '@/components/Ui/UiDrawer'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiTitle from '@/components/Ui/UiTitle'
 import useUser from '@/hooks/useUser'
+import Group, { parseGroup } from '@/models/Group'
 import Notice, { parseNotice } from '@/models/Notice'
 import logo from '@/public/logo/pfadi_olten-textless.svg'
 import FetchService from '@/services/FetchService'
 import theme from '@/theme-utils'
 import { GetServerSideProps, NextPage } from 'next'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {
-  notices: Notice[]
+  data: {
+    notices: Notice[]
+    groups: Group[]
+  }
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const [notices, error] = await FetchService.get<Notice[]>('notices')
-  if (error !== null) {
-    throw error
+  const [notices, noticesError] = await FetchService.get<Notice[]>('notices')
+  if (noticesError !== null) {
+    throw noticesError
+  }
+  const [groups, groupsError] = await FetchService.get<Group[]>('groups')
+  if (groupsError !== null) {
+    throw groupsError
   }
   return {
     props: {
-      notices,
+      data: {
+        notices,
+        groups,
+      },
     },
   }
 }
 
-const Home: NextPage<Props> = ({ notices: noticesData }) => {
+const Home: NextPage<Props> = ({ data }) => {
   const [isNoticeFormOpen, setNoticeFormOpen] = useState(false)
 
-  const [notices, setNotices] = useState(noticesData.map(parseNotice))
+  const [notices, setNotices] = useState(data.notices.map(parseNotice))
+  const groups = useMemo(() => data.groups.map(parseGroup), [data.groups])
 
   const user = useUser()
   return (
@@ -69,7 +81,7 @@ const Home: NextPage<Props> = ({ notices: noticesData }) => {
             </NoticeCreateButton>
           )}
           {notices.map((notice) => (
-            <NoticeCard key={notice.id} notice={notice} />
+            <NoticeCard key={notice.id} notice={notice} allGroups={groups} />
           ))}
         </NoticeCardList>
 
@@ -79,7 +91,7 @@ const Home: NextPage<Props> = ({ notices: noticesData }) => {
               <UiTitle level={2}>
                 Neue Aktivität erfassen
               </UiTitle>
-              <NoticeForm onSave={(notice) => setNotices((notices) => [...notices, notice])} onClose={() => setNoticeFormOpen(false)} />
+              <NoticeForm groups={groups} onSave={(notice) => setNotices((notices) => [...notices, notice])} onClose={() => setNoticeFormOpen(false)} />
             </UiDrawer>
           </>
         )}
@@ -149,4 +161,5 @@ const MainText = styled.p`
 `
 const NoticeCreateButton = styled(UiButton)`
   border: 2px solid ${theme.colors.secondary.contrast};
+  min-height: ${theme.spacing(24)};
 `

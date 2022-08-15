@@ -1,6 +1,6 @@
 import { run } from '@/utils/control-flow'
 import { FlattenSimpleInterpolation } from 'styled-components'
-import { Theme, BreakpointName, ColorName, defaultTheme, FontName, TransitionName, Breakpoint } from './theme'
+import { Theme, BreakpointName, ColorName, defaultTheme, FontName, TransitionName, Breakpoint, Color } from './theme'
 
 interface ThemeFn {
   (props: { theme: Theme }): string | FlattenSimpleInterpolation
@@ -16,6 +16,30 @@ type ColorSingleAccess = FlattenSimpleInterpolation & {
 
 type ColorSingleAccessWithContrast = ColorSingleAccess & {
   contrast: ColorSingleAccess
+}
+
+export const createColorAccess = (color: Color): ColorSingleAccessWithContrast => {
+  return createCustomColorAccess({
+    colorString: `rgb(${color.value.join(', ')})`,
+    contrastString: `rgb(${color.contrast.join(', ')})`,
+    colorAlpha: (alpha) => () => `rgba(${color.value.join(', ')}, ${alpha});`,
+    contrastAlpha: (alpha) => () => `rgba(${color.contrast.join(', ')}, ${alpha});`,
+  })
+}
+
+interface ColorSingleAccessConfig {
+  colorString: string
+  contrastString: string
+  colorAlpha(alpha: number): ThemeFn
+  contrastAlpha(alpha: number): ThemeFn
+}
+
+const createCustomColorAccess = (config: ColorSingleAccessConfig): ColorSingleAccessWithContrast => {
+  const colorAccess = { toString: () => config.colorString } as unknown as ColorSingleAccessWithContrast
+  colorAccess.a = config.colorAlpha
+  colorAccess.contrast = { toString: () => config.contrastString } as unknown as ColorSingleAccess
+  colorAccess.contrast.a = config.contrastAlpha
+  return colorAccess
 }
 
 interface CurrentColorAccess {
@@ -136,13 +160,12 @@ class ThemeAccess {
   })
 
   public readonly colors: ColorAccess = Object.keys(defaultTheme.colors).reduce((access, colorName) => {
-    const colorVar = `var(--theme-color-${colorName})`
-    const contrastVar = `var(--theme-color-${colorName}--contrast)`
-    const color = { toString: () => colorVar } as unknown as ColorSingleAccessWithContrast
-    color.a = (alpha) => ({ theme }) => `rgba(${theme.colors[colorName].value.join(', ')}, ${alpha});`
-    color.contrast = { toString: () => contrastVar } as unknown as ColorSingleAccess
-    color.contrast.a = (alpha) => ({ theme }) => `rgba(${theme.colors[colorName].contrast.join(', ')}, ${alpha});`
-    access[colorName] = color
+    access[colorName] = createCustomColorAccess({
+      colorString: `var(--theme-color-${colorName})`,
+      contrastString: `var(--theme-color-${colorName}--contrast)`,
+      colorAlpha: (alpha) => ({ theme }) => `rgba(${theme.colors[colorName].value.join(', ')}, ${alpha});`,
+      contrastAlpha: (alpha) => ({ theme }) => `rgba(${theme.colors[colorName].contrast.join(', ')}, ${alpha});`,
+    })
     return access
   }, {} as ColorAccess)
 

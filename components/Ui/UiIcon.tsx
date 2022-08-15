@@ -3,7 +3,7 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import {
   faBars,
   faBold,
-  faCheck,
+  faCheck, faChevronDown,
   faClock,
   faEdit,
   faFan,
@@ -66,6 +66,7 @@ export default styled(UiIcon)``
 
 const icons = {
   menu: faBars,
+  dropdown: faChevronDown,
   confirm: faCheck,
   cancel: faTimes,
   recordAdd: faPlus,
