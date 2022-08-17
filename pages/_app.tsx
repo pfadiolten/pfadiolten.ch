@@ -49,12 +49,6 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${theme.colors.secondary};
     color: ${theme.colors.secondary.contrast};
   }
-  
-  main {
-    position: relative;
-    min-height: calc(100vh);
-    padding-block: 2rem;
-  }
 
   sup {
     vertical-align: super;
