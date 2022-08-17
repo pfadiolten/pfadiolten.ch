@@ -6,6 +6,7 @@ import UiButton from '@/components/Ui/Button/UiButton'
 import UiDrawer from '@/components/Ui/UiDrawer'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiTitle from '@/components/Ui/UiTitle'
+import useSsrState from '@/hooks/useSsrState'
 import useUser from '@/hooks/useUser'
 import Group, { parseGroup } from '@/models/Group'
 import Notice, { parseNotice } from '@/models/Notice'
@@ -48,9 +49,7 @@ const Home: NextPage<Props> = ({ data }) => {
   const [isNoticeCreationOpen, setNoticeCreationOpen] = useState(false)
   const [editNotice, setEditNotice] = useState(null as Notice | null)
 
-  const [notices, setNotices] = typeof window === 'undefined'
-    ? [data.notices.map(parseNotice), noop]
-    : useState(data.notices.map(parseNotice))
+  const [notices, setNotices] = useSsrState(() => data.notices.map(parseNotice))
   const groups = useMemo(() => data.groups.map(parseGroup), [data.groups])
 
   const user = useUser()
@@ -177,8 +176,6 @@ const Content = styled.div`
   gap: ${theme.spacing(2)};
   position: relative;
   z-index: 5;
-  min-height: calc(100vh - ${theme.spacing(16)});
-  margin-top: ${theme.spacing(-8)};
 `
 const ContentCard = styled.div`
   color: ${theme.colors.secondary.contrast};
