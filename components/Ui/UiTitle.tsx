@@ -11,7 +11,7 @@ interface Props extends StyleProps {
 const UiTitle: React.FC<Props> = ({ level, ...props }) => {
   return <Heading as={`h${level}`} {...props} />
 }
-export default UiTitle
+export default styled(UiTitle)``
 
 const Heading = styled.h1`
   font-family: ${theme.fonts.heading};

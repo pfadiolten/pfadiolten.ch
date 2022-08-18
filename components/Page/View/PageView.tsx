@@ -51,9 +51,11 @@ const Container = styled.div`
 `
 
 const Main = styled.main`
+  --main-height: calc(100vh - 4rem - 1em);
+  
   position: relative;
   width: 100vw;
-  min-height: calc(100vh - 4rem - 1em);
+  min-height: var(--main-height);
   padding-top: ${theme.spacing(16)};
   padding-bottom: ${theme.spacing(16)};
 `
