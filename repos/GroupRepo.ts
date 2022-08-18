@@ -62,11 +62,3 @@ const groups: Group[] = [
     },
   },
 ]
-
-const midataGroupIds: { [x in GroupId]: string } = {
-  biber: '5045',
-  woelfli: '2467',
-  pfadis: '2468',
-  pios: '2469',
-  rover: '2470',
-}

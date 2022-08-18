@@ -60,6 +60,9 @@ class FetchService {
     })
     const { status } = res
     if (status < 200 || 299 < status) {
+      if (status === 404) {
+        return [null as unknown as T, new FetchError(404, 'Not Found')]
+      }
       const data: { error: string } = await res.json()
       const error = new FetchError(status, data.error)
       return [null as unknown as T, error]
