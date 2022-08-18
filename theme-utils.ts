@@ -202,7 +202,12 @@ class ThemeAccess {
     return access
   }, {} as BreakpointAccess)
 
-  public readonly spacing = (factor: number): string => `calc(var(--theme-spacing) * ${factor})`
+  public readonly spacing = (factor: number): string => {
+    const variable = 'var(--theme-spacing)'
+    return factor === 1
+      ? variable
+      : `calc(${variable} * ${factor})`
+  }
 
   public readonly transitions: TransitionAccess = Object.keys(defaultTheme.transitions).reduce((access, transitionName) => {
     access[transitionName] = `var(--theme-transition-${transitionName}-duration) var(--theme-transition-${transitionName}-timing)`

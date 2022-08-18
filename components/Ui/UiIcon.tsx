@@ -1,9 +1,11 @@
+import theme from '@/theme-utils'
 import { StyleProps } from '@/utils/props'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import {
   faBars,
   faBold,
-  faCheck, faChevronDown,
+  faCheck,
+  faChevronDown,
   faClock,
   faEdit,
   faFan,
@@ -36,8 +38,7 @@ const UiIcon: React.VFC<Props> = ({
   className,
 }) => {
   const icon = icons[name]
-  const [width, height, _ligatures, _unicode, svgPathData] = icon.icon
-  const pixelSize = 16 * size
+  const [_width, _height, _ligatures, _unicode, svgPathData] = icon.icon
 
   const path = useMemo(() => (
     Array.isArray(svgPathData)
@@ -46,19 +47,20 @@ const UiIcon: React.VFC<Props> = ({
   ), [svgPathData])
 
   return (
-    <Container
-      isSpinner={isSpinner}
-      style={style}
+    <Svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      style={{
+        ...style,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        '--size': size,
+      }}
       className={className}
-      pixelSize={pixelSize}
+      isSpinner={isSpinner}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox={`0 0 ${width} ${height}`}
-      >
-        <path d={path} fill="currentColor" />
-      </svg>
-    </Container>
+      <path d={path} fill="currentColor" />
+    </Svg>
   )
 }
 export default styled(UiIcon)``
@@ -96,22 +98,15 @@ const SpinAnimation = keyframes`
     transform: rotate(360deg);
   }
 `
-export const Container = styled.span<{ isSpinner: boolean, pixelSize: number }>`
-  position: relative;
-  display: inline-block;
-  width: ${({ pixelSize }) => pixelSize}px;
-  height: ${({ pixelSize }) => pixelSize}px;
 
-  svg {
-    position: absolute;
-    left: 0;
-  }
-
+const Svg = styled.svg<{ isSpinner: boolean }>`
+  vertical-align: -0.125em;
+  width: calc(${theme.spacing(2)} * var(--size));
+  height: calc(${theme.spacing(2)} * var(--size));
+  
   ${({ isSpinner }) => isSpinner && css`
-    svg {
-      animation: 2.5s linear infinite ${SpinAnimation};
-      animation-play-state: inherit;
-      will-change: transform;
-    }
+    animation: 2.5s linear infinite ${SpinAnimation};
+    animation-play-state: inherit;
+    will-change: transform;
   `}
 `
