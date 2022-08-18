@@ -53,7 +53,7 @@ const Wrapper = styled.li<{ isActive: boolean }>`
   
   display: inline-flex;
   align-items: center;
-
+  cursor: pointer;
 
   ${({ isActive }) => !isActive && css`
     &:hover {
@@ -77,7 +77,6 @@ const Wrapper = styled.li<{ isActive: boolean }>`
   }
   
   ${LinkName} {
-    cursor: pointer;
     display: inline-block;
     text-align: center;
     transition-property: letter-spacing, font-weight;
