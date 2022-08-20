@@ -2,6 +2,7 @@ import Member from '@/models/Member'
 import { createDefaultUserData } from '@/models/UserData'
 import UserDataRepo from '@/repos/UserDataRepo'
 import ApiService, { ApiResponse } from '@/services/ApiService'
+import MemberService from '@/services/MemberService'
 import StringHelper from '@/utils/helpers/StringHelper'
 import { createInMemoryCache } from '@/utils/InMemoryCache'
 import { MidataPeopleResponse, MidataPerson } from 'midata'
@@ -30,7 +31,8 @@ const cache = createInMemoryCache<ContactInfo>(86_400_000) // 1d
 const fetchALs = async (): Promise<Contact[]> => {
   const midataResponse = await fetch(`https://db.scout.ch/de/groups/5993/people.json?token=${process.env.MIDATA_ACCESS_TOKEN}`)
   const data: MidataPeopleResponse = await midataResponse.json()
-  return Promise.all(data.people.map((midataPerson) => mapMidataPersonToContact(midataPerson, data)))
+  return (await Promise.all(data.people.map((midataPerson) => mapMidataPersonToContact(midataPerson, data))))
+    .sort((a, b) => MemberService.compare(a.member, b.member))
 }
 
 const fetchPresident = async (): Promise<Contact> => {
@@ -46,15 +48,8 @@ const mapMidataPersonToContact = async (midataPerson: MidataPerson, data: Midata
   const phoneNumber = data.linked.phone_numbers?.find((midataPhoneNumber) => (
     midataPhoneNumber.public && midataPhoneNumber.label === 'Mobil' && midataPerson.links.phone_numbers?.includes(midataPhoneNumber.id)
   ))
-  const id = StringHelper.encode64(midataPerson.id)
   return {
-    member: {
-      id,
-      firstName: midataPerson.first_name,
-      lastName: midataPerson.last_name,
-      scoutName: StringHelper.nullable(midataPerson.nickname),
-      userData: await UserDataRepo.find(id) ?? createDefaultUserData(id),
-    },
+    member: await MemberService.mapFromMidata(midataPerson),
     phoneNumber: phoneNumber?.number ?? null,
   }
 }

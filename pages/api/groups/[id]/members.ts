@@ -4,6 +4,7 @@ import { createDefaultUserData } from '@/models/UserData'
 import UserDataRepo from '@/repos/UserDataRepo'
 import { ApiError } from '@/services/api/ApiErrorService'
 import ApiService, { ApiResponse } from '@/services/ApiService'
+import MemberService from '@/services/MemberService'
 import StringHelper from '@/utils/helpers/StringHelper'
 import { createKeyedInMemoryCache } from '@/utils/InMemoryCache'
 import { MidataPeopleResponse } from 'midata'
@@ -72,8 +73,8 @@ export default ApiService.handleREST({
       }, {} as { [responseRoleId: string]: MidataRoleConfig }) ?? {}
 
       return (await Promise.all(
-        data.people.map(async (midataMember) => {
-          const role: [MidataRoleConfig, number] | null = midataMember.links.roles?.reduce((result, roleResponseId) => {
+        data.people.map(async (midataPerson) => {
+          const role: [MidataRoleConfig, number] | null = midataPerson.links.roles?.reduce((result, roleResponseId) => {
             const roleConfig = midataRoleMapping[roleResponseId]
             if (roleConfig === undefined) {
               return result
@@ -85,24 +86,16 @@ export default ApiService.handleREST({
             return [roleConfig, roleIndex]
           }, null as [MidataRoleConfig, number] | null) ?? null
           if (role === null) {
-            throw new Error(`person ${midataMember.id} does not own a known role`)
+            throw new Error(`person ${midataPerson.id} does not own a known role`)
           }
-          const id = StringHelper.encode64(midataMember.id)
-          const member: Member = {
-            id,
-            firstName: midataMember.first_name,
-            lastName: midataMember.last_name,
-            scoutName: StringHelper.nullable(midataMember.nickname),
-            userData: await UserDataRepo.find(id) ?? createDefaultUserData(id),
-          }
-          return [role, member] as const
+          return [role, await MemberService.mapFromMidata(midataPerson)] as const
         }))
       )
         .sort(([roleA, a], [roleB, b]) => {
           if (roleA[1] !== roleB[1]) {
             return roleA[1] - roleB[1]
           }
-          return getMemberName(a).localeCompare(getMemberName(b))
+          return MemberService.compare(a, b)
         })
         .reduce((result, [[roleConfig], member]) => {
           const members = result.find((entry) => entry.role === roleConfig.role)?.members
@@ -143,11 +136,10 @@ const makeGroupRoles = (stufenleiterId: string, leiterId: string): MidataRoleCon
     id: leiterId,
     roleType: 'Mitleiter*in',
     role: {
-      name: 'Mitleitung',
+      name: 'Leiter:in',
     },
   },
 ]
-
 
 const midataConfig: { [x in GroupId]: MidataGroupConfig } = {
   biber: {
