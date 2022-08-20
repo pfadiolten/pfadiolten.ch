@@ -1,9 +1,11 @@
 import { GroupId } from '@/models/Group'
 import Member, { getMemberName } from '@/models/Member'
+import { createDefaultUserData } from '@/models/UserData'
+import UserDataRepo from '@/repos/UserDataRepo'
 import { ApiError } from '@/services/api/ApiErrorService'
 import ApiService, { ApiResponse } from '@/services/ApiService'
 import StringHelper from '@/utils/helpers/StringHelper'
-import { createInMemoryCache, InMemoryCache } from '@/utils/InMemoryCache'
+import { createKeyedInMemoryCache } from '@/utils/InMemoryCache'
 import { MidataPeopleResponse } from 'midata'
 
 export type GroupMemberList = Array<{
@@ -19,11 +21,7 @@ export default ApiService.handleREST({
       throw new ApiError(404, 'Not Found')
     }
 
-    let cache = memberListCache[id]
-    if (cache === undefined) {
-      cache = createInMemoryCache(CACHE_MS)
-    }
-    const result = await cache.resolve(async () => {
+    const result = await memberListCache.resolve(id, async () => {
       const roleFilter = midataGroupConfig.roles.map((role) => role.id).join('-')
       const midataResponse = await fetch(`https://db.scout.ch/de/groups/${midataGroupConfig.id}/people.json?token=${process.env.MIDATA_ACCESS_TOKEN}&filters[role][role_type_ids]=${roleFilter}&range=deep`)
       const data: MidataPeopleResponse = await midataResponse.json()
@@ -73,8 +71,8 @@ export default ApiService.handleREST({
         return mapping
       }, {} as { [responseRoleId: string]: MidataRoleConfig }) ?? {}
 
-      return data.people
-        .map((midataMember) => {
+      return (await Promise.all(
+        data.people.map(async (midataMember) => {
           const role: [MidataRoleConfig, number] | null = midataMember.links.roles?.reduce((result, roleResponseId) => {
             const roleConfig = midataRoleMapping[roleResponseId]
             if (roleConfig === undefined) {
@@ -89,14 +87,17 @@ export default ApiService.handleREST({
           if (role === null) {
             throw new Error(`person ${midataMember.id} does not own a known role`)
           }
+          const id = StringHelper.encode64(midataMember.id)
           const member: Member = {
-            id: StringHelper.encode64(midataMember.id),
+            id,
             firstName: midataMember.first_name,
             lastName: midataMember.last_name,
             scoutName: StringHelper.nullable(midataMember.nickname),
+            userData: await UserDataRepo.find(id) ?? createDefaultUserData(id),
           }
           return [role, member] as const
-        })
+        }))
+      )
         .sort(([roleA, a], [roleB, b]) => {
           if (roleA[1] !== roleB[1]) {
             return roleA[1] - roleB[1]
@@ -117,9 +118,7 @@ export default ApiService.handleREST({
   },
 })
 
-const CACHE_MS = 3_600_000 // 1h
-
-const memberListCache: { [K in GroupId]?: InMemoryCache<GroupMemberList> } = {}
+const memberListCache = createKeyedInMemoryCache<GroupId, GroupMemberList>(3_600_000) // 1h
 
 interface MidataGroupConfig {
   id: string

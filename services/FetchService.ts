@@ -52,7 +52,9 @@ class FetchService {
       mode: 'same-origin',
       headers: run(() => {
         const headers: Record<string, string> = {}
-        if (!isFormData(options.body)) {
+        if (isFormData(options.body)) {
+          headers['Accept'] = '*/*'
+        } else {
           headers['Content-Type'] = 'application/json'
         }
         return headers
@@ -90,8 +92,8 @@ interface Options {
 }
 
 const isFormData = (value: unknown): value is FormData => {
-  if (process.browser) {
-    return value instanceof FormData
+  if (typeof window === 'undefined') {
+    return false
   }
-  return false
+  return value instanceof FormData
 }

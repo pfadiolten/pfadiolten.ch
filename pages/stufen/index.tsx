@@ -2,6 +2,7 @@ import Page from '@/components/Page/Page'
 import Group, { parseGroup } from '@/models/Group'
 import FetchService from '@/services/FetchService'
 import { GetServerSideProps, NextPage } from 'next'
+import Link from 'next/link'
 import { useMemo } from 'react'
 
 interface Props {
@@ -28,7 +29,15 @@ const Stufen: NextPage<Props> = ({ data }) => {
   const groups = useMemo(() => data.groups.map(parseGroup), [data.groups])
   return (
     <Page title="unsere Stufen">
-      {JSON.stringify(groups)}
+      <ul>
+        {groups.map((group) => (
+          <li key={group.id}>
+            <Link href={`/stufen/${group.id}`}>
+              {group.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </Page>
   )
 }

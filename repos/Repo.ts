@@ -7,8 +7,13 @@ export type Repo<T> =
   | UpdateRepo<T>
   | DeleteRepo<T>
 
-export interface ReadRepo<T> {
+export interface ReadRepo<T> extends ListRepo<T>, FindRepo<T> {}
+
+export interface ListRepo<T> {
   list(options?: ListOptions<T>): Promise<T[]>
+}
+
+export interface FindRepo<T> {
   find(id: Id<T>): Promise<T | null>
 }
 
@@ -28,11 +33,14 @@ export interface ListOptions<_T> {
   limit?: number | null
 }
 
-
-export const isReadRepo = <T extends Model>(repo: unknown): repo is ReadRepo<T> => {
+export const isListRepo = <T extends Model>(repo: unknown): repo is ListRepo<T> => {
   return repo != null
-    && (repo as ReadRepo<T>).list !== undefined
-    && (repo as ReadRepo<T>).find !== undefined
+    && (repo as ListRepo<T>).list !== undefined
+}
+
+export const isFindRepo = <T extends Model>(repo: unknown): repo is FindRepo<T> => {
+  return repo != null
+    && (repo as FindRepo<T>).find !== undefined
 }
 
 export const isCreateRepo = <T extends Model>(repo: unknown): repo is CreateRepo<T> => {

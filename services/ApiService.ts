@@ -4,11 +4,13 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import {
   CreateRepo,
   DeleteRepo,
+  FindRepo,
   isCreateRepo,
   isDeleteRepo,
-  isReadRepo,
+  isFindRepo,
+  isListRepo,
   isUpdateRepo,
-  ReadRepo,
+  ListRepo,
   Repo,
   UpdateRepo,
 } from '@/repos/Repo'
@@ -33,6 +35,7 @@ class ApiService {
       [parseOrHandle as Parser<I>, handleOrUndefined]
     )
     return ApiErrorService.around(async (req, res) => {
+      // console.log(req)
       const session = await unstable_getServerSession(req, res, authOptions)
       const serviceReq: ApiRequest = Object.assign(req, {
         user: (session?.user ?? null) as User | null,
@@ -51,7 +54,8 @@ class ApiService {
   }
 
   handleResource<T extends Model>(repo: Repo<T>, options: ResourceOptions<T>): NextApiHandler {
-    const readRepo: ReadRepo<T> | null = isReadRepo(repo) ? repo : null
+    const listRepo:   ListRepo<T>   | null = isListRepo(repo)   ? repo : null
+    const findRepo:   FindRepo<T>   | null = isFindRepo(repo)   ? repo : null
     const createRepo: CreateRepo<T> | null = isCreateRepo(repo) ? repo : null
     const updateRepo: UpdateRepo<T> | null = isUpdateRepo(repo) ? repo : null
     const deleteRepo: DeleteRepo<T> | null = isDeleteRepo(repo) ? repo : null
@@ -63,7 +67,7 @@ class ApiService {
 
     const allowedPluralMethods = run(() => {
       const methods = [] as string[]
-      if (readRepo !== null) {
+      if (listRepo !== null) {
         methods.push('GET')
       }
       if (createRepo !== null) {
@@ -73,7 +77,7 @@ class ApiService {
     })
     const allowedSingularMethods = run(() => {
       const methods = [] as string[]
-      if (readRepo !== null) {
+      if (findRepo !== null) {
         methods.push('GET')
       }
       if (updateRepo !== null) {
@@ -97,13 +101,13 @@ class ApiService {
         switch (req.method) {
         case 'GET':
           // endpoint: GET '/'
-          if (readRepo) {
+          if (listRepo !== null) {
             let limit = this.Params.getInt(req, 'limit')
             if (limit !== null) {
               limit = Math.max(0, limit)
             }
             const records = await (options.list ? options.list(req, { limit }) : (
-              readRepo.list({ limit: limit ?? undefined })
+              listRepo.list({ limit: limit ?? undefined })
             ))
             res.status(200).json(records)
             return
@@ -127,8 +131,8 @@ class ApiService {
         switch (req.method) {
         case 'GET':
           // endpoint: GET '/{id}'
-          if (readRepo) {
-            const record = await readRepo.find(id)
+          if (findRepo !== null) {
+            const record = await findRepo.find(id)
             if (record === null) {
               throw new ApiError(404, 'not found')
             }
