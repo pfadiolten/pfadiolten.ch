@@ -4,9 +4,8 @@ import theme from '@/theme-utils'
 import { noop } from '@/utils/fns'
 import { InputProps } from '@daniel-va/react-form'
 import React, { useCallback, useMemo } from 'react'
-import Select, { Options } from 'react-select'
-import { StylesConfig } from 'react-select/dist/declarations/src/styles'
-import styled, { useTheme } from 'styled-components'
+import Select from 'react-select'
+import styled from 'styled-components'
 
 interface Props<T, TOption, TMultiple extends boolean> extends InputProps<Value<T, TMultiple>>, LookAndFeelProps {
   options: TOption[]

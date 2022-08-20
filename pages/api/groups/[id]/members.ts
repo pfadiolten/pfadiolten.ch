@@ -1,11 +1,8 @@
 import { GroupId, Role } from '@/models/Group'
-import Member, { getMemberName } from '@/models/Member'
-import { createDefaultUserData } from '@/models/UserData'
-import UserDataRepo from '@/repos/UserDataRepo'
+import Member from '@/models/Member'
 import { ApiError } from '@/services/api/ApiErrorService'
 import ApiService, { ApiResponse } from '@/services/ApiService'
 import MemberService from '@/services/MemberService'
-import StringHelper from '@/utils/helpers/StringHelper'
 import { createKeyedInMemoryCache } from '@/utils/InMemoryCache'
 import { MidataPeopleResponse } from 'midata'
 

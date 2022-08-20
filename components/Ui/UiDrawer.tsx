@@ -18,7 +18,7 @@ interface Props {
 
 const UiDrawer: React.FC<Props> = ({ isOpen, size = 'auto', position = 'left', children, onClose: pushClose }) => {
   const elementRef = useRef<HTMLDivElement | null>(null)
-  useClickAway(elementRef, (e) => {
+  useClickAway(elementRef, () => {
     pushClose()
   })
 

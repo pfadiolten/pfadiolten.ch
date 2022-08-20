@@ -7,9 +7,8 @@ import Group, { GroupId, parseGroup } from '@/models/Group'
 import { parseMember } from '@/models/Member'
 import { GroupMemberList } from '@/pages/api/groups/[id]/members'
 import FetchService from '@/services/FetchService'
-import { also } from '@/utils/control-flow'
 import { GetServerSideProps, NextPage } from 'next'
-import React, { EventHandler, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 
 interface Props {
   data: {

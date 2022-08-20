@@ -1,9 +1,6 @@
 import Member from '@/models/Member'
-import { createDefaultUserData } from '@/models/UserData'
-import UserDataRepo from '@/repos/UserDataRepo'
 import ApiService, { ApiResponse } from '@/services/ApiService'
 import MemberService from '@/services/MemberService'
-import StringHelper from '@/utils/helpers/StringHelper'
 import { createInMemoryCache } from '@/utils/InMemoryCache'
 import { MidataPeopleResponse, MidataPerson } from 'midata'
 

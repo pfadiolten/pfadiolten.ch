@@ -18,7 +18,7 @@ interface Props {
 }
 
 
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const [contactInfo, contactInfoError] = await FetchService.get<ContactInfo>('contact')
   if (contactInfoError !== null) {
     throw contactInfoError
