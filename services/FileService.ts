@@ -37,4 +37,17 @@ export default class FileService {
       })
     })
   }
+
+  async delete(id: Id<unknown>): Promise<void> {
+    const path = `${this.directory}/${id}`
+    return new Promise((resolve, reject) => {
+      fs.rm(path, (error) => {
+        if (error !== null) {
+          reject(error)
+          return
+        }
+        resolve(undefined)
+      })
+    })
+  }
 }

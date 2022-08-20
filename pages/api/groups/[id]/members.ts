@@ -88,7 +88,6 @@ export default ApiService.handleREST({
             throw new Error(`person ${midataMember.id} does not own a known role`)
           }
           const id = StringHelper.encode64(midataMember.id)
-          console.log('foobar')
           const member: Member = {
             id,
             firstName: midataMember.first_name,

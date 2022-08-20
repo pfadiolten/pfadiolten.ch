@@ -55,7 +55,7 @@ const UiDrawer: React.FC<Props> = ({ isOpen, size = 'auto', position = 'left', c
 }
 export default UiDrawer
 
-export type Size = 'auto' | 'full'
+export type Size = 'auto' | 'full' | 'fixed'
 export type Position = 'left' | 'right'
 
 const Box = styled.aside<{ isOpen: boolean, size: Size, position: Position }>`
@@ -107,4 +107,13 @@ const Box = styled.aside<{ isOpen: boolean, size: Size, position: Position }>`
       transform: translateY(calc(100% + 20px));
     }
   `}
+
+  ${({ size }) => size === 'fixed' && css`
+    ${theme.media.lg.min} {
+      width: 60vw;
+    }
+    ${theme.media.xl.min} {
+      width: 50vw;
+    }
+  `};
 `

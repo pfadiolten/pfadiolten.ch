@@ -1,11 +1,9 @@
+import Dimensions from '@/models/base/Dimensions'
 
 export default interface UploadedImage {
   path: string
   mimeType: string
-  dimensions: {
-    width: number
-    height: number
-  }
+  dimensions: Dimensions
 }
 
 export const allowedImageTypes = [

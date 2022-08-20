@@ -35,7 +35,6 @@ class ApiService {
       [parseOrHandle as Parser<I>, handleOrUndefined]
     )
     return ApiErrorService.around(async (req, res) => {
-      // console.log(req)
       const session = await unstable_getServerSession(req, res, authOptions)
       const serviceReq: ApiRequest = Object.assign(req, {
         user: (session?.user ?? null) as User | null,

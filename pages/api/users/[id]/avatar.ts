@@ -58,7 +58,7 @@ export default ApiService.handleREST({
 
     const fileData = await fs.readFile(file.filepath)
     await AvatarFileService.save(id, fileData)
-    await UserDataRepo.update(id, {
+    const updatedUserData = await UserDataRepo.update(id, {
       ...userData,
       avatar: {
         path: `/api/users/${id}/avatar?c=${uuid()}`,
@@ -70,6 +70,24 @@ export default ApiService.handleREST({
       },
     })
     await fs.rm(file.filepath)
+    if (updatedUserData === null) {
+      throw new Error(`failed to update UserData for ${id}`)
+    }
+    res.status(200).json(updatedUserData)
+  },
+
+
+  async delete(req, res) {
+    const id = req.query.id as Id<UserData>
+    const userData = await UserDataRepo.find(id)
+    if (userData === null || userData.avatar === null) {
+      throw new ApiError(404, 'Not Found')
+    }
+    await AvatarFileService.delete(id)
+    await UserDataRepo.update(id, {
+      ...userData,
+      avatar: null,
+    })
     res.status(201).end()
   },
 })

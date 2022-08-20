@@ -1,7 +1,7 @@
 import theme from '@/theme-utils'
 import React, { ReactNode, useRef } from 'react'
 import { useEffectOnce, useIsomorphicLayoutEffect } from 'react-use'
-import styled, { css, useTheme } from 'styled-components'
+import styled, { css } from 'styled-components'
 
 interface Props {
   isOpen: boolean
@@ -10,7 +10,6 @@ interface Props {
 
 const UiScreenOverlay: React.FC<Props> = ({ isOpen, children }) => {
   const elementRef = useRef<HTMLDivElement | null>(null)
-  const theme = useTheme()
   useEffectOnce(() => {
     const { current: element } = elementRef
     if (element === null) {
@@ -34,7 +33,7 @@ const UiScreenOverlay: React.FC<Props> = ({ isOpen, children }) => {
       setTimeout(() => {
         element.style.zIndex = '-1'
         element.style.opacity = '0'
-      }, theme.transitions.slideOut.duration)
+      })
     }
   }, [isOpen])
 

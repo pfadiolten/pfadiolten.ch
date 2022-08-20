@@ -2,6 +2,7 @@ import MemberCard from '@/components/Member/MemberCard'
 import MemberCardList from '@/components/Member/MemberCardList'
 import Page from '@/components/Page/Page'
 import UiTitle from '@/components/Ui/UiTitle'
+import useSsrState from '@/hooks/useSsrState'
 import Group, { GroupId, parseGroup } from '@/models/Group'
 import { parseMember } from '@/models/Member'
 import { GroupMemberList } from '@/pages/api/groups/[id]/members'
@@ -46,22 +47,10 @@ export const getServerSideProps: GetServerSideProps<Props, Query> = async (ctx) 
 
 const Stufe: NextPage<Props> = ({ data }) => {
   const group = useMemo(() => parseGroup(data.group), [data.group])
-  const members: GroupMemberList = useMemo(() => data.members.map(({ role, members }) => ({
+  const [members, setMembers] = useSsrState<GroupMemberList>(() => data.members.map(({ role, members }) => ({
     role,
     members: members.map(parseMember),
-  })), [data.members])
-
-  const [image, setImage] = useState(null as File | null)
-  const handleImageChange: EventHandler<React.ChangeEvent<HTMLInputElement>> = (e) => {
-    const image = e.target.files?.[0] ?? null
-    setImage(image)
-  }
-
-  const submit = async () => {
-    await FetchService.post(`users/${members[0].members[1].id}/avatar`, also(new FormData(), (fields) => {
-      fields.append('file', image!)
-    }))
-  }
+  })))
 
   return (
     <Page title={`${group.name}`}>
@@ -74,18 +63,22 @@ const Stufe: NextPage<Props> = ({ data }) => {
         <UiTitle level={2}>
           Leitungsteam
         </UiTitle>
-        {members.map(({ role, members }) => (
+        {members.map(({ role, members }, membersI) => (
           <MemberCardList key={role.name}>
-            {members.map((member) => (
-              <MemberCard key={member.id} member={member} role={role} />
+            {members.map((member, memberI) => (
+              <MemberCard key={member.id} member={member} role={role} onChange={(member) => setMembers((members) => {
+                members = [...members]
+                members[membersI] = {
+                  ...members[membersI],
+                  members: [...members[membersI].members],
+                }
+                members[membersI].members[memberI] = member
+                return [...members]
+              })} />
             ))}
           </MemberCardList>
         ))}
       </section>
-
-      <br />
-      <input type="file" accept="image/png, image/jpeg" onChange={handleImageChange} />
-      <button type="button" onClick={submit}>Submit!</button>
     </Page>
   )
 }

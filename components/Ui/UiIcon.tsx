@@ -19,7 +19,7 @@ import {
   faSignOutAlt,
   faTimes,
   faTrashAlt,
-  faUndoAlt,
+  faUndoAlt, faUpload,
 } from '@fortawesome/free-solid-svg-icons'
 import React, { useMemo } from 'react'
 import styled, { css, keyframes } from 'styled-components'
@@ -38,7 +38,7 @@ const UiIcon: React.VFC<Props> = ({
   className,
 }) => {
   const icon = icons[name]
-  const [_width, _height, _ligatures, _unicode, svgPathData] = icon.icon
+  const [width, height, _ligatures, _unicode, svgPathData] = icon.icon
 
   const path = useMemo(() => (
     Array.isArray(svgPathData)
@@ -49,7 +49,7 @@ const UiIcon: React.VFC<Props> = ({
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 512 512"
+      viewBox={`0 0 ${width} ${height}`}
       style={{
         ...style,
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -70,6 +70,8 @@ const icons = {
   dropdown: faChevronDown,
   confirm: faCheck,
   cancel: faTimes,
+  upload: faUpload,
+  reset: faRedoAlt,
   recordAdd: faPlus,
   recordEdit: faEdit,
   recordDelete: faTrashAlt,
@@ -100,6 +102,7 @@ const SpinAnimation = keyframes`
 `
 
 const Svg = styled.svg<{ isSpinner: boolean }>`
+  display: table-cell;
   vertical-align: -0.125em;
   width: calc(${theme.spacing(2)} * var(--size));
   height: calc(${theme.spacing(2)} * var(--size));
