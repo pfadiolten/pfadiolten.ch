@@ -57,8 +57,6 @@ const Stufe: NextPage<Props> = ({ data }) => {
       <UiTitle level={1}>
         die {group.name}
       </UiTitle>
-      {JSON.stringify(group)}
-      <br />
       <section>
         <UiTitle level={2}>
           Leitungsteam
