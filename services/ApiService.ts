@@ -1,6 +1,7 @@
 import Model from '@/models/base/Model'
-import User from '@/models/User'
+import SessionUser from '@/models/SessionUser'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import { BasePolicy, PolicyConstructor } from '@/policies/Policy'
 import {
   CreateRepo,
   DeleteRepo,
@@ -37,7 +38,7 @@ class ApiService {
     return ApiErrorService.around(async (req, res) => {
       const session = await unstable_getServerSession(req, res, authOptions)
       const serviceReq: ApiRequest = Object.assign(req, {
-        user: (session?.user ?? null) as User | null,
+        user: (session?.user ?? null) as SessionUser | null,
       })
       const data = req.body == null ? null : run(() => {
         if (typeof req.body === 'object' && Object.keys(req.body).length === 0) {
@@ -198,11 +199,15 @@ class ApiService {
       return handle(req, res, data)
     })
   }
+
+  policy<P>(req: ApiRequest, policy: PolicyConstructor<P>): P {
+    return new policy(req.user)
+  }
 }
 export default new ApiService()
 
 export type ApiRequest = NextApiRequest & {
-  user: User | null
+  user: SessionUser | null
 }
 
 export type ApiResponse<T> = NextApiResponse<T>

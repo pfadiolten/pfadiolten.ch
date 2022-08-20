@@ -2,7 +2,7 @@ import Id from '@/models/base/Id'
 import Model, { ModelData } from '@/models/base/Model'
 import RichText from '@/models/base/RichText'
 import { GroupId } from '@/models/Group'
-import User from '@/models/User'
+import SessionUser from '@/models/SessionUser'
 import { createValidator, validate } from '@daniel-va/validate'
 
 export default interface Notice extends Model {
@@ -13,7 +13,7 @@ export default interface Notice extends Model {
   endLocation: string | null
   startsAt: Date,
   endsAt: Date,
-  authorId: Id<User>
+  authorId: Id<SessionUser>
 }
 
 export const parseNotice = (data: Notice): Notice => ({

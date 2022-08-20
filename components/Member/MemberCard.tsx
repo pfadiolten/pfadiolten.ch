@@ -3,10 +3,12 @@ import MemberAvatarForm from '@/components/Member/MemberAvatarForm'
 import UiDrawer from '@/components/Ui/UiDrawer'
 import UiIcon, { UiIconName } from '@/components/Ui/UiIcon'
 import UiTitle from '@/components/Ui/UiTitle'
+import usePolicy from '@/hooks/usePolicy'
 import useUser from '@/hooks/useUser'
 import UploadedImage from '@/models/base/UploadedImage'
 import { Role } from '@/models/Group'
 import Member from '@/models/Member'
+import MemberPolicy from '@/policies/MemberPolicy'
 import { ColorName } from '@/theme'
 import theme from '@/theme-utils'
 import React, { ReactNode, useCallback, useMemo, useState } from 'react'
@@ -32,8 +34,9 @@ const MemberCard: React.FC<Props> = ({
   onResetAvatar: pushResetAvatar,
   children,
 }) => {
-  const user = useUser()
-  const isEditable = pushChange !== undefined
+  const policy = usePolicy(MemberPolicy)
+  const canEdit = policy.canEdit(member)
+
   const [isAvatarFormVisible, setIsAvatarFormVisible] = useState(false)
 
   const openAvatarForm = useCallback(() => setIsAvatarFormVisible(true), [])
@@ -44,12 +47,15 @@ const MemberCard: React.FC<Props> = ({
     if (pushRemoveAvatar) {
       return pushRemoveAvatar
     }
-    return user !== null && isEditable
+    return canEdit && pushChange
       ? openAvatarForm
       : undefined
-  }, [isEditable, openAvatarForm, pushRemoveAvatar, pushResetAvatar, user])
+  }, [pushResetAvatar, pushRemoveAvatar, canEdit, pushChange, openAvatarForm])
 
   const avatarOverlay: { color: ColorName, icon: UiIconName } | null = useMemo(() => {
+    if (!canEdit) {
+      return null
+    }
     switch (handleAvatarClick) {
     case undefined:
       return null
@@ -62,7 +68,7 @@ const MemberCard: React.FC<Props> = ({
     default:
       throw new Error(`unexpected callback: ${handleAvatarClick}`)
     }
-  }, [handleAvatarClick, openAvatarForm, pushRemoveAvatar, pushResetAvatar])
+  }, [canEdit, handleAvatarClick, openAvatarForm, pushRemoveAvatar, pushResetAvatar])
 
   return (
     <Box>
@@ -93,7 +99,7 @@ const MemberCard: React.FC<Props> = ({
         )}
       </div>
 
-      {(isEditable && user !== null) && (
+      {(pushChange && canEdit) && (
         <UiDrawer size="fixed" isOpen={isAvatarFormVisible} onClose={() => setIsAvatarFormVisible(false)}>
           <AvatarFormBox>
             <UiTitle level={2}>
