@@ -55,6 +55,7 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
       </MenuToggle>
       <Menu isOpen={isOpen}>
         <Links>
+          <PageNavItem name="Stufen" href="/stufen" />
           <PageNavItem name="Kontakt" href="/kontakt" />
 
           <MenuOffset>

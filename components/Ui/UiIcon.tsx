@@ -2,6 +2,7 @@ import theme from '@/theme-utils'
 import { StyleProps } from '@/utils/props'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import {
+  faAt,
   faBars,
   faBold,
   faCheck,
@@ -12,7 +13,7 @@ import {
   faItalic,
   faListOl,
   faListUl,
-  faLocationDot,
+  faLocationDot, faPhone,
   faPlus,
   faRedoAlt,
   faSignInAlt,
@@ -72,10 +73,12 @@ const icons = {
   cancel: faTimes,
   upload: faUpload,
   reset: faRedoAlt,
+  clock: faClock,
+  phone: faPhone,
+  email: faAt,
   recordAdd: faPlus,
   recordEdit: faEdit,
   recordDelete: faTrashAlt,
-  clock: faClock,
   editorBold: faBold,
   editorItalic: faItalic,
   editorListOl: faListOl,

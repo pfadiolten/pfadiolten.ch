@@ -14,6 +14,8 @@ export interface ContactInfo {
 
 export interface Contact {
   member: Member
+  firstName: string
+  lastName: string
   phoneNumber: string | null
 }
 
@@ -50,6 +52,8 @@ const mapMidataPersonToContact = async (midataPerson: MidataPerson, data: Midata
   ))
   return {
     member: await MemberService.mapFromMidata(midataPerson),
+    firstName: midataPerson.first_name,
+    lastName: midataPerson.last_name,
     phoneNumber: phoneNumber?.number ?? null,
   }
 }

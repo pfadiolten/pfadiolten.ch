@@ -1,5 +1,5 @@
 import UploadedImage from '@/models/base/UploadedImage'
-import Member, { getMemberName } from '@/models/Member'
+import Member from '@/models/Member'
 import { Theme } from '@/theme'
 import theme from '@/theme-utils'
 import { StyleProps } from '@/utils/props'
@@ -22,7 +22,7 @@ const MemberAvatar: React.FC<Props> = ({
   className,
   style,
 }) => {
-  const alt = `Avatar von ${getMemberName(member)}`
+  const alt = `Avatar von ${member.name}`
   return (
     <Box onClick={pushClick} className={className} style={style}>
       {avatar === null ? (

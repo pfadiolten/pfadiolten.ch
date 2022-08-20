@@ -1,35 +1,37 @@
 import MemberAvatar from '@/components/Member/MemberAvatar'
+import MemberAvatarForm from '@/components/Member/MemberAvatarForm'
 import UiDrawer from '@/components/Ui/UiDrawer'
 import UiIcon, { UiIconName } from '@/components/Ui/UiIcon'
 import UiTitle from '@/components/Ui/UiTitle'
-import MemberAvatarForm from '@/components/Member/MemberAvatarForm'
 import useUser from '@/hooks/useUser'
 import UploadedImage from '@/models/base/UploadedImage'
 import { Role } from '@/models/Group'
-import Member, { getMemberName } from '@/models/Member'
+import Member from '@/models/Member'
 import { ColorName } from '@/theme'
 import theme from '@/theme-utils'
-import { run } from '@/utils/control-flow'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { ReactNode, useCallback, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 interface Props {
   member: Member
+  title?: ReactNode
   avatar?: UploadedImage | null
   role?: Role | null
   onChange?: (member: Member) => void
   onRemoveAvatar?: () => void
   onResetAvatar?: () => void
+  children?: ReactNode
 }
 
 const MemberCard: React.FC<Props> = ({
   member, avatar,
+  title = null,
   role = null,
   onChange: pushChange,
   onRemoveAvatar: pushRemoveAvatar,
   onResetAvatar: pushResetAvatar,
+  children,
 }) => {
-  const name = getMemberName(member)
   const user = useUser()
   const isEditable = pushChange !== undefined
   const [isAvatarFormVisible, setIsAvatarFormVisible] = useState(false)
@@ -76,10 +78,19 @@ const MemberCard: React.FC<Props> = ({
         )}
       </Avatar>
       <div>
-        <UiTitle level={3}>
-          {name}
+        <UiTitle level={5}>
+          {title ?? member.name}
         </UiTitle>
-        {role?.name}
+        {role && (
+          <Role>
+            {role.name}
+          </Role>
+        )}
+        {children && (
+          <CustomContent>
+            {children}
+          </CustomContent>
+        )}
       </div>
 
       {(isEditable && user !== null) && (
@@ -139,4 +150,11 @@ const AvatarFormBox = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing(2)};
+`
+const Role = styled.em`
+  font-family: ${theme.fonts.serif};
+  font-size: 1.1rem;
+`
+const CustomContent = styled.div`
+  margin-top: ${theme.spacing(1)};
 `

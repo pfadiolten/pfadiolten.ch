@@ -1,4 +1,4 @@
-import Member, { getMemberName } from '@/models/Member'
+import Member from '@/models/Member'
 import { createDefaultUserData } from '@/models/UserData'
 import UserDataRepo from '@/repos/UserDataRepo'
 import StringHelper from '@/utils/helpers/StringHelper'
@@ -9,15 +9,13 @@ class MemberService {
     const id = StringHelper.encode64(input.id)
     return {
       id,
-      firstName: input.first_name,
-      lastName: input.last_name,
-      scoutName: StringHelper.nullable(input.nickname),
+      name: StringHelper.nullable(input.nickname) ?? input.first_name,
       userData: await UserDataRepo.find(id) ?? createDefaultUserData(id),
     }
   }
 
   compare(a: Member, b: Member): number {
-    return getMemberName(a).localeCompare(getMemberName(b))
+    return a.name.localeCompare(b.name)
   }
 }
 export default new MemberService()
