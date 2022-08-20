@@ -1,3 +1,5 @@
+import MemberCard from '@/components/Member/MemberCard'
+import MemberCardList from '@/components/Member/MemberCardList'
 import Page from '@/components/Page/Page'
 import UiTitle from '@/components/Ui/UiTitle'
 import Group, { GroupId, parseGroup } from '@/models/Group'
@@ -56,7 +58,7 @@ const Stufe: NextPage<Props> = ({ data }) => {
   }
 
   const submit = async () => {
-    await FetchService.post(`users/${members[0].members[0].id}/avatar`, also(new FormData(), (fields) => {
+    await FetchService.post(`users/${members[0].members[1].id}/avatar`, also(new FormData(), (fields) => {
       fields.append('file', image!)
     }))
   }
@@ -68,7 +70,18 @@ const Stufe: NextPage<Props> = ({ data }) => {
       </UiTitle>
       {JSON.stringify(group)}
       <br />
-      {JSON.stringify(members)}
+      <section>
+        <UiTitle level={2}>
+          Leitungsteam
+        </UiTitle>
+        {members.map(({ role, members }) => (
+          <MemberCardList key={role.name}>
+            {members.map((member) => (
+              <MemberCard key={member.id} member={member} role={role} />
+            ))}
+          </MemberCardList>
+        ))}
+      </section>
 
       <br />
       <input type="file" accept="image/png, image/jpeg" onChange={handleImageChange} />

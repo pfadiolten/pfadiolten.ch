@@ -1,4 +1,4 @@
-import { GroupId } from '@/models/Group'
+import { GroupId, Role } from '@/models/Group'
 import Member, { getMemberName } from '@/models/Member'
 import { createDefaultUserData } from '@/models/UserData'
 import UserDataRepo from '@/repos/UserDataRepo'
@@ -9,7 +9,7 @@ import { createKeyedInMemoryCache } from '@/utils/InMemoryCache'
 import { MidataPeopleResponse } from 'midata'
 
 export type GroupMemberList = Array<{
-  role: string
+  role: Role
   members: Member[]
 }>
 
@@ -88,6 +88,7 @@ export default ApiService.handleREST({
             throw new Error(`person ${midataMember.id} does not own a known role`)
           }
           const id = StringHelper.encode64(midataMember.id)
+          console.log('foobar')
           const member: Member = {
             id,
             firstName: midataMember.first_name,
@@ -105,9 +106,9 @@ export default ApiService.handleREST({
           return getMemberName(a).localeCompare(getMemberName(b))
         })
         .reduce((result, [[roleConfig], member]) => {
-          const members = result.find((entry) => entry.role === roleConfig.displayName)?.members
+          const members = result.find((entry) => entry.role === roleConfig.role)?.members
           if (members === undefined) {
-            result.push({ role: roleConfig.displayName, members: [member] })
+            result.push({ role: roleConfig.role, members: [member] })
           } else {
             members.push(member)
           }
@@ -128,19 +129,23 @@ interface MidataGroupConfig {
 interface MidataRoleConfig {
   id: string
   roleType: string
-  displayName: string
+  role: Role
 }
 
 const makeGroupRoles = (stufenleiterId: string, leiterId: string): MidataRoleConfig[] => [
   {
     id: stufenleiterId,
     roleType: 'Einheitsleiter*in',
-    displayName: 'Stufenleiter:in',
+    role: {
+      name: 'Stufenleitung',
+    },
   },
   {
     id: leiterId,
     roleType: 'Mitleiter*in',
-    displayName: 'Leiter:in',
+    role: {
+      name: 'Mitleitung',
+    },
   },
 ]
 

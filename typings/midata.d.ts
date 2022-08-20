@@ -20,6 +20,7 @@ declare module 'midata' {
     first_name: string
     last_name: string
     nickname: string
+    gender: 'm' | 'f' | null
     links: {
       roles?: string[]
       phone_numbers?: string[]

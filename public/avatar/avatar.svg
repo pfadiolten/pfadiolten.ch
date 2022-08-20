@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1000mm"
+   height="1000mm"
+   viewBox="0 0 1000 1000"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15, custom)"
+   sodipodi:docname="avatar.svg">
+  <defs
+     id="defs2">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath109">
+      <rect
+         style="fill:#f2f2f2;stroke-width:0.315835"
+         id="rect111"
+         width="1000.0266"
+         height="1000"
+         x="0"
+         y="0"
+         inkscape:label="Background"
+         transform="matrix(0.99998672,-0.0051545,0,1,0,0)" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.12374369"
+     inkscape:cx="5519.9818"
+     inkscape:cy="2838.04"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <rect
+     style="opacity:1;fill:#f2f2f2;stroke-width:0.315831"
+     id="rect62"
+     width="1000"
+     height="1000"
+     x="0"
+     y="0"
+     inkscape:label="Background" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <ellipse
+       style="fill:#cccccc;fill-rule:evenodd;stroke-width:0.54242"
+       id="path10"
+       cx="504.28302"
+       cy="1011.6273"
+       rx="414.80783"
+       ry="522.77924"
+       transform="matrix(0.99998672,0.00515457,0,1,0,0)"
+       inkscape:label="Body"
+       clip-path="url(#clipPath109)" />
+    <ellipse
+       style="fill:#f2f2f2;fill-rule:evenodd;stroke-width:0.293065"
+       id="path10-4-2"
+       cx="500.00409"
+       cy="375.43338"
+       rx="253.2093"
+       ry="249.99791"
+       transform="matrix(0.99999185,0.0040381,0,1,0,0)"
+       inkscape:label="Head Offset" />
+    <ellipse
+       style="fill:#cccccc;fill-rule:evenodd;stroke-width:0.262082"
+       id="path10-4"
+       cx="500.00418"
+       cy="360.05469"
+       rx="225.00188"
+       ry="224.99811"
+       transform="matrix(0.99999164,0.00408991,0,1,0,0)"
+       inkscape:label="Head" />
+  </g>
+</svg>

@@ -16,3 +16,7 @@ export type GroupId =
   | 'pfadis'
   | 'pios'
   | 'rover'
+
+export interface Role {
+  name: string,
+}
