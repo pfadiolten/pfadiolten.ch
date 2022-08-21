@@ -1,22 +1,31 @@
 import Model from '@/models/base/Model'
-import { Color } from '@/theme'
 
 export default interface Group extends Model {
   id: GroupId
   name: string
   shortName: string
-  color: Color
 }
 
 export const parseGroup = (data: Group) => data
 
 export type GroupId =
-  | 'biber'
-  | 'woelfli'
-  | 'pfadis'
-  | 'pios'
-  | 'rover'
+  | 'als'
+  | UnitId
+  | CommitteeId
+
+export enum UnitId {
+  BIBER = 'biber',
+  WOELFLI = 'woelfli',
+  PFADIS = 'pfadis',
+  PIOS = 'pios',
+  ROVER = 'rover',
+}
+
+export enum CommitteeId {
+  VORSTAND = 'vorstand',
+}
 
 export interface Role {
   name: string,
+  groupId: GroupId
 }

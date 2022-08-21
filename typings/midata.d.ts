@@ -5,6 +5,10 @@ declare module 'midata' {
       roles?: Array<{
         id: string
         role_type: string
+        label: string
+        links: {
+          group: string
+        }
       }>
       phone_numbers?: Array<{
         id: string

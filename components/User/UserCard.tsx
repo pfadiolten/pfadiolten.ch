@@ -5,7 +5,7 @@ import UserAvatar from '@/components/User/UserAvatar'
 import UserAvatarForm from '@/components/User/UserAvatarForm'
 import usePolicy from '@/hooks/usePolicy'
 import UploadedImage from '@/models/base/UploadedImage'
-import { Role } from '@/models/Group'
+import { GroupId, Role } from '@/models/Group'
 import User from '@/models/User'
 import UserPolicy from '@/policies/UserPolicy'
 import { ColorName } from '@/theme'
@@ -15,6 +15,7 @@ import styled, { css } from 'styled-components'
 
 interface Props {
   user: User
+  group?: GroupId,
   title?: ReactNode
   avatar?: UploadedImage | null
   role?: Role | null
@@ -26,6 +27,7 @@ interface Props {
 
 const UserCard: React.FC<Props> = ({
   user,
+  group = null,
   avatar,
   title = null,
   role = null,
@@ -87,11 +89,22 @@ const UserCard: React.FC<Props> = ({
         <UiTitle level={5}>
           {title ?? user.name}
         </UiTitle>
-        {role && (
-          <Role>
-            {role.name}
-          </Role>
-        )}
+        <Roles>
+          {group === null ? (
+            user.roles.map((role) => (
+              <RoleItem key={`${role.groupId} ${role.name}`}>
+                {/* TODO Link to group */}
+                {role.name}
+              </RoleItem>
+            ))
+          ) : (
+            user.roles.filter((role) => role.groupId === group).map((role) => (
+              <RoleItem key={`${role.groupId} ${role.name}`}>
+                {role.name}
+              </RoleItem>
+            ))
+          )}
+        </Roles>
         {children && (
           <CustomContent>
             {children}
@@ -157,7 +170,10 @@ const AvatarFormBox = styled.div`
   flex-direction: column;
   gap: ${theme.spacing(2)};
 `
-const Role = styled.em`
+const Roles = styled.ul`
+  
+`
+const RoleItem = styled.li`
   font-family: ${theme.fonts.serif};
   font-size: 1.1rem;
 `

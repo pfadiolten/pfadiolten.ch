@@ -8,7 +8,7 @@ import { createKeyedInMemoryCache } from '@/utils/InMemoryCache'
 
 class UserDataRepo implements FindRepo<UserData>, UpdateRepo<UserData> {
   async find(id: Id<UserData>): Promise<UserData | null> {
-    const existingData = await BackingRepo.find(id)
+    const existingData = this.findLocally(id)
     if (existingData !== null) {
       return existingData
     }
@@ -16,6 +16,10 @@ class UserDataRepo implements FindRepo<UserData>, UpdateRepo<UserData> {
       return null
     }
     return createDefaultUserData(id)
+  }
+
+  findLocally(id: Id<UserData>): Promise<UserData | null> {
+    return BackingRepo.find(id)
   }
 
   async update(id: Id<UserData>, data: ModelData<UserData>): Promise<UserData | null> {

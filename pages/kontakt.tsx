@@ -5,7 +5,7 @@ import UiTitle from '@/components/Ui/UiTitle'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
 import useSsrState from '@/hooks/useSsrState'
-import { Role } from '@/models/Group'
+import { CommitteeId, GroupId } from '@/models/Group'
 import { Contact, ContactInfo } from '@/pages/api/contact'
 import FetchService from '@/services/FetchService'
 import theme from '@/theme-utils'
@@ -41,8 +41,8 @@ const Kontakt: NextPage<Props> = ({ contactInfo }) => {
         {als.map((contact, i) => (
           <ContactCard
             key={contact.user.id}
+            group="als"
             contact={contact}
-            role={{ name: 'Abteilungsleitung' }}
             onChange={(contact) => setAls((als) => {
               als = [...als]
               als[i] = contact
@@ -50,7 +50,7 @@ const Kontakt: NextPage<Props> = ({ contactInfo }) => {
             })}
           />
         ))}
-        <ContactCard contact={president} role={{ name: 'Vereinspräsident' }} onChange={setPresident} />
+        <ContactCard contact={president} group={CommitteeId.VORSTAND} onChange={setPresident} />
       </ContactList>
     </Page>
   )
@@ -59,21 +59,21 @@ export default Kontakt
 
 interface ContactCardProps {
   contact: Contact
-  role: Role
+  group: GroupId
   onChange: (contact: Contact) => void
 }
 
-const ContactCard: React.FC<ContactCardProps> = ({ contact, role, onChange: pushChange }) => {
+const ContactCard: React.FC<ContactCardProps> = ({ contact, group, onChange: pushChange }) => {
   return (
     <UserCard
       key={contact.user.id}
       user={contact.user}
+      group={group}
       title={(
         <React.Fragment>
           {contact.firstName} {contact.lastName} v/o {contact.user.name}
         </React.Fragment>
       )}
-      role={role}
       onChange={(user) => pushChange({ ...contact, user })}
     >
       <UiClientOnly>{() => (

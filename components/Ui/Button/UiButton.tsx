@@ -1,3 +1,4 @@
+import UiIcon from '@/components/Ui/UiIcon'
 import { ColorName } from '@/theme'
 import theme from '@/theme-utils'
 import { StyleProps } from '@/utils/props'

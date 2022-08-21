@@ -3,9 +3,8 @@ import UiTitle from '@/components/Ui/UiTitle'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
 import useSsrState from '@/hooks/useSsrState'
-import Group, { GroupId, parseGroup } from '@/models/Group'
-import { parseUser } from '@/models/User'
-import { GroupMemberList } from '@/pages/api/groups/[id]/members'
+import Group, { GroupId, parseGroup, UnitId } from '@/models/Group'
+import User, { parseUser } from '@/models/User'
 import FetchService from '@/services/FetchService'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useMemo } from 'react'
@@ -13,16 +12,20 @@ import React, { useMemo } from 'react'
 interface Props {
   data: {
     group: Group
-    members: GroupMemberList
+    members: User[]
   }
 }
 
 type Query = {
-  id: GroupId
+  id: UnitId
 }
 
 export const getServerSideProps: GetServerSideProps<Props, Query> = async (ctx) => {
   const id = ctx.params!.id
+  if (!Object.values(UnitId).includes(id)) {
+    return { notFound: true }
+  }
+
   const [group, groupError] = await FetchService.get<Group>(`groups/${id}`)
   if (groupError !== null) {
     if (groupError.status === 404) {
@@ -30,7 +33,7 @@ export const getServerSideProps: GetServerSideProps<Props, Query> = async (ctx) 
     }
     throw groupError
   }
-  const [members, membersError] = await FetchService.get<GroupMemberList>(`groups/${id}/members`)
+  const [members, membersError] = await FetchService.get<User[]>(`groups/${id}/users`)
   if (membersError !== null) {
     throw membersError
   }
@@ -46,10 +49,7 @@ export const getServerSideProps: GetServerSideProps<Props, Query> = async (ctx) 
 
 const Stufe: NextPage<Props> = ({ data }) => {
   const group = useMemo(() => parseGroup(data.group), [data.group])
-  const [members, setMembers] = useSsrState<GroupMemberList>(() => data.members.map(({ role, members }) => ({
-    role,
-    members: members.map(parseUser),
-  })))
+  const [members, setMembers] = useSsrState(() => data.members.map(parseUser))
 
   return (
     <Page title={`${group.name}`}>
@@ -60,21 +60,15 @@ const Stufe: NextPage<Props> = ({ data }) => {
         <UiTitle level={2}>
           Leitungsteam
         </UiTitle>
-        {members.map(({ role, members }, usersI) => (
-          <UserCardList key={role.name}>
-            {members.map((member, userI) => (
-              <UserCard key={member.id} user={member} role={role} onChange={(user) => setMembers((users) => {
-                users = [...users]
-                users[usersI] = {
-                  ...users[usersI],
-                  members: [...users[usersI].members],
-                }
-                users[usersI].members[userI] = user
-                return [...users]
-              })} />
-            ))}
-          </UserCardList>
-        ))}
+        <UserCardList>
+          {members.map((member, i) => (
+            <UserCard key={member.id} user={member} role={member.roles.find((role) => role.groupId === group.id)} onChange={(member) => setMembers((members) => {
+              members = [...members]
+              members[i] = member
+              return members
+            })} />
+          ))}
+        </UserCardList>
       </section>
     </Page>
   )

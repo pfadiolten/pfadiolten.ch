@@ -1,9 +1,11 @@
 import Id from '@/models/base/Id'
 import Model from '@/models/base/Model'
 import UploadedImage, { parseUploadedImage } from '@/models/base/UploadedImage'
+import { Role } from '@/models/Group'
 
 export default interface User extends UserData {
   name: string
+  roles: Role[]
 }
 
 /**
