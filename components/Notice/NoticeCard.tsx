@@ -77,6 +77,10 @@ const NoticeCard: React.FC<Props> = ({ notice, allGroups, onEdit: pushEdit }) =>
       <Description>
         <UiRichText value={notice.description} />
       </Description>
+      <Divider />
+      <a href={`mailto:${notice.authorId}@pfadiolten.ch`}>
+        Abmelden bei
+      </a>
     </Box>
   )
 }

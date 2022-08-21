@@ -1,5 +1,5 @@
 import SessionUser from '@/models/SessionUser'
-import { CreateRepo, DeleteRepo, FindRepo, ListRepo, ReadRepo, UpdateRepo } from '@/repos/Repo'
+import { CreateRepo, DeleteRepo, FindRepo, ListRepo, UpdateRepo } from '@/repos/Repo'
 
 export class BasePolicy<_T> {
   constructor(protected readonly user: SessionUser | null) {

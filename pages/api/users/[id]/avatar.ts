@@ -1,9 +1,9 @@
 import Id from '@/models/base/Id'
 import { allowedImageTypes } from '@/models/base/UploadedImage'
-import UserData from '@/models/UserData'
-import MemberPolicy from '@/policies/MemberPolicy'
-import MemberRepo from '@/repos/MemberRepo'
+import User from '@/models/User'
+import UserPolicy from '@/policies/UserPolicy'
 import UserDataRepo from '@/repos/UserDataRepo'
+import UserRepo from '@/repos/UserRepo'
 import { ApiError } from '@/services/api/ApiErrorService'
 import ApiService, { ApiRequest } from '@/services/ApiService'
 import FileService from '@/services/FileService'
@@ -16,26 +16,21 @@ import { v4 as uuid } from 'uuid'
 
 export default ApiService.handleREST({
   async get(req, res) {
-    const id = req.query.id as Id<UserData>
+    const id = req.query.id as Id<User>
 
-    const userData = await UserDataRepo.find(id)
-    if (userData === null || userData.avatar === null) {
+    const user = await UserRepo.find(id)
+    if (user === null || user.avatar === null) {
       return ApiService.Error.notFound()
     }
 
-    const member = await MemberRepo.find(id)
-    if (member === null) {
-      return ApiService.Error.notFound()
-    }
-
-    const policy = ApiService.policy(req, MemberPolicy)
-    ApiService.allowIf(policy.canRead(member))
+    const policy = ApiService.policy(req, UserPolicy)
+    ApiService.allowIf(policy.canRead(user))
 
     const fileStream = await AvatarFileService.read(id)
-    const fileExt = mime.extension(userData.avatar.mimeType)
+    const fileExt = mime.extension(user.avatar.mimeType)
     res.writeHead(200, {
-      'Content-Type': userData.avatar.mimeType,
-      'Content-Disposition': `inline; filename="${member.name}.${fileExt}"`,
+      'Content-Type': user.avatar.mimeType,
+      'Content-Disposition': `inline; filename="${user.name}.${fileExt}"`,
     })
     fileStream.pipe(res)
   },
@@ -46,23 +41,17 @@ export default ApiService.handleREST({
       throw new ApiError(415, 'expected \'multipart/form-data\' content')
     }
 
-    const id = req.query.id as Id<UserData>
+    const id = req.query.id as Id<User>
     const file = await parseFile(req)
 
-    const userData = await UserDataRepo.find(id)
-    if (userData === null) {
+    const user = await UserRepo.find(id)
+    if (user === null) {
       await fs.rm(file.filepath)
       return ApiService.Error.notFound()
     }
 
-    const member = await MemberRepo.find(id)
-    if (member === null) {
-      await fs.rm(file.filepath)
-      return ApiService.Error.notFound()
-    }
-
-    const policy = ApiService.policy(req, MemberPolicy)
-    ApiService.allowIf(policy.canEdit(member))
+    const policy = ApiService.policy(req, UserPolicy)
+    ApiService.allowIf(policy.canEdit(user))
 
     const fileProbe = await probe(createReadStream(file.filepath))
     if (!allowedImageTypes.includes(fileProbe.mime)) {
@@ -79,7 +68,6 @@ export default ApiService.handleREST({
     const fileData = await fs.readFile(file.filepath)
     await AvatarFileService.save(id, fileData)
     const updatedUserData = await UserDataRepo.update(id, {
-      ...userData,
       avatar: {
         path: `/api/users/${id}/avatar?c=${uuid()}`,
         mimeType: fileProbe.mime,
@@ -93,28 +81,23 @@ export default ApiService.handleREST({
     if (updatedUserData === null) {
       throw new Error(`failed to update UserData for ${id}`)
     }
-    res.status(200).json(updatedUserData)
+    res.status(200).json(updatedUserData.avatar)
   },
 
 
   async delete(req, res) {
-    const id = req.query.id as Id<UserData>
+    const id = req.query.id as Id<User>
 
-    const userData = await UserDataRepo.find(id)
-    if (userData === null || userData.avatar === null) {
-      return ApiService.Error.notFound()
-    }
-    const member = await MemberRepo.find(id)
-    if (member === null) {
+    const user = await UserRepo.find(id)
+    if (user === null) {
       return ApiService.Error.notFound()
     }
 
-    const policy = ApiService.policy(req, MemberPolicy)
-    ApiService.allowIf(policy.canEdit(member))
+    const policy = ApiService.policy(req, UserPolicy)
+    ApiService.allowIf(policy.canEdit(user))
 
     await AvatarFileService.delete(id)
     await UserDataRepo.update(id, {
-      ...userData,
       avatar: null,
     })
     res.status(201).end()

@@ -1,9 +1,9 @@
-import MemberCard from '@/components/Member/MemberCard'
-import MemberCardList from '@/components/Member/MemberCardList'
 import Page from '@/components/Page/Page'
 import UiClientOnly from '@/components/Ui/UiClientOnly'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiTitle from '@/components/Ui/UiTitle'
+import UserCard from '@/components/User/UserCard'
+import UserCardList from '@/components/User/UserCardList'
 import useSsrState from '@/hooks/useSsrState'
 import { Role } from '@/models/Group'
 import { Contact, ContactInfo } from '@/pages/api/contact'
@@ -16,7 +16,6 @@ import styled from 'styled-components'
 interface Props {
   contactInfo: ContactInfo
 }
-
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const [contactInfo, contactInfoError] = await FetchService.get<ContactInfo>('contact')
@@ -41,7 +40,7 @@ const Kontakt: NextPage<Props> = ({ contactInfo }) => {
       <ContactList>
         {als.map((contact, i) => (
           <ContactCard
-            key={contact.member.id}
+            key={contact.user.id}
             contact={contact}
             role={{ name: 'Abteilungsleitung' }}
             onChange={(contact) => setAls((als) => {
@@ -66,23 +65,23 @@ interface ContactCardProps {
 
 const ContactCard: React.FC<ContactCardProps> = ({ contact, role, onChange: pushChange }) => {
   return (
-    <MemberCard
-      key={contact.member.id}
-      member={contact.member}
+    <UserCard
+      key={contact.user.id}
+      user={contact.user}
       title={(
         <React.Fragment>
-          {contact.firstName} {contact.lastName} v/o {contact.member.name}
+          {contact.firstName} {contact.lastName} v/o {contact.user.name}
         </React.Fragment>
       )}
       role={role}
-      onChange={(member) => pushChange({ ...contact, member })}
+      onChange={(user) => pushChange({ ...contact, user })}
     >
       <UiClientOnly>{() => (
         <React.Fragment>
           <ContactDetail>
             <UiIcon name="email" />
-            <a href={`mailto:${contact.member.name.toLowerCase()}@pfadiolten.ch`}>
-              {contact.member.name.toLowerCase()}@pfadiolten.ch
+            <a href={`mailto:${contact.user.name.toLowerCase()}@pfadiolten.ch`}>
+              {contact.user.name.toLowerCase()}@pfadiolten.ch
             </a>
           </ContactDetail>
           {contact.phoneNumber !== null && (
@@ -93,11 +92,11 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, role, onChange: push
           )}
         </React.Fragment>
       )}</UiClientOnly>
-    </MemberCard>
+    </UserCard>
   )
 }
 
-const ContactList = styled(MemberCardList)`
+const ContactList = styled(UserCardList)`
   ${theme.media.md.min} {
     display: flex;
     flex-wrap: wrap;

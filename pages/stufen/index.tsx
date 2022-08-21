@@ -1,4 +1,5 @@
 import Page from '@/components/Page/Page'
+import UiTitle from '@/components/Ui/UiTitle'
 import Group, { parseGroup } from '@/models/Group'
 import FetchService from '@/services/FetchService'
 import { GetServerSideProps, NextPage } from 'next'
@@ -29,6 +30,9 @@ const Stufen: NextPage<Props> = ({ data }) => {
   const groups = useMemo(() => data.groups.map(parseGroup), [data.groups])
   return (
     <Page title="unsere Stufen">
+      <UiTitle level={1}>
+        unsere Stufen
+      </UiTitle>
       <ul>
         {groups.map((group) => (
           <li key={group.id}>

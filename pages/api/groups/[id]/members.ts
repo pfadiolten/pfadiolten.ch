@@ -1,15 +1,15 @@
 import { GroupId, Role } from '@/models/Group'
-import Member from '@/models/Member'
-import MemberPolicy from '@/policies/MemberPolicy'
+import User from '@/models/User'
+import UserPolicy from '@/policies/UserPolicy'
 import { ApiError } from '@/services/api/ApiErrorService'
 import ApiService, { ApiResponse } from '@/services/ApiService'
-import MemberService from '@/services/MemberService'
+import UserService from '@/services/UserService'
 import { createKeyedInMemoryCache } from '@/utils/InMemoryCache'
 import { MidataPeopleResponse } from 'midata'
 
 export type GroupMemberList = Array<{
   role: Role
-  members: Member[]
+  members: User[]
 }>
 
 export default ApiService.handleREST({
@@ -20,7 +20,7 @@ export default ApiService.handleREST({
       throw new ApiError(404, 'Not Found')
     }
 
-    const policy = ApiService.policy(req, MemberPolicy)
+    const policy = ApiService.policy(req, UserPolicy)
     ApiService.allowIf(policy.canList())
 
     const result = await memberListCache.resolve(id, async () => {
@@ -30,7 +30,7 @@ export default ApiService.handleREST({
 
       // We only want to list the members that have certain roles (ex. Stufenleiter).
       // To filter by role, we need the id of these roles as they stored inside of MiData.
-      // The next step is map each of the members returned by MiData to our own representation, the `Member` model.
+      // The next step is map each of the members returned by MiData to our own representation, the `User` model.
       // This is not all that difficult, if MiData would return the roles of a person in a usable format, which it of course does not.
       //
       // MiData returns the roles of each member in the form of an array of ids of the member's respective roles.
@@ -89,14 +89,14 @@ export default ApiService.handleREST({
           if (role === null) {
             throw new Error(`person ${midataPerson.id} does not own a known role`)
           }
-          return [role, await MemberService.mapFromMidata(midataPerson)] as const
+          return [role, await UserService.mapFromMidata(midataPerson)] as const
         }))
       )
         .sort(([roleA, a], [roleB, b]) => {
           if (roleA[1] !== roleB[1]) {
             return roleA[1] - roleB[1]
           }
-          return MemberService.compare(a, b)
+          return UserService.compare(a, b)
         })
         .reduce((result, [[roleConfig], member]) => {
           const members = result.find((entry) => entry.role === roleConfig.role)?.members

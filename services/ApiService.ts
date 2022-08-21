@@ -3,8 +3,12 @@ import SessionUser from '@/models/SessionUser'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import {
   BasePolicy,
-  CreatePolicy,
-  InferPolicy, isCreatePolicy, isDeletePolicy, isListPolicy, isReadPolicy, isEditPolicy,
+  InferPolicy,
+  isCreatePolicy,
+  isDeletePolicy,
+  isEditPolicy,
+  isListPolicy,
+  isReadPolicy,
   ListPolicy,
   PolicyConstructor,
   ReadPolicy,
@@ -26,7 +30,7 @@ import {
 import ApiErrorService, { ApiError } from '@/services/api/ApiErrorService'
 import ApiParamService from '@/services/api/ApiParamService'
 import { run } from '@/utils/control-flow'
-import { identity, noop } from '@/utils/fns'
+import { identity } from '@/utils/fns'
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { unstable_getServerSession } from 'next-auth'
 

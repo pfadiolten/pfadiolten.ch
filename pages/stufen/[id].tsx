@@ -1,10 +1,10 @@
-import MemberCard from '@/components/Member/MemberCard'
-import MemberCardList from '@/components/Member/MemberCardList'
 import Page from '@/components/Page/Page'
 import UiTitle from '@/components/Ui/UiTitle'
+import UserCard from '@/components/User/UserCard'
+import UserCardList from '@/components/User/UserCardList'
 import useSsrState from '@/hooks/useSsrState'
 import Group, { GroupId, parseGroup } from '@/models/Group'
-import { parseMember } from '@/models/Member'
+import { parseUser } from '@/models/User'
 import { GroupMemberList } from '@/pages/api/groups/[id]/members'
 import FetchService from '@/services/FetchService'
 import { GetServerSideProps, NextPage } from 'next'
@@ -48,7 +48,7 @@ const Stufe: NextPage<Props> = ({ data }) => {
   const group = useMemo(() => parseGroup(data.group), [data.group])
   const [members, setMembers] = useSsrState<GroupMemberList>(() => data.members.map(({ role, members }) => ({
     role,
-    members: members.map(parseMember),
+    members: members.map(parseUser),
   })))
 
   return (
@@ -60,20 +60,20 @@ const Stufe: NextPage<Props> = ({ data }) => {
         <UiTitle level={2}>
           Leitungsteam
         </UiTitle>
-        {members.map(({ role, members }, membersI) => (
-          <MemberCardList key={role.name}>
-            {members.map((member, memberI) => (
-              <MemberCard key={member.id} member={member} role={role} onChange={(member) => setMembers((members) => {
-                members = [...members]
-                members[membersI] = {
-                  ...members[membersI],
-                  members: [...members[membersI].members],
+        {members.map(({ role, members }, usersI) => (
+          <UserCardList key={role.name}>
+            {members.map((member, userI) => (
+              <UserCard key={member.id} user={member} role={role} onChange={(user) => setMembers((users) => {
+                users = [...users]
+                users[usersI] = {
+                  ...users[usersI],
+                  members: [...users[usersI].members],
                 }
-                members[membersI].members[memberI] = member
-                return [...members]
+                users[usersI].members[userI] = user
+                return [...users]
               })} />
             ))}
-          </MemberCardList>
+          </UserCardList>
         ))}
       </section>
     </Page>
