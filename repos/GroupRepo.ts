@@ -1,8 +1,7 @@
 /* eslint-disable array-bracket-spacing */
 import Id from '@/models/base/Id'
-import Group, { GroupId } from '@/models/Group'
+import Group from '@/models/Group'
 import { ListOptions, ReadRepo } from '@/repos/Repo'
-import { defaultTheme } from '@/theme'
 
 class GroupRepo implements ReadRepo<Group> {
   find(id: Id<Group>): Promise<Group | null> {

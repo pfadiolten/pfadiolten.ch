@@ -1,5 +1,6 @@
 import { GroupId, Role } from '@/models/Group'
 import Member from '@/models/Member'
+import MemberPolicy from '@/policies/MemberPolicy'
 import { ApiError } from '@/services/api/ApiErrorService'
 import ApiService, { ApiResponse } from '@/services/ApiService'
 import MemberService from '@/services/MemberService'
@@ -18,6 +19,9 @@ export default ApiService.handleREST({
     if (midataGroupConfig === undefined) {
       throw new ApiError(404, 'Not Found')
     }
+
+    const policy = ApiService.policy(req, MemberPolicy)
+    ApiService.allowIf(policy.canList())
 
     const result = await memberListCache.resolve(id, async () => {
       const roleFilter = midataGroupConfig.roles.map((role) => role.id).join('-')

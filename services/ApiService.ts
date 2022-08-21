@@ -1,7 +1,15 @@
 import Model from '@/models/base/Model'
 import SessionUser from '@/models/SessionUser'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
-import { BasePolicy, PolicyConstructor } from '@/policies/Policy'
+import {
+  BasePolicy,
+  CreatePolicy,
+  InferPolicy, isCreatePolicy, isDeletePolicy, isListPolicy, isReadPolicy, isEditPolicy,
+  ListPolicy,
+  PolicyConstructor,
+  ReadPolicy,
+  WritePolicy,
+} from '@/policies/Policy'
 import {
   CreateRepo,
   DeleteRepo,
@@ -27,6 +35,10 @@ class ApiService {
     return ApiParamService
   }
 
+  get Error() {
+    return ApiErrorService
+  }
+
   handle<I, O>(parse: Parser<I>, handle: Handle<I, O>): NextApiHandler
   handle<I, O>(handle: Handle<I, O>): NextApiHandler
   handle<I, O>(parseOrHandle: Parser<I> | Handle<I, O>, handleOrUndefined?: Handle<I, O>): NextApiHandler {
@@ -39,6 +51,7 @@ class ApiService {
       const session = await unstable_getServerSession(req, res, authOptions)
       const serviceReq: ApiRequest = Object.assign(req, {
         user: (session?.user ?? null) as SessionUser | null,
+        isAuthorized: false,
       })
       const data = req.body == null ? null : run(() => {
         if (typeof req.body === 'object' && Object.keys(req.body).length === 0) {
@@ -49,21 +62,30 @@ class ApiService {
         }
         return parse(req.body)
       })
+
+      if (process.env.NODE_ENV === 'development') {
+        const base = res.end
+        res.end = function <A extends unknown[]>(...args: A) {
+          if (!serviceReq.isAuthorized) {
+            res.end = base
+            throw new Error(`request for ${req.method} ${req.url} has not been authorized`)
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return base.apply(this, args as any)
+        }
+      }
       return handle(serviceReq, res, data as I)
     })
   }
 
-  handleResource<T extends Model>(repo: Repo<T>, options: ResourceOptions<T>): NextApiHandler {
+  handleResource<T extends Model, R extends Repo<T>>(repo: R, options: ResourceOptions<T, R>): NextApiHandler {
     const listRepo:   ListRepo<T>   | null = isListRepo(repo)   ? repo : null
     const findRepo:   FindRepo<T>   | null = isFindRepo(repo)   ? repo : null
     const createRepo: CreateRepo<T> | null = isCreateRepo(repo) ? repo : null
     const updateRepo: UpdateRepo<T> | null = isUpdateRepo(repo) ? repo : null
     const deleteRepo: DeleteRepo<T> | null = isDeleteRepo(repo) ? repo : null
 
-    const {
-      parse,
-      allowAnonymousMutations = false,
-    } = options
+    const { parse } = options
 
     const allowedPluralMethods = run(() => {
       const methods = [] as string[]
@@ -89,13 +111,8 @@ class ApiService {
       return methods
     })
 
-    const performSessionCheck: (req: ApiRequest) => void = allowAnonymousMutations ? noop : async (req) => {
-      if (req.user === null) {
-        throw new ApiError(401, 'not authenticated')
-      }
-    }
-
     return this.handle(parse, async (req, res, data: T | null) => {
+      const policy = this.policy(req, options.policy as PolicyConstructor<BasePolicy<T>>) as unknown as ListPolicy<T> & ReadPolicy<T> & WritePolicy<T>
       const id = this.Params.getString(req, 'id')
       if (id === null) {
         switch (req.method) {
@@ -106,6 +123,7 @@ class ApiService {
             if (limit !== null) {
               limit = Math.max(0, limit)
             }
+            this.allowIf(policy.canList())
             const records = await (options.list ? options.list(req, { limit }) : (
               listRepo.list({ limit: limit ?? undefined })
             ))
@@ -116,10 +134,10 @@ class ApiService {
         case 'POST':
           // endpoint: POST '/'
           if (createRepo) {
-            performSessionCheck(req)
             if (data === null) {
               throw new ApiError(400, 'create data missing')
             }
+            this.allowIf(policy.canCreate())
             const record = await createRepo.create(data)
             res.status(201).json(record)
             return
@@ -134,22 +152,27 @@ class ApiService {
           if (findRepo !== null) {
             const record = await findRepo.find(id)
             if (record === null) {
-              throw new ApiError(404, 'not found')
+              return this.Error.notFound()
             }
+            this.allowIf(policy.canRead(record))
             res.status(200).json(record)
             return
           }
           break
         case 'PUT':
           // endpoint: PUT '/{id}'
-          if (updateRepo) {
-            performSessionCheck(req)
+          if (findRepo && updateRepo) {
             if (data === null) {
               throw new ApiError(400, 'update data missing')
             }
+            const existingRecord = await findRepo.find(id)
+            if (existingRecord === null) {
+              return this.Error.notFound()
+            }
+            this.allowIf(policy.canEdit(existingRecord))
             const record = await updateRepo.update(id, data)
             if (record === null) {
-              throw new ApiError(404, 'not found')
+              return this.Error.notFound()
             }
             res.status(200).json(record)
             return
@@ -157,11 +180,15 @@ class ApiService {
           break
         case 'DELETE':
           // endpoint: DELETE '/{id}'
-          if (deleteRepo) {
-            performSessionCheck(req)
+          if (findRepo && deleteRepo) {
+            const existingRecord = await findRepo.find(id)
+            if (existingRecord === null) {
+              throw new ApiError(404, 'not found')
+            }
+            this.allowIf(policy.canDelete(existingRecord))
             const ok = await deleteRepo.delete(id)
             if (!ok) {
-              throw new ApiError(404, 'not found')
+              return this.Error.notFound()
             }
             res.status(204).end()
             return
@@ -200,14 +227,54 @@ class ApiService {
     })
   }
 
-  policy<P>(req: ApiRequest, policy: PolicyConstructor<P>): P {
-    return new policy(req.user)
+  policy<T, P extends BasePolicy<T>>(req: ApiRequest, policyClass: PolicyConstructor<P>): P {
+    const policy = new policyClass(req.user)
+    if (process.env.NODE_ENV === 'development') {
+      const markAuthorized = <B, A extends unknown[]>(base: (this: B, ...args: A) => boolean) => function (this: B, ...args: A): boolean {
+        req.isAuthorized = true
+        return base.apply(this, args)
+      }
+      if (isListPolicy(policy)) {
+        policy.canList = markAuthorized(policy.canList)
+      }
+      if (isReadPolicy(policy)) {
+        policy.canRead = markAuthorized(policy.canRead)
+      }
+      if (isCreatePolicy(policy)) {
+        policy.canCreate = markAuthorized(policy.canCreate)
+      }
+      if (isEditPolicy(policy)) {
+        policy.canEdit = markAuthorized(policy.canEdit)
+      }
+      if (isDeletePolicy(policy)) {
+        policy.canDelete = markAuthorized(policy.canDelete)
+      }
+    }
+    return policy
+  }
+
+  allowIf(isPermitted: boolean) {
+    if (!isPermitted) {
+      throw new ApiError(403, 'Forbidden')
+    }
+  }
+
+  skipAuthorization(req: ApiRequest) {
+    req.isAuthorized = true
   }
 }
 export default new ApiService()
 
 export type ApiRequest = NextApiRequest & {
   user: SessionUser | null
+
+  /**
+   * Shows whether the current API handler has performed authorization.
+   *
+   * This is mainly used in development to ensure that the handler does not forget to authorize its response data.
+   * In other environments, this field is not guaranteed to be correctly updated.
+   */
+  isAuthorized: boolean
 }
 
 export type ApiResponse<T> = NextApiResponse<T>
@@ -216,9 +283,9 @@ export interface ListParams {
   limit: number | null
 }
 
-interface ResourceOptions<T> {
+interface ResourceOptions<T, R> {
   parse: Parser<T>
-  allowAnonymousMutations?: boolean
+  policy: PolicyConstructor<InferPolicy<R>>
   list?: (req: ApiRequest, params: ListParams) => Promise<T[]>
 }
 

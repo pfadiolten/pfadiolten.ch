@@ -11,12 +11,16 @@ class ApiErrorService {
         }
         if (e instanceof Error) {
           console.error('[Internal Server Error]', e.stack ?? e)
-        } else {
-          console.error('[Internal Server Error]', e)
+          return res.status(500).json({ error: `Internal Server ${e}` })
         }
+        console.error('[Internal Server Error]', e)
         return res.status(500).json({ error: `Internal Server Error: ${e}` })
       }
     }
+  }
+
+  notFound(): never {
+    throw new ApiError(404, 'Not Found')
   }
 }
 export default new ApiErrorService()
