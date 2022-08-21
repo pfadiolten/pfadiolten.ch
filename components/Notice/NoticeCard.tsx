@@ -8,6 +8,7 @@ import Group from '@/models/Group'
 import Notice from '@/models/Notice'
 import { Color } from '@/theme'
 import theme, { createColorAccess } from '@/theme-utils'
+import Link from 'next/link'
 import React, { useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -40,9 +41,11 @@ const NoticeCard: React.FC<Props> = ({ notice, allGroups, onEdit: pushEdit }) =>
       </TitleRow>
       <GroupRow>
         {groups.map((group) => (
-          <GroupName key={group.id} groupColor={group.color}>
-            {group.shortName}
-          </GroupName>
+          <Link key={group.id} href={`/stufen/${group.id}`} passHref>
+            <GroupName groupColor={group.color}>
+              {group.shortName}
+            </GroupName>
+          </Link>
         ))}
       </GroupRow>
       <Divider />
@@ -113,8 +116,10 @@ const GroupRow = styled.div`
   gap: ${theme.spacing(1)};
   margin-block: ${theme.spacing(0.75)};
 `
-const GroupName = styled.span<{ groupColor: Color }>`
+const GroupName = styled.a<{ groupColor: Color }>`
   padding: ${theme.spacing(0.25)} ${theme.spacing(0.5)};
+  text-decoration: none;
+  
   ${({ groupColor }) => {
     const color = createColorAccess(groupColor)
     return css`
@@ -122,6 +127,12 @@ const GroupName = styled.span<{ groupColor: Color }>`
       background-color: ${color};
     `
   }}
+  
+  transition: ${theme.transitions.fade};
+  transition-property: filter;
+  :hover {
+    filter: brightness(0.75);
+  }
 `
 const InfoBox = styled.div`
 `
