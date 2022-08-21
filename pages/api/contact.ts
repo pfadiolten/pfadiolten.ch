@@ -18,6 +18,7 @@ export interface Contact {
 
 export default ApiService.handleREST({
   async get(req, res: ApiResponse<ContactInfo>) {
+    ApiService.skipAuthorization(req)
     return res.status(200).json(await cache.resolve(async () => ({
       als: await fetchALs(),
       president: await fetchPresident(),
