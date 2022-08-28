@@ -9,21 +9,28 @@ import Group from '@/models/Group'
 import Notice from '@/models/Notice'
 import theme from '@/theme-utils'
 import Link from 'next/link'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
 interface Props {
   notice: Notice
   allGroups: Group[]
   onEdit: (notice: Notice) => void
+  onDelete: (notice: Notice) => void
 }
 
-const NoticeCard: React.FC<Props> = ({ notice, allGroups, onEdit: pushEdit }) => {
+const NoticeCard: React.FC<Props> = ({ notice, allGroups, onEdit: pushEdit, onDelete: pushDelete }) => {
   const groups = useMemo(() => (
     allGroups.filter((group) => notice.groupIds.includes(group.id))
   ), [allGroups, notice.groupIds])
 
   const user = useUser()
+
+  const handleDelete = useCallback(() => {
+    if (confirm(`Willst du die Aktivität "${notice.title}" wirklich löschen?`)) {
+      pushDelete(notice)
+    }
+  }, [notice, pushDelete])
 
   return (
     <Box>
@@ -42,6 +49,9 @@ const NoticeCard: React.FC<Props> = ({ notice, allGroups, onEdit: pushEdit }) =>
               <UiDropdown.Menu label="Mehr zu dieser Aktivität">
                 <UiDropdown.Item onClick={() => pushEdit(notice)}>
                   Bearbeiten
+                </UiDropdown.Item>
+                <UiDropdown.Item onClick={handleDelete}>
+                  Löschen
                 </UiDropdown.Item>
               </UiDropdown.Menu>
             </UiDropdown>

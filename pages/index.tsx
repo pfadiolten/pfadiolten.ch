@@ -15,7 +15,7 @@ import FetchService from '@/services/FetchService'
 import theme from '@/theme-utils'
 import { GetServerSideProps, NextPage } from 'next'
 import Image from 'next/image'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -52,6 +52,19 @@ const Home: NextPage<Props> = ({ data }) => {
   const groups = useMemo(() => data.groups.map(parseGroup), [data.groups])
 
   const user = useUser()
+
+  const deleteNotice = useCallback(async (notice: Notice) => {
+    const error = await FetchService.delete(`notices/${notice.id}`)
+    if (error !== null) {
+      throw error
+    }
+    setNotices((notices) => {
+      notices = [...notices]
+      notices.splice(notices.indexOf(notice), 1)
+      return notices
+    })
+  }, [setNotices])
+
   return (
     <Page title="Home" noBackground>
       <Background>
@@ -88,6 +101,7 @@ const Home: NextPage<Props> = ({ data }) => {
               notice={notice}
               allGroups={groups}
               onEdit={setEditNotice}
+              onDelete={deleteNotice}
             />
           ))}
           {user !== null && (
