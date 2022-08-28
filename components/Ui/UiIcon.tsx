@@ -8,7 +8,7 @@ import {
   faCheck,
   faChevronDown,
   faClock,
-  faEdit,
+  faEdit, faEllipsis,
   faFan,
   faItalic,
   faListOl,
@@ -31,7 +31,7 @@ interface Props extends StyleProps {
   isSpinner?: boolean
 }
 
-const UiIcon: React.VFC<Props> = ({
+const UiIcon: React.FC<Props> = ({
   name,
   size = 1,
   isSpinner = false,
@@ -90,6 +90,7 @@ const icons = {
   logoGithub: faGithub,
   spinner: faFan,
   location: faLocationDot,
+  more: faEllipsis,
 }
 
 export type UiIconName = keyof typeof icons

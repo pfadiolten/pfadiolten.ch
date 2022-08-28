@@ -1,4 +1,5 @@
 import UiActionButton from '@/components/Ui/Button/UiActionButton'
+import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
 import UiDate from '@/components/Ui/UiDate'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiRichText from '@/components/Ui/UiRichText'
@@ -6,11 +7,10 @@ import UiTitle from '@/components/Ui/UiTitle'
 import useUser from '@/hooks/useUser'
 import Group from '@/models/Group'
 import Notice from '@/models/Notice'
-import { Color } from '@/theme'
-import theme, { createColorAccess } from '@/theme-utils'
+import theme from '@/theme-utils'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 interface Props {
   notice: Notice
@@ -33,16 +33,25 @@ const NoticeCard: React.FC<Props> = ({ notice, allGroups, onEdit: pushEdit }) =>
         </UiTitle>
         {user !== null && (
           <ActionButtons>
-            <UiActionButton title="Bearbeiten" onClick={() => pushEdit(notice)}>
-              <UiIcon name="recordEdit" />
-            </UiActionButton>
+            <UiDropdown>
+              <UiDropdown.Activator>{({ toggle }) => (
+                <UiActionButton title="Mehr" color="secondary" onClick={toggle}>
+                  <UiIcon name="more" />
+                </UiActionButton>
+              )}</UiDropdown.Activator>
+              <UiDropdown.Menu label="Mehr zu dieser Aktivität">
+                <UiDropdown.Item onClick={() => pushEdit(notice)}>
+                  Bearbeiten
+                </UiDropdown.Item>
+              </UiDropdown.Menu>
+            </UiDropdown>
           </ActionButtons>
         )}
       </TitleRow>
       <GroupRow>
         {groups.map((group) => (
           <Link key={group.id} href={`/stufen/${group.id}`} passHref>
-            <GroupName groupColor={group.color}>
+            <GroupName>
               {group.shortName}
             </GroupName>
           </Link>
@@ -108,6 +117,7 @@ const TitleRow = styled.div`
   gap: ${theme.spacing(2)};
 `
 const ActionButtons = styled.div`
+  position: relative;
   flex: 0 0 auto;
   display: flex;
   align-items: center;
@@ -120,17 +130,11 @@ const GroupRow = styled.div`
   gap: ${theme.spacing(1)};
   margin-block: ${theme.spacing(0.75)};
 `
-const GroupName = styled.a<{ groupColor: Color }>`
+const GroupName = styled.a`
   padding: ${theme.spacing(0.25)} ${theme.spacing(0.5)};
   text-decoration: none;
-  
-  ${({ groupColor }) => {
-    const color = createColorAccess(groupColor)
-    return css`
-      color: ${color.contrast};
-      background-color: ${color};
-    `
-  }}
+  color: ${theme.colors.primary.contrast};
+  background-color: ${theme.colors.primary};
   
   transition: ${theme.transitions.fade};
   transition-property: filter;
