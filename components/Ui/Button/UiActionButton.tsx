@@ -1,7 +1,5 @@
 import UiButton from '@/components/Ui/Button/UiButton'
-import UiIcon from '@/components/Ui/UiIcon'
 import styled from 'styled-components'
-
 
 const UiActionButton = styled(UiButton)`
   position: relative;
@@ -12,10 +10,5 @@ const UiActionButton = styled(UiButton)`
   justify-content: center;
   align-items: center;
   padding: 0;
-  
-  ${UiIcon} {
-    width: 12px;
-    height: 12px;
-  }
 `
 export default UiActionButton
