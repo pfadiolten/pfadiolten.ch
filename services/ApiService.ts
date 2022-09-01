@@ -33,6 +33,7 @@ import { run } from '@/utils/control-flow'
 import { identity } from '@/utils/fns'
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { unstable_getServerSession } from 'next-auth'
+import * as superjson from 'superjson'
 
 class ApiService {
   get Params() {
@@ -58,14 +59,18 @@ class ApiService {
         isAuthorized: false,
       })
       const data = req.body == null ? null : run(() => {
-        if (typeof req.body === 'object' && Object.keys(req.body).length === 0) {
-          return null
+        if (typeof req.body === 'object') {
+          if (Object.keys(req.body).length === 0) {
+            return null
+          }
+          return superjson.deserialize(req.body)
         }
         if (typeof req.body === 'string' && req.body.length === 0) {
           return null
         }
         return parse(req.body)
       })
+      req.body = data
 
       if (process.env.NODE_ENV === 'development') {
         const base = res.end
@@ -77,6 +82,10 @@ class ApiService {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return base.apply(this, args as any)
         }
+      }
+      const jsonBase = res.json
+      res.json = (data, ...args) => {
+        return jsonBase(superjson.serialize(data), ...args)
       }
       return handle(serviceReq, res, data as I)
     })

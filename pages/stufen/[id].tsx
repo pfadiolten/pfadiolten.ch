@@ -2,19 +2,16 @@ import Page from '@/components/Page/Page'
 import UiTitle from '@/components/Ui/UiTitle'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
-import useSsrState from '@/hooks/useSsrState'
-import Group, { parseGroup, UnitId } from '@/models/Group'
-import User, { parseUser } from '@/models/User'
+import Group, { UnitId } from '@/models/Group'
+import User from '@/models/User'
 import GroupRepo from '@/repos/GroupRepo'
 import UserRepo from '@/repos/UserRepo'
 import { GetServerSideProps, NextPage } from 'next'
-import React, { useMemo } from 'react'
+import React, { useState } from 'react'
 
 interface Props {
-  data: {
-    group: Group
-    members: User[]
-  }
+  group: Group
+  members: User[]
 }
 
 type Query = {
@@ -37,18 +34,14 @@ export const getServerSideProps: GetServerSideProps<Props, Query> = async (ctx) 
   }
   return {
     props: {
-      data: {
-        group,
-        members,
-      },
+      group,
+      members,
     },
   }
 }
 
-const Stufe: NextPage<Props> = ({ data }) => {
-  const group = useMemo(() => parseGroup(data.group), [data.group])
-  const [members, setMembers] = useSsrState(() => data.members.map(parseUser))
-
+const Stufe: NextPage<Props> = ({ group, members: initialMembers }) => {
+  const [members, setMembers] = useState(initialMembers)
   return (
     <Page title={`${group.name}`}>
       <UiTitle level={1}>

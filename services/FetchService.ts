@@ -1,4 +1,5 @@
 import { run } from '@/utils/control-flow'
+import * as superjson from 'superjson'
 
 class FetchService {
   get<T>(path: string, options: Options = {}): Promise<FetchResponse<T>> {
@@ -48,7 +49,7 @@ class FetchService {
     const url = path.startsWith('/') ? `${host}${path}` : `${host}/${path}`
     const res = await fetch(url, {
       method: options.method,
-      body: isFormData(options.body) ? options.body : JSON.stringify(options.body),
+      body: isFormData(options.body) ? options.body : superjson.stringify(options.body),
       mode: 'same-origin',
       headers: run(() => {
         const headers: Record<string, string> = {}
@@ -70,7 +71,7 @@ class FetchService {
       return [null as unknown as T, error]
     }
     if (res.headers.get('content-type')?.startsWith('application/json')) {
-      const value: T = await res.json()
+      const value = superjson.deserialize<T>(await res.json())
       return [value, null]
     }
     return [null as unknown as T, null]

@@ -6,10 +6,9 @@ import UiButton from '@/components/Ui/Button/UiButton'
 import UiDrawer from '@/components/Ui/UiDrawer'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiTitle from '@/components/Ui/UiTitle'
-import useSsrState from '@/hooks/useSsrState'
 import useUser from '@/hooks/useUser'
-import Group, { parseGroup } from '@/models/Group'
-import Notice, { parseNotice } from '@/models/Notice'
+import Group from '@/models/Group'
+import Notice from '@/models/Notice'
 import logo from '@/public/logo/pfadi_olten-textless.svg'
 import GroupRepo from '@/repos/GroupRepo'
 import NoticeRepo from '@/repos/NoticeRepo'
@@ -17,14 +16,12 @@ import FetchService from '@/services/FetchService'
 import theme from '@/theme-utils'
 import { GetServerSideProps, NextPage } from 'next'
 import Image from 'next/image'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {
-  data: {
-    notices: Notice[]
-    groups: Group[]
-  }
+  notices: Notice[]
+  groups: Group[]
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
@@ -32,20 +29,17 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const groups = await GroupRepo.list()
   return {
     props: {
-      data: {
-        notices,
-        groups,
-      },
+      notices,
+      groups,
     },
   }
 }
 
-const Home: NextPage<Props> = ({ data }) => {
+const Home: NextPage<Props> = ({ notices: initialNotices, groups }) => {
   const [isNoticeCreationOpen, setNoticeCreationOpen] = useState(false)
   const [editNotice, setEditNotice] = useState(null as Notice | null)
 
-  const [notices, setNotices] = useSsrState(() => data.notices.map(parseNotice))
-  const groups = useMemo(() => data.groups.map(parseGroup), [data.groups])
+  const [notices, setNotices] = useState(initialNotices)
 
   const user = useUser()
 

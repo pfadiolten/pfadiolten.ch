@@ -1,31 +1,24 @@
 import Page from '@/components/Page/Page'
 import UiTitle from '@/components/Ui/UiTitle'
-import Group, { GroupType, parseGroup } from '@/models/Group'
+import Group, { GroupType } from '@/models/Group'
 import GroupRepo from '@/repos/GroupRepo'
 import { GetServerSideProps, NextPage } from 'next'
 import Link from 'next/link'
-import { useMemo } from 'react'
 
 interface Props {
-  data: {
-    groups: Group[]
-  }
+  groups: Group[]
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const groups = await GroupRepo.list({ type: GroupType.UNIT })
   return {
     props: {
-      data: {
-        groups,
-        date: new Date()
-      },
+      groups,
     },
   }
 }
 
-const Stufen: NextPage<Props> = ({ data }) => {
-  const groups = useMemo(() => data.groups.map(parseGroup), [data.groups])
+const Stufen: NextPage<Props> = ({ groups }) => {
   return (
     <Page title="unsere Stufen">
       <UiTitle level={1}>
