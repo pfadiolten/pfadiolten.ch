@@ -5,5 +5,5 @@ export default withAuth({
     authorized() {
       return true
     },
-  }
+  },
 })

@@ -11,6 +11,8 @@ import useUser from '@/hooks/useUser'
 import Group, { parseGroup } from '@/models/Group'
 import Notice, { parseNotice } from '@/models/Notice'
 import logo from '@/public/logo/pfadi_olten-textless.svg'
+import GroupRepo from '@/repos/GroupRepo'
+import NoticeRepo from '@/repos/NoticeRepo'
 import FetchService from '@/services/FetchService'
 import theme from '@/theme-utils'
 import { GetServerSideProps, NextPage } from 'next'
@@ -26,14 +28,8 @@ interface Props {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const [notices, noticesError] = await FetchService.get<Notice[]>('notices')
-  if (noticesError !== null) {
-    throw noticesError
-  }
-  const [groups, groupsError] = await FetchService.get<Group[]>('groups')
-  if (groupsError !== null) {
-    throw groupsError
-  }
+  const notices = await NoticeRepo.list()
+  const groups = await GroupRepo.list()
   return {
     props: {
       data: {

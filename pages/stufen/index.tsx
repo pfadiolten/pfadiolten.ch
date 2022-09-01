@@ -1,7 +1,7 @@
 import Page from '@/components/Page/Page'
 import UiTitle from '@/components/Ui/UiTitle'
 import Group, { parseGroup } from '@/models/Group'
-import FetchService from '@/services/FetchService'
+import GroupRepo from '@/repos/GroupRepo'
 import { GetServerSideProps, NextPage } from 'next'
 import Link from 'next/link'
 import { useMemo } from 'react'
@@ -13,10 +13,7 @@ interface Props {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const [groups, groupsError] = await FetchService.get<Group[]>('groups')
-  if (groupsError !== null) {
-    throw groupsError
-  }
+  const groups = await GroupRepo.list()
   return {
     props: {
       data: {

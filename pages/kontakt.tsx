@@ -6,9 +6,11 @@ import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
 import useSsrState from '@/hooks/useSsrState'
 import { CommitteeId, GroupId } from '@/models/Group'
-import { Contact, ContactInfo } from '@/pages/api/contact'
-import FetchService from '@/services/FetchService'
+import User from '@/models/User'
+import { compareUsers, mapUserFromMidata } from '@/repos/UserRepo'
 import theme from '@/theme-utils'
+import { createInMemoryCache } from '@/utils/InMemoryCache'
+import { MidataPeopleResponse, MidataPerson } from 'midata'
 import { GetServerSideProps, NextPage } from 'next'
 import React from 'react'
 import styled from 'styled-components'
@@ -17,17 +19,31 @@ interface Props {
   contactInfo: ContactInfo
 }
 
+interface ContactInfo {
+  als: Contact[]
+  president: Contact
+}
+
+interface Contact {
+  user: User
+  firstName: string
+  lastName: string
+  phoneNumber: string | null
+}
+
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const [contactInfo, contactInfoError] = await FetchService.get<ContactInfo>('contact')
-  if (contactInfoError !== null) {
-    throw contactInfoError
-  }
+  const contactInfo = await cache.resolve(async () => ({
+    als: await fetchALs(),
+    president: await fetchPresident(),
+  }))
   return {
     props: {
       contactInfo,
     },
   }
 }
+
+const cache = createInMemoryCache<ContactInfo>(86_400_000) // 1d
 
 const Kontakt: NextPage<Props> = ({ contactInfo }) => {
   const [als, setAls] = useSsrState(contactInfo.als)
@@ -112,3 +128,31 @@ const ContactDetail = styled.div`
     margin-right: ${theme.spacing(1)};
   }
 `
+
+const fetchALs = async (): Promise<Contact[]> => {
+  const midataResponse = await fetch(`https://db.scout.ch/de/groups/5993/people.json?token=${process.env.MIDATA_ACCESS_TOKEN}&range=deep`)
+  const data: MidataPeopleResponse = await midataResponse.json()
+  return (await Promise.all(data.people.map((midataPerson) => mapMidataPersonToContact(midataPerson, data))))
+  .sort((a, b) => compareUsers(a.user, b.user))
+}
+
+const fetchPresident = async (): Promise<Contact> => {
+  const midataResponse = await fetch(`https://db.scout.ch/de/groups/5395/people.json?token=${process.env.MIDATA_ACCESS_TOKEN}&filters[role][role_type_ids]=39&range=deep`)
+  const data: MidataPeopleResponse = await midataResponse.json()
+  if (data.people.length === 0) {
+    throw new Error('president not found in MiData')
+  }
+  return mapMidataPersonToContact(data.people[0], data)
+}
+
+const mapMidataPersonToContact = async (midataPerson: MidataPerson, data: MidataPeopleResponse): Promise<Contact> => {
+  const phoneNumber = data.linked.phone_numbers?.find((midataPhoneNumber) => (
+    midataPhoneNumber.public && midataPhoneNumber.label === 'Mobil' && midataPerson.links.phone_numbers?.includes(midataPhoneNumber.id)
+  ))
+  return {
+    user: await mapUserFromMidata(midataPerson, data),
+    firstName: midataPerson.first_name,
+    lastName: midataPerson.last_name,
+    phoneNumber: phoneNumber?.number ?? null,
+  }
+}

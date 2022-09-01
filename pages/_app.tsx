@@ -9,6 +9,7 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { defaultTheme } from '@/theme'
 import 'reset-css/reset.css'
 
+
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <SessionProvider session={pageProps.session} refetchInterval={0}>
