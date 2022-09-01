@@ -68,6 +68,19 @@ const Kontakt: NextPage<Props> = ({ contactInfo }) => {
         ))}
         <ContactCard contact={president} group={CommitteeId.VORSTAND} onChange={setPresident} />
       </ContactList>
+
+      <section>
+        <UiTitle level={2}>
+          Bankverbindung
+        </UiTitle>
+        <p>
+          Raiffeisenbank Olten, 4603 Olten
+          <br />
+          CH22 8080 8008 5506 3235 2
+          <br />
+          Pfadi Olten, 4600 Olten
+        </p>
+      </section>
     </Page>
   )
 }
