@@ -1,9 +1,17 @@
 import Model from '@/models/base/Model'
 
-export default interface Group extends Model {
-  id: GroupId
+export default interface Group<TType extends GroupType = GroupType> extends Model {
+  id:
+    TType extends GroupType.UNIT
+      ? UnitId
+      :
+    TType extends GroupType.COMMITTEE
+      ? CommitteeId
+      :
+    'als'
   name: string
-  shortName: string
+  shortName: string | null
+  type: TType
 }
 
 export const parseGroup = (data: Group) => data
@@ -23,6 +31,12 @@ export enum UnitId {
 
 export enum CommitteeId {
   VORSTAND = 'vorstand',
+}
+
+export enum GroupType {
+  UNIT,
+  COMMITTEE,
+  OTHER,
 }
 
 export interface Role {

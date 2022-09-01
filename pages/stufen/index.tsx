@@ -1,6 +1,6 @@
 import Page from '@/components/Page/Page'
 import UiTitle from '@/components/Ui/UiTitle'
-import Group, { parseGroup } from '@/models/Group'
+import Group, { GroupType, parseGroup } from '@/models/Group'
 import GroupRepo from '@/repos/GroupRepo'
 import { GetServerSideProps, NextPage } from 'next'
 import Link from 'next/link'
@@ -13,11 +13,12 @@ interface Props {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const groups = await GroupRepo.list()
+  const groups = await GroupRepo.list({ type: GroupType.UNIT })
   return {
     props: {
       data: {
         groups,
+        date: new Date()
       },
     },
   }

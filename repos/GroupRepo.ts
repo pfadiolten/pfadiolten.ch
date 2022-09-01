@@ -1,63 +1,87 @@
 /* eslint-disable array-bracket-spacing */
 import Id from '@/models/base/Id'
-import Group from '@/models/Group'
+import Group, { CommitteeId, GroupType, UnitId } from '@/models/Group'
 import { ListOptions, ReadRepo } from '@/repos/Repo'
+import { run } from '@/utils/control-flow'
 
 class GroupRepo implements ReadRepo<Group> {
   find(id: Id<Group>): Promise<Group | null> {
-    return Promise.resolve(groups.find((it) => it.id === id.toLowerCase()) ?? null)
+    return Promise.resolve(allGroups.find((it) => it.id === id.toLowerCase()) ?? null)
   }
 
-  list(options?: ListOptions<Group>): Promise<Group[]> {
+  list(options?: ListGroupOptions): Promise<Group[]> {
+    const groups = run(() => {
+      switch (options?.type) {
+      case GroupType.UNIT:
+        return units
+      case GroupType.COMMITTEE:
+        return committees
+      case GroupType.OTHER:
+        return [als]
+      case undefined:
+        return allGroups
+      }
+    })
     return Promise.resolve(groups.slice(0, options?.limit ?? groups.length))
   }
 }
 export default new GroupRepo()
 
-const groups: Group[] = [
+export interface ListGroupOptions extends ListOptions<Group> {
+  type?: GroupType
+}
+
+const units: Group<GroupType.UNIT>[] = [
   {
-    id: 'biber',
+    id: UnitId.BIBER,
     name: 'Biberstufe',
     shortName: 'Biber',
-    color: {
-      value:    [255, 193,   7],
-      contrast: [ 56,  54,  89],
-    },
+    type: GroupType.UNIT,
   },
   {
-    id: 'woelfli',
+    id: UnitId.WOELFLI,
     name: 'Wolfsstufe',
     shortName: 'Wölfe',
-    color: {
-      value:    [  0, 130, 165],
-      contrast: [220, 215, 209],
-    },
+    type: GroupType.UNIT,
   },
   {
-    id: 'pfadis',
+    id: UnitId.PFADIS,
     name: 'Pfadistufe',
     shortName: 'Pfadis',
-    color: {
-      value:    [115,  98,  91],
-      contrast: [220, 215, 209],
-    },
+    type: GroupType.UNIT,
   },
   {
-    id: 'pios',
+    id: UnitId.PIOS,
     name: 'Piostufe',
     shortName: 'Pios',
-    color: {
-      value:    [215,  46,  23],
-      contrast: [220, 215, 209],
-    },
+    type: GroupType.UNIT,
   },
   {
-    id: 'rover',
+    id: UnitId.ROVER,
     name: 'Roverstufe',
     shortName: 'Rover',
-    color: {
-      value:    [ 10,  93,  65],
-      contrast: [220, 215, 209],
-    },
+    type: GroupType.UNIT,
   },
+]
+
+const committees: Group<GroupType.COMMITTEE>[] = [
+  {
+    id: CommitteeId.VORSTAND,
+    name: 'Vorstand',
+    shortName: null,
+    type: GroupType.COMMITTEE,
+  },
+]
+
+const als: Group<GroupType.OTHER> = {
+  id: 'als',
+  name: 'Abteilungsleitung',
+  shortName: 'ALs',
+  type: GroupType.OTHER,
+}
+
+const allGroups = [
+  ...units,
+  ...committees,
+  als,
 ]
