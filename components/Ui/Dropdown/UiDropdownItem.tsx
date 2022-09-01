@@ -1,6 +1,6 @@
 import UiDropdownContext from '@/components/Ui/Dropdown/UiDropdownContext'
 import theme from '@/theme-utils'
-import React, { ReactNode, useCallback, useContext, useState } from 'react'
+import React, { ReactNode, useCallback, useContext } from 'react'
 import styled from 'styled-components'
 
 interface Props {
