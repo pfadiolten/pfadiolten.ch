@@ -54,6 +54,9 @@ class UserRepo implements ReadRepo<User> {
   async listGroup(groupId: GroupId): Promise<User[] | null> {
     return groupUserListCache.resolve(groupId, async () => {
       const groupConfig = midataGroupConfigs[groupId]
+      if (groupConfig.roles.length === 0) {
+        return []
+      }
       const roleFilter = groupConfig.roles.map((role) => role.id).join('-')
       const users = await fetchUsersFromMidata(`https://db.scout.ch/de/groups/${groupConfig.id}/people.json?token=${process.env.MIDATA_ACCESS_TOKEN}&filters[role][role_type_ids]=${roleFilter}&range=deep`)
       if (users === null) {

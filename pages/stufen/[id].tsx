@@ -53,11 +53,16 @@ const Stufe: NextPage<Props> = ({ group, members: initialMembers }) => {
         </UiTitle>
         <UserCardList>
           {members.map((member, i) => (
-            <UserCard key={member.id} user={member} role={member.roles.find((role) => role.groupId === group.id)} onChange={(member) => setMembers((members) => {
-              members = [...members]
-              members[i] = member
-              return members
-            })} />
+            <UserCard
+              key={member.id}
+              user={member}
+              group={group.id}
+              onChange={(member) => setMembers((members) => {
+                members = [...members]
+                members[i] = member
+                return members
+              })}
+            />
           ))}
         </UserCardList>
       </section>

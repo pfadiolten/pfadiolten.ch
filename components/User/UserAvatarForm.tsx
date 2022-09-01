@@ -2,7 +2,7 @@ import UiIcon from '@/components/Ui/UiIcon'
 import UiSubmit from '@/components/Ui/UiSubmit'
 import UserCard from '@/components/User/UserCard'
 import UploadedImage, { allowedImageTypes } from '@/models/base/UploadedImage'
-import { Role } from '@/models/Group'
+import { GroupId } from '@/models/Group'
 import User from '@/models/User'
 import FetchService from '@/services/FetchService'
 import theme from '@/theme-utils'
@@ -12,14 +12,14 @@ import styled, { css } from 'styled-components'
 
 interface Props {
   user: User
-  role?: Role | null
+  group?: GroupId | null
   onChange: (user: User) => void
   onClose: () => void
 }
 
 const UserAvatarForm: React.FC<Props> = ({
   user,
-  role,
+  group,
   onChange: pushChange,
   onClose: pushClose,
 }) => {
@@ -131,7 +131,7 @@ const UserAvatarForm: React.FC<Props> = ({
           <UserCard
             user={user}
             avatar={avatarImage}
-            role={role}
+            group={group ?? undefined}
             onResetAvatar={avatarImage === null && user.avatar !== null ? handleResetAvatar : undefined}
             onRemoveAvatar={avatarImage !== null ? handleRemoveAvatar : undefined}
           />

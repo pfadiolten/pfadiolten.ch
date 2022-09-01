@@ -18,7 +18,6 @@ interface Props {
   group?: GroupId,
   title?: ReactNode
   avatar?: UploadedImage | null
-  role?: Role | null
   onChange?: (user: User) => void
   onRemoveAvatar?: () => void
   onResetAvatar?: () => void
@@ -30,7 +29,6 @@ const UserCard: React.FC<Props> = ({
   group = null,
   avatar,
   title = null,
-  role = null,
   onChange: pushChange,
   onRemoveAvatar: pushRemoveAvatar,
   onResetAvatar: pushResetAvatar,
@@ -120,7 +118,6 @@ const UserCard: React.FC<Props> = ({
             </UiTitle>
             <UserAvatarForm
               user={user}
-              role={role}
               onChange={pushChange}
               onClose={() => setIsAvatarFormVisible(false)}
             />
