@@ -16,12 +16,6 @@ export default interface Notice extends Model {
   authorId: Id<SessionUser>
 }
 
-export const parseNotice = (data: Notice): Notice => ({
-  ...data,
-  startsAt: new Date(data.startsAt),
-  endsAt: new Date(data.endsAt),
-})
-
 export const validateNotice = createValidator<ModelData<Notice>>({
   title: [
     validate.notBlank(),

@@ -133,7 +133,7 @@ const fetchALs = async (): Promise<Contact[]> => {
   const midataResponse = await fetch(`https://db.scout.ch/de/groups/5993/people.json?token=${process.env.MIDATA_ACCESS_TOKEN}&range=deep`)
   const data: MidataPeopleResponse = await midataResponse.json()
   return (await Promise.all(data.people.map((midataPerson) => mapMidataPersonToContact(midataPerson, data))))
-  .sort((a, b) => compareUsers(a.user, b.user))
+    .sort((a, b) => compareUsers(a.user, b.user))
 }
 
 const fetchPresident = async (): Promise<Contact> => {

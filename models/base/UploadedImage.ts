@@ -6,8 +6,6 @@ export default interface UploadedImage {
   dimensions: Dimensions
 }
 
-export const parseUploadedImage = (data: UploadedImage): UploadedImage => data
-
 export const allowedImageTypes = [
   'image/jpeg',
   'image/png',

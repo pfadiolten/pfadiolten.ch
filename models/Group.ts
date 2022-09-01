@@ -14,8 +14,6 @@ export default interface Group<TType extends GroupType = GroupType> extends Mode
   type: TType
 }
 
-export const parseGroup = (data: Group) => data
-
 export type GroupId =
   | 'als'
   | UnitId

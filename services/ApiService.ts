@@ -98,8 +98,6 @@ class ApiService {
     const updateRepo: UpdateRepo<T> | null = isUpdateRepo(repo) ? repo : null
     const deleteRepo: DeleteRepo<T> | null = isDeleteRepo(repo) ? repo : null
 
-    const { parse } = options
-
     const allowedPluralMethods = run(() => {
       const methods = [] as string[]
       if (listRepo !== null) {
@@ -124,7 +122,7 @@ class ApiService {
       return methods
     })
 
-    return this.handle(parse, async (req, res, data: T | null) => {
+    return this.handle(async (req, res, data: T | null) => {
       const policy = this.policy(req, options.policy as PolicyConstructor<BasePolicy<T>>) as unknown as ListPolicy<T> & ReadPolicy<T> & WritePolicy<T>
       const id = this.Params.getString(req, 'id')
       if (id === null) {
@@ -297,7 +295,6 @@ export interface ListParams {
 }
 
 interface ResourceOptions<T, R> {
-  parse: Parser<T>
   policy: PolicyConstructor<InferPolicy<R>>
   list?: (req: ApiRequest, params: ListParams) => Promise<T[]>
 }
