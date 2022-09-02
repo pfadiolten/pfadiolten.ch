@@ -10,6 +10,7 @@ const nextConfig = {
       'policies',
       'repos',
       'services',
+      'store',
       'typings',
       'utils',
     ],

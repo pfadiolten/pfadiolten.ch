@@ -7,10 +7,9 @@ import UiSubmit from '@/components/Ui/UiSubmit'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import { ModelData } from '@/models/base/Model'
 import { emptyRichText } from '@/models/base/RichText'
-import Group from '@/models/Group'
+import { allGroups } from '@/models/Group'
 import Notice, { validateNotice } from '@/models/Notice'
 import FetchService from '@/services/FetchService'
-import { selectGroup, selectGroups } from '@/store/groups/groups.slice'
 import { useAppSelector } from '@/store/hooks'
 import { selectUsers } from '@/store/users/users.slice'
 import { noop } from '@/utils/fns'
@@ -57,7 +56,6 @@ const NoticeForm: React.FC<Props> = ({
   useCancel(form, pushClose)
 
   const users = useAppSelector(selectUsers)
-  const groups = useAppSelector(selectGroups)
 
   return (
     <Form state={form}>
@@ -68,7 +66,7 @@ const NoticeForm: React.FC<Props> = ({
         <UiSelectInput
           {...inputProps}
           label="Stufen"
-          options={groups}
+          options={allGroups}
           optionValue={({ id }) => id}
           optionName={({ name }) => name}
           hasMultiple

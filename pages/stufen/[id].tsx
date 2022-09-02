@@ -2,9 +2,8 @@ import Page from '@/components/Page/Page'
 import UiTitle from '@/components/Ui/UiTitle'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
-import Group, { UnitId } from '@/models/Group'
+import Group, { allUnits, UnitId } from '@/models/Group'
 import User from '@/models/User'
-import GroupRepo from '@/repos/GroupRepo'
 import UserRepo from '@/repos/UserRepo'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useState } from 'react'
@@ -19,19 +18,13 @@ type Query = {
 }
 
 export const getServerSideProps: GetServerSideProps<Props, Query> = async (ctx) => {
-  const id = ctx.params!.id
+  const id = ctx.params!.id.toLowerCase() as UnitId
   if (!Object.values(UnitId).includes(id)) {
     return { notFound: true }
   }
 
-  const group = await GroupRepo.find(id)
-  if (group === null) {
-    return { notFound: true }
-  }
-  const members = await UserRepo.listGroup(id)
-  if (members === null) {
-    return { notFound: true }
-  }
+  const group = allUnits.find((group) => group.id === id)!
+  const members = (await UserRepo.listGroup(id))!
   return {
     props: {
       group,

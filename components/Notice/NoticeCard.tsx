@@ -5,8 +5,8 @@ import UiIcon from '@/components/Ui/UiIcon'
 import UiRichText from '@/components/Ui/UiRichText'
 import UiTitle from '@/components/Ui/UiTitle'
 import useCurrentUser from '@/hooks/useCurrentUser'
+import { allGroups } from '@/models/Group'
 import Notice from '@/models/Notice'
-import { selectGroups } from '@/store/groups/groups.slice'
 import { useAppSelector } from '@/store/hooks'
 import { selectUser } from '@/store/users/users.slice'
 import theme from '@/theme-utils'
@@ -23,10 +23,9 @@ interface Props {
 const NoticeCard: React.FC<Props> = ({ notice, onEdit: pushEdit, onDelete: pushDelete }) => {
   const currentUser = useCurrentUser()
 
-  const allGroups = useAppSelector(selectGroups)
   const groups = useMemo(() => (
     allGroups.filter((group) => notice.groupIds.includes(group.id))
-  ), [allGroups, notice.groupIds])
+  ), [notice.groupIds])
 
   const handleDelete = useCallback(() => {
     if (confirm(`Willst du die Aktivität "${notice.title}" wirklich löschen?`)) {
