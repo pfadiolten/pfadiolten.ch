@@ -80,7 +80,7 @@ const als: Group<GroupType.OTHER> = {
   type: GroupType.OTHER,
 }
 
-const allGroups = [
+export const allGroups = [
   ...units,
   ...committees,
   als,

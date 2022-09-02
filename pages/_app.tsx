@@ -8,19 +8,22 @@ import React from 'react'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { defaultTheme } from '@/theme'
 import 'reset-css/reset.css'
-
+import { Provider as ReduxProvider } from 'react-redux'
+import store from '@/store'
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <SessionProvider session={pageProps.session} refetchInterval={0}>
       <ThemeProvider theme={defaultTheme}>
-        <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-        </Head>
-        <GlobalStyle />
-        <PageView>
-          <Component {...pageProps} />
-        </PageView>
+        <ReduxProvider store={store}>
+          <Head>
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+          </Head>
+          <GlobalStyle />
+          <PageView>
+            <Component {...pageProps} />
+          </PageView>
+        </ReduxProvider>
       </ThemeProvider>
     </SessionProvider>
   )

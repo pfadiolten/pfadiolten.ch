@@ -4,9 +4,11 @@ import UiDate from '@/components/Ui/UiDate'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiRichText from '@/components/Ui/UiRichText'
 import UiTitle from '@/components/Ui/UiTitle'
-import useUser from '@/hooks/useUser'
-import Group from '@/models/Group'
+import useCurrentUser from '@/hooks/useCurrentUser'
 import Notice from '@/models/Notice'
+import { selectGroups } from '@/store/groups/groups.slice'
+import { useAppSelector } from '@/store/hooks'
+import { selectUser } from '@/store/users/users.slice'
 import theme from '@/theme-utils'
 import Link from 'next/link'
 import React, { useCallback, useMemo } from 'react'
@@ -14,17 +16,17 @@ import styled from 'styled-components'
 
 interface Props {
   notice: Notice
-  allGroups: Group[]
   onEdit: (notice: Notice) => void
   onDelete: (notice: Notice) => void
 }
 
-const NoticeCard: React.FC<Props> = ({ notice, allGroups, onEdit: pushEdit, onDelete: pushDelete }) => {
+const NoticeCard: React.FC<Props> = ({ notice, onEdit: pushEdit, onDelete: pushDelete }) => {
+  const currentUser = useCurrentUser()
+
+  const allGroups = useAppSelector(selectGroups)
   const groups = useMemo(() => (
     allGroups.filter((group) => notice.groupIds.includes(group.id))
   ), [allGroups, notice.groupIds])
-
-  const user = useUser()
 
   const handleDelete = useCallback(() => {
     if (confirm(`Willst du die Aktivität "${notice.title}" wirklich löschen?`)) {
@@ -32,13 +34,15 @@ const NoticeCard: React.FC<Props> = ({ notice, allGroups, onEdit: pushEdit, onDe
     }
   }, [notice, pushDelete])
 
+  const author = useAppSelector(selectUser(notice.authorId))
+
   return (
     <Box>
       <TitleRow>
         <UiTitle level={4}>
           {notice.title}
         </UiTitle>
-        {user !== null && (
+        {currentUser !== null && (
           <ActionButtons>
             <UiDropdown>
               <UiDropdown.Activator>{({ toggle }) => (
@@ -96,10 +100,14 @@ const NoticeCard: React.FC<Props> = ({ notice, allGroups, onEdit: pushEdit, onDe
       <Description>
         <UiRichText value={notice.description} />
       </Description>
-      <Divider />
-      <a href={`mailto:${notice.authorId}@pfadiolten.ch`}>
-        Abmelden bei
-      </a>
+      {author !== null && (
+        <React.Fragment>
+          <Divider />
+          <a href={`mailto:${author.name.toLocaleLowerCase()}@pfadiolten.ch`}>
+            Abmelden bei {author.name}
+          </a>
+        </React.Fragment>
+      )}
     </Box>
   )
 }

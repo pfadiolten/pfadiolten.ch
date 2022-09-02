@@ -1,6 +1,6 @@
 import PageNavItem from '@/components/Page/Nav/Item/PageNavItem'
 import UiIcon from '@/components/Ui/UiIcon'
-import useUser from '@/hooks/useUser'
+import useCurrentUser from '@/hooks/useCurrentUser'
 import theme from '@/theme-utils'
 import { signIn, signOut } from 'next-auth/react'
 import Image from 'next/image'
@@ -34,7 +34,7 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
   }, [y, noBackground])
 
 
-  const user = useUser()
+  const user = useCurrentUser()
 
   return (
     <Nav ref={navRef} isOpaque={isOpaque}>

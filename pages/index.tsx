@@ -6,13 +6,17 @@ import UiButton from '@/components/Ui/Button/UiButton'
 import UiDrawer from '@/components/Ui/UiDrawer'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiTitle from '@/components/Ui/UiTitle'
-import useUser from '@/hooks/useUser'
-import Group from '@/models/Group'
+import useCurrentUser from '@/hooks/useCurrentUser'
+import useSsrEffect from '@/hooks/useSsrEffect'
 import Notice from '@/models/Notice'
+import User from '@/models/User'
 import logo from '@/public/logo/pfadi_olten-textless.svg'
 import GroupRepo from '@/repos/GroupRepo'
 import NoticeRepo from '@/repos/NoticeRepo'
+import UserRepo from '@/repos/UserRepo'
 import FetchService from '@/services/FetchService'
+import { useAppDispatch } from '@/store/hooks'
+import { saveUsers } from '@/store/users/users.slice'
 import theme from '@/theme-utils'
 import { GetServerSideProps, NextPage } from 'next'
 import Image from 'next/image'
@@ -21,27 +25,32 @@ import styled from 'styled-components'
 
 interface Props {
   notices: Notice[]
-  groups: Group[]
+  users: User[]
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const notices = await NoticeRepo.list()
-  const groups = await GroupRepo.list()
+  const users = await UserRepo.list()
   return {
     props: {
       notices,
-      groups,
+      users,
     },
   }
 }
 
-const Home: NextPage<Props> = ({ notices: initialNotices, groups }) => {
+const Home: NextPage<Props> = ({ notices: initialNotices, users }) => {
+  const dispatch = useAppDispatch()
+  useSsrEffect(() => {
+    dispatch(saveUsers(users))
+  })
+
   const [isNoticeCreationOpen, setNoticeCreationOpen] = useState(false)
   const [editNotice, setEditNotice] = useState(null as Notice | null)
 
   const [notices, setNotices] = useState(initialNotices)
 
-  const user = useUser()
+  const user = useCurrentUser()
 
   const deleteNotice = useCallback(async (notice: Notice) => {
     const error = await FetchService.delete(`notices/${notice.id}`)
@@ -80,16 +89,10 @@ const Home: NextPage<Props> = ({ notices: initialNotices, groups }) => {
         </ContentCard>
 
         <NoticeCardList>
-          {user !== null && (
-            <NoticeCreateButton color="secondary" onClick={() => setNoticeCreationOpen(true)} title="Neue Aktivität erfassen">
-              <UiIcon name="recordAdd" size={1.5} />
-            </NoticeCreateButton>
-          )}
           {notices.map((notice) => (
             <NoticeCard
               key={notice.id}
               notice={notice}
-              allGroups={groups}
               onEdit={setEditNotice}
               onDelete={deleteNotice}
             />
@@ -105,7 +108,6 @@ const Home: NextPage<Props> = ({ notices: initialNotices, groups }) => {
                 </UiTitle>
                 <NoticeForm
                   notice={editNotice}
-                  groups={groups}
                   onSave={(notice) => {
                     setNotices((notices) => {
                       notices = [...notices]
@@ -117,6 +119,11 @@ const Home: NextPage<Props> = ({ notices: initialNotices, groups }) => {
                 />
               </UiDrawer>
             </>
+          )}
+          {user !== null && (
+            <NoticeCreateButton color="secondary" onClick={() => setNoticeCreationOpen(true)} title="Neue Aktivität erfassen">
+              <UiIcon name="recordAdd" size={1.5} />
+            </NoticeCreateButton>
           )}
         </NoticeCardList>
 
@@ -130,7 +137,6 @@ const Home: NextPage<Props> = ({ notices: initialNotices, groups }) => {
                 Neue Aktivität erfassen
               </UiTitle>
               <NoticeForm
-                groups={groups}
                 onSave={(notice) => setNotices((notices) => [...notices, notice])}
                 onClose={() => setNoticeCreationOpen(false)}
               />

@@ -4,12 +4,15 @@ import UiSelectInput from '@/components/Ui/Input/UiSelectInput'
 import UiTextInput from '@/components/Ui/Input/UiTextInput'
 import UiGrid from '@/components/Ui/UiGrid'
 import UiSubmit from '@/components/Ui/UiSubmit'
-import { useRequiredUser } from '@/hooks/useUser'
+import useCurrentUser from '@/hooks/useCurrentUser'
 import { ModelData } from '@/models/base/Model'
 import { emptyRichText } from '@/models/base/RichText'
 import Group from '@/models/Group'
-import Notice, { parseNotice, validateNotice } from '@/models/Notice'
+import Notice, { validateNotice } from '@/models/Notice'
 import FetchService from '@/services/FetchService'
+import { selectGroup, selectGroups } from '@/store/groups/groups.slice'
+import { useAppSelector } from '@/store/hooks'
+import { selectUsers } from '@/store/users/users.slice'
 import { noop } from '@/utils/fns'
 import DateHelper, { Weekday } from '@/utils/helpers/DateHelper'
 import { Form, FormField, useCancel, useForm, useSubmit, useValidate } from '@daniel-va/react-form'
@@ -17,18 +20,16 @@ import React from 'react'
 
 interface Props {
   notice?: Notice | null
-  groups: Group[]
   onSave?: (notice: Notice) => void
   onClose?: () => void
 }
 
 const NoticeForm: React.FC<Props> = ({
   notice = null,
-  groups,
   onSave: pushSave = noop,
   onClose: pushClose = noop,
 }) => {
-  const user = useRequiredUser()
+  const currentUser = useCurrentUser({ required: true })
   const form = useForm<ModelData<Notice>>(notice, () => ({
     title: '',
     description: emptyRichText(),
@@ -37,7 +38,7 @@ const NoticeForm: React.FC<Props> = ({
     endLocation: null,
     startsAt: NEXT_SATURDAY_START,
     endsAt: NEXT_SATURDAY_END,
-    authorId: user.id,
+    authorId: currentUser.id,
   }))
 
   useValidate(form, validateNotice)
@@ -50,10 +51,13 @@ const NoticeForm: React.FC<Props> = ({
     if (error !== null) {
       throw error
     }
-    pushSave(parseNotice(newNotice))
+    pushSave(newNotice)
     pushClose()
   })
   useCancel(form, pushClose)
+
+  const users = useAppSelector(selectUsers)
+  const groups = useAppSelector(selectGroups)
 
   return (
     <Form state={form}>
@@ -65,8 +69,8 @@ const NoticeForm: React.FC<Props> = ({
           {...inputProps}
           label="Stufen"
           options={groups}
-          optionValue={(group) => group.id}
-          optionName={(group) => group.name}
+          optionValue={({ id }) => id}
+          optionName={({ name }) => name}
           hasMultiple
         />
       )}</FormField>
@@ -97,6 +101,15 @@ const NoticeForm: React.FC<Props> = ({
           )}</FormField>
         </UiGrid.Col>
       </UiGrid>
+      <FormField field={form.authorId}>{(inputProps) => (
+        <UiSelectInput
+          {...inputProps}
+          label="Verantwortliche Leitungsperson"
+          options={users}
+          optionValue={({ id }) => id}
+          optionName={({ name }) => name}
+        />
+      )}</FormField>
       <UiSubmit />
     </Form>
   )
