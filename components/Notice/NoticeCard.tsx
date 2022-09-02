@@ -8,6 +8,7 @@ import UiRichText from '@/components/Ui/UiRichText'
 import UiTitle from '@/components/Ui/UiTitle'
 import useBool from '@/hooks/useBool'
 import useCurrentUser from '@/hooks/useCurrentUser'
+import { isEmptyRichText } from '@/models/base/RichText'
 import { allGroups } from '@/models/Group'
 import Notice from '@/models/Notice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
@@ -40,6 +41,7 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
 
   const author = useAppSelector(selectUser(notice.authorId))
 
+  // console.log(notice.description)
   return (
     <Box>
       <TitleRow>
@@ -100,10 +102,14 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
           </span>
         </InfoRow>
       </InfoBox>
-      <Divider />
-      <Description>
-        <UiRichText value={notice.description} />
-      </Description>
+      {!isEmptyRichText(notice.description) && (
+        <React.Fragment>
+          <Divider />
+          <Description>
+            <UiRichText value={notice.description} />
+          </Description>
+        </React.Fragment>
+      )}
       {author !== null && (
         <React.Fragment>
           <Divider />
@@ -112,7 +118,6 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
           </a>
         </React.Fragment>
       )}
-
       {currentUser !== null && (
         <UiDrawer isOpen={isEdit} onClose={setEdit.off}>{({ close }) => (
           <React.Fragment>
