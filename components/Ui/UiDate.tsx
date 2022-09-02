@@ -1,14 +1,15 @@
 import UiClientOnly from '@/components/Ui/UiClientOnly'
 import LocalDate from '@/models/base/LocalDate'
 import { run } from '@/utils/control-flow'
+import { ElementProps } from '@/utils/props'
 import React, { useMemo } from 'react'
 
-interface Props {
+interface Props extends ElementProps<HTMLSpanElement> {
   value: LocalDate | Date
   format: 'date' | 'time' | 'datetime'
 }
 
-const UiDate: React.FC<Props> = ({ value, format }) => {
+const UiDate: React.FC<Props> = ({ value, format, ...props }) => {
   const date = useMemo(() => (
     value instanceof Date
       ? value
@@ -34,7 +35,7 @@ const UiDate: React.FC<Props> = ({ value, format }) => {
       // Timezone differences between server and client may cause hydration errors,
       // so we render the dates only on the client side.
       <UiClientOnly>{() => (
-        <span>
+        <span {...props}>
           {children}
         </span>
       )}</UiClientOnly>

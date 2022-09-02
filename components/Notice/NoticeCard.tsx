@@ -78,7 +78,7 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
         ))}
       </GroupRow>
       <Divider />
-      <InfoBox>
+      <InfoBox aria-label="Zeit und Ort">
         <InfoRow>
           <UiTitle level={5}>
             Beginn
@@ -88,16 +88,16 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
           </UiTitle>
         </InfoRow>
         <InfoRow>
-          <UiDate value={notice.startsAt} format="datetime" />
+          <UiDate value={notice.startsAt} format="datetime" aria-label="Startzeit" />
           <UiIcon name="clock" />
-          <UiDate value={notice.endsAt} format="datetime" />
+          <UiDate value={notice.endsAt} format="datetime" aria-label="Schlusszeit" />
         </InfoRow>
         <InfoRow>
-          <span>
+          <span aria-label="Startort">
             {notice.startLocation}
           </span>
           <UiIcon name="location" />
-          <span>
+          <span aria-label="Schlussort">
             {notice.endLocation ?? notice.startLocation}
           </span>
         </InfoRow>
@@ -105,7 +105,7 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
       {!isEmptyRichText(notice.description) && (
         <React.Fragment>
           <Divider />
-          <Description>
+          <Description aria-label="Beschreibung">
             <UiRichText value={notice.description} />
           </Description>
         </React.Fragment>
