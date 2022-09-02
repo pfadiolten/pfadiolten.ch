@@ -156,6 +156,14 @@ class DateHelper {
     )
     return result
   }
+
+  getToday(date: Date = new Date()): Date {
+    return this.updateTime(date, { hours: 0, min: 0, sec: 0, ms: 0 })
+  }
+
+  getTomorrow(date: Date = new Date()): Date {
+    return this.addDays(this.getToday(date), 1)
+  }
 }
 
 export default new DateHelper()

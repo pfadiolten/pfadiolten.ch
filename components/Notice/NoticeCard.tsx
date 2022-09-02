@@ -1,13 +1,17 @@
+import NoticeForm from '@/components/Notice/NoticeForm'
 import UiActionButton from '@/components/Ui/Button/UiActionButton'
 import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
 import UiDate from '@/components/Ui/UiDate'
+import UiDrawer from '@/components/Ui/UiDrawer'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiRichText from '@/components/Ui/UiRichText'
 import UiTitle from '@/components/Ui/UiTitle'
+import useBool from '@/hooks/useBool'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import { allGroups } from '@/models/Group'
 import Notice from '@/models/Notice'
-import { useAppSelector } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { deleteNotice } from '@/store/notices/notices.slice'
 import { selectUser } from '@/store/users/users.slice'
 import theme from '@/theme-utils'
 import Link from 'next/link'
@@ -16,22 +20,23 @@ import styled from 'styled-components'
 
 interface Props {
   notice: Notice
-  onEdit: (notice: Notice) => void
-  onDelete: (notice: Notice) => void
 }
 
-const NoticeCard: React.FC<Props> = ({ notice, onEdit: pushEdit, onDelete: pushDelete }) => {
+const NoticeCard: React.FC<Props> = ({ notice }) => {
   const currentUser = useCurrentUser()
 
   const groups = useMemo(() => (
     allGroups.filter((group) => notice.groupIds.includes(group.id))
   ), [notice.groupIds])
 
+  const [isEdit, setEdit] = useBool()
+
+  const dispatch = useAppDispatch()
   const handleDelete = useCallback(() => {
     if (confirm(`Willst du die Aktivität "${notice.title}" wirklich löschen?`)) {
-      pushDelete(notice)
+      dispatch(deleteNotice(notice.id))
     }
-  }, [notice, pushDelete])
+  }, [notice, dispatch])
 
   const author = useAppSelector(selectUser(notice.authorId))
 
@@ -50,7 +55,7 @@ const NoticeCard: React.FC<Props> = ({ notice, onEdit: pushEdit, onDelete: pushD
                 </UiActionButton>
               )}</UiDropdown.Activator>
               <UiDropdown.Menu label="Mehr zu dieser Aktivität">
-                <UiDropdown.Item onClick={() => pushEdit(notice)}>
+                <UiDropdown.Item onClick={setEdit.on}>
                   Bearbeiten
                 </UiDropdown.Item>
                 <UiDropdown.Item onClick={handleDelete}>
@@ -106,6 +111,20 @@ const NoticeCard: React.FC<Props> = ({ notice, onEdit: pushEdit, onDelete: pushD
             Abmelden bei {author.name}
           </a>
         </React.Fragment>
+      )}
+
+      {currentUser !== null && (
+        <UiDrawer isOpen={isEdit} onClose={setEdit.off}>{({ close }) => (
+          <React.Fragment>
+            <UiTitle level={2}>
+              Aktivität bearbeiten
+            </UiTitle>
+            <NoticeForm
+              notice={notice}
+              onClose={close}
+            />
+          </React.Fragment>
+        )}</UiDrawer>
       )}
     </Box>
   )

@@ -9,8 +9,8 @@ import { ModelData } from '@/models/base/Model'
 import { emptyRichText } from '@/models/base/RichText'
 import { allGroups } from '@/models/Group'
 import Notice, { validateNotice } from '@/models/Notice'
-import FetchService from '@/services/FetchService'
-import { useAppSelector } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { createNotice, updateNotice } from '@/store/notices/notices.slice'
 import { selectUsers } from '@/store/users/users.slice'
 import { noop } from '@/utils/fns'
 import DateHelper, { Weekday } from '@/utils/helpers/DateHelper'
@@ -19,13 +19,11 @@ import React from 'react'
 
 interface Props {
   notice?: Notice | null
-  onSave?: (notice: Notice) => void
   onClose?: () => void
 }
 
 const NoticeForm: React.FC<Props> = ({
   notice = null,
-  onSave: pushSave = noop,
   onClose: pushClose = noop,
 }) => {
   const currentUser = useCurrentUser({ required: true })
@@ -42,15 +40,12 @@ const NoticeForm: React.FC<Props> = ({
 
   useValidate(form, validateNotice)
 
+  const dispatch = useAppDispatch()
   useSubmit(form, async (data) => {
-    const [newNotice, error] = await (notice === null
-      ? FetchService.post<Notice>('notices', data)
-      : FetchService.put<Notice>(`notices/${notice.id}`, data)
+    await (notice === null
+      ? dispatch(createNotice(data))
+      : dispatch(updateNotice({ id: notice.id, data }))
     )
-    if (error !== null) {
-      throw error
-    }
-    pushSave(newNotice)
     pushClose()
   })
   useCancel(form, pushClose)

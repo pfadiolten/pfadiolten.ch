@@ -76,4 +76,6 @@ const Box = styled.ul<{ isOpen: boolean, color: ColorName }>`
     transition: ${theme.transitions.slideOut};
     transform: translateX(-50%) scaleY(0);
   `}
+  
+  border: 1px solid var(--color);
 `

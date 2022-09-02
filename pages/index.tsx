@@ -13,18 +13,21 @@ import User from '@/models/User'
 import logo from '@/public/logo/pfadi_olten-textless.svg'
 import NoticeRepo from '@/repos/NoticeRepo'
 import UserRepo from '@/repos/UserRepo'
-import FetchService from '@/services/FetchService'
-import { useAppDispatch } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { saveNotices, selectActiveNotices } from '@/store/notices/notices.slice'
 import { saveUsers } from '@/store/users/users.slice'
 import theme from '@/theme-utils'
 import { GetServerSideProps, NextPage } from 'next'
 import Image from 'next/image'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
+import { batch } from 'react-redux'
 import styled from 'styled-components'
 
 interface Props {
-  notices: Notice[]
-  users: User[]
+  data: {
+    notices: Notice[]
+    users: User[]
+  }
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
@@ -32,36 +35,25 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const users = await UserRepo.list()
   return {
     props: {
-      notices,
-      users,
+      data: {
+        notices,
+        users,
+      },
     },
   }
 }
 
-const Home: NextPage<Props> = ({ notices: initialNotices, users }) => {
+const Home: NextPage<Props> = ({ data }) => {
   const dispatch = useAppDispatch()
-  useSsrEffect(() => {
-    dispatch(saveUsers(users))
-  })
+  useSsrEffect(() => batch(() => {
+    dispatch(saveUsers(data.users))
+    dispatch(saveNotices(data.notices))
+  }))
+
+  const currentUser = useCurrentUser()
+  const activeNotices = useAppSelector(selectActiveNotices)
 
   const [isNoticeCreationOpen, setNoticeCreationOpen] = useState(false)
-  const [editNotice, setEditNotice] = useState(null as Notice | null)
-
-  const [notices, setNotices] = useState(initialNotices)
-
-  const user = useCurrentUser()
-
-  const deleteNotice = useCallback(async (notice: Notice) => {
-    const error = await FetchService.delete(`notices/${notice.id}`)
-    if (error !== null) {
-      throw error
-    }
-    setNotices((notices) => {
-      notices = [...notices]
-      notices.splice(notices.indexOf(notice), 1)
-      return notices
-    })
-  }, [setNotices])
 
   return (
     <Page title="Home" noBackground>
@@ -88,45 +80,20 @@ const Home: NextPage<Props> = ({ notices: initialNotices, users }) => {
         </ContentCard>
 
         <NoticeCardList>
-          {notices.map((notice) => (
+          {activeNotices.map((notice) => (
             <NoticeCard
               key={notice.id}
               notice={notice}
-              onEdit={setEditNotice}
-              onDelete={deleteNotice}
             />
           ))}
-          {user !== null && (
-            <>
-              <UiDrawer
-                isOpen={editNotice !== null}
-                onClose={() => { setEditNotice(null) }}
-              >
-                <UiTitle level={2}>
-                  Aktivität bearbeiten
-                </UiTitle>
-                <NoticeForm
-                  notice={editNotice}
-                  onSave={(notice) => {
-                    setNotices((notices) => {
-                      notices = [...notices]
-                      notices[notices.indexOf(editNotice!)!] = notice
-                      return notices
-                    })
-                  }}
-                  onClose={() => setEditNotice(null)}
-                />
-              </UiDrawer>
-            </>
-          )}
-          {user !== null && (
+          {currentUser !== null && (
             <NoticeCreateButton color="secondary" onClick={() => setNoticeCreationOpen(true)} title="Neue Aktivität erfassen">
               <UiIcon name="recordAdd" size={1.5} />
             </NoticeCreateButton>
           )}
         </NoticeCardList>
 
-        {user !== null && (
+        {currentUser !== null && (
           <>
             <UiDrawer
               isOpen={isNoticeCreationOpen}
@@ -135,10 +102,7 @@ const Home: NextPage<Props> = ({ notices: initialNotices, users }) => {
               <UiTitle level={2}>
                 Neue Aktivität erfassen
               </UiTitle>
-              <NoticeForm
-                onSave={(notice) => setNotices((notices) => [...notices, notice])}
-                onClose={() => setNoticeCreationOpen(false)}
-              />
+              <NoticeForm onClose={() => setNoticeCreationOpen(false)} />
             </UiDrawer>
           </>
         )}

@@ -12,14 +12,18 @@ interface Props {
   isOpen: boolean
   size?: Size
   position?: Position
-  children: ReactNode
+  children: ReactNode | ChildrenFn
   onClose: () => void
 }
+
+type ChildrenFn = ((context: { close(): void }) => ReactNode)
 
 const UiDrawer: React.FC<Props> = ({ isOpen, size = 'auto', position = 'left', children, onClose: pushClose }) => {
   const elementRef = useRef<HTMLDivElement | null>(null)
   useClickAway(elementRef, () => {
-    pushClose()
+    if (isOpen) {
+      pushClose()
+    }
   })
 
   const [_isLockedBody, setLockedBody] = useLockedBody()
@@ -45,7 +49,11 @@ const UiDrawer: React.FC<Props> = ({ isOpen, size = 'auto', position = 'left', c
         ReactDOM.createPortal((
           <Box ref={elementRef} role="dialog" isOpen={isOpen} size={size} position={position}>
             <UiContainer>
-              {(isOpen || !isHidden) && children}
+              {(isOpen || !isHidden) && (
+                typeof children === 'function'
+                  ? children({ close: pushClose })
+                  : children
+              )}
             </UiContainer>
           </Box>
         ), document.body)
