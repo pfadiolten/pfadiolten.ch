@@ -1,4 +1,6 @@
 import CalendarEventForm from '@/components/Calendar/Event/CalendarEventForm'
+import GroupLabel from '@/components/Group/GroupLabel'
+import GroupLabelList from '@/components/Group/GroupLabelList'
 import NoticeForm from '@/components/Notice/NoticeForm'
 import UiActionButton from '@/components/Ui/Button/UiActionButton'
 import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
@@ -10,12 +12,13 @@ import useBool from '@/hooks/useBool'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import LocalDate from '@/models/base/LocalDate'
 import CalendarEvent from '@/models/CalendarEvent'
+import { allGroups } from '@/models/Group'
 import { deleteCalendarEvent } from '@/store/calendar/events/calendarEvents.slice'
 import { useAppDispatch } from '@/store/hooks'
 import { deleteNotice } from '@/store/notices/notices.slice'
 import theme from '@/theme-utils'
 import DateHelper from '@/utils/helpers/DateHelper'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -34,6 +37,8 @@ const CalendarEventListItem: React.FC<Props> = ({ event }) => {
       dispatch(deleteCalendarEvent(event.id))
     }
   }, [event, dispatch])
+
+  const groups = useMemo(() => allGroups.filter(({ id }) => event.groupIds.includes(id)), [event.groupIds])
 
   return (
     <Box>
@@ -58,7 +63,7 @@ const CalendarEventListItem: React.FC<Props> = ({ event }) => {
           </React.Fragment>
         )}
       </div>
-      {currentUser !== null && (
+      {currentUser === null ? <div /> : (
         <React.Fragment>
           <UiDropdown>
             <UiDropdown.Activator>{({ toggle }) => (
@@ -85,6 +90,19 @@ const CalendarEventListItem: React.FC<Props> = ({ event }) => {
           )}</UiDrawer>
         </React.Fragment>
       )}
+      <GroupRow>
+        <GroupLabelList>
+          {event.isInternal && (
+            <GroupLabel group="Rover-Event" color="info" />
+          )}
+          {groups.length === 0 && (
+            <GroupLabel group="Alle Stufen" color="info" />
+          )}
+          {groups.map((group) => (
+            <GroupLabel key={group.id} group={group} />
+          ))}
+        </GroupLabelList>
+      </GroupRow>
     </Box>
   )
 }
@@ -92,6 +110,9 @@ export default CalendarEventListItem
 
 const Box = styled.li`
   display: grid;
+  grid-template-areas:
+    "a b c d"
+    "e e e e";
   grid-template-columns: 2fr 1fr 1fr auto;
   
   padding: ${theme.spacing(1)};
@@ -100,4 +121,8 @@ const Box = styled.li`
   :not(:first-child) {
     border-top: none;
   }
+`
+const GroupRow = styled.div`
+  grid-area: e;
+  justify-content: start;
 `

@@ -2,6 +2,7 @@ import Id from '@/models/base/Id'
 import LocalDate from '@/models/base/LocalDate'
 import { ModelData } from '@/models/base/Model'
 import CalendarEvent from '@/models/CalendarEvent'
+import { allGroups, GroupId } from '@/models/Group'
 import FetchService from '@/services/FetchService'
 import { RootState } from '@/store'
 import { run } from '@/utils/control-flow'
@@ -58,10 +59,15 @@ export const calendarEventsSlice = createSlice({
 export const { saveCalendarEvents, saveCalendarEvent } = calendarEventsSlice.actions
 export default calendarEventsSlice.reducer
 
-interface SelectCalendarEventsPayload {
+export interface CalendarEventFetchPayload {
   startsAt?: LocalDate
   endsAt?: LocalDate
 }
+
+export type CalendarEventsFilter =
+  & CalendarEventFetchPayload
+  & { isInternal?: boolean }
+  & { [K in GroupId]?: boolean }
 
 const findInsertionIndex = (state: WritableDraft<CalendarEvent>[], event: CalendarEvent): number => {
   for (let i = state.length - 1; i >= 0; i--) {
@@ -73,22 +79,37 @@ const findInsertionIndex = (state: WritableDraft<CalendarEvent>[], event: Calend
   return 0
 }
 
-export const selectCalendarEvents = ({ startsAt, endsAt }: SelectCalendarEventsPayload = {}) => (state: RootState): CalendarEvent[] => {
-  if (startsAt === undefined && endsAt === undefined) {
-    return state.calendarEvents
-  }
-  console.log('')
-  console.log({ startsAt: startsAt === undefined ? undefined : LocalDate.toDate(startsAt), endsAt: endsAt === undefined ? undefined : LocalDate.toDate(endsAt) })
+export const selectCalendarEvents = (filters: CalendarEventsFilter = {}) => (state: RootState): CalendarEvent[] => {
+  const { startsAt, endsAt } = filters
   return state.calendarEvents.filter((event) => {
+    if (!filters.isInternal && event.isInternal) {
+      return false
+    }
+
     const isStartValid = startsAt === undefined || (event.startsAt >= startsAt && (endsAt === undefined || event.startsAt <= endsAt))
     const isEndValid = endsAt === undefined || (event.endsAt <= endsAt && (startsAt === undefined || event.endsAt >= startsAt))
-    console.log(event.name, { isStartValid, isEndValid })
-    return isStartValid || isEndValid
+    if (!isStartValid || !isEndValid) {
+      return false
+    }
+    if (event.groupIds.length === 0) {
+      return true
+    }
+    let groupFiltersCount = 0
+    for (const group of allGroups) {
+      const groupFilter = filters[group.id]
+      if (groupFilter === true) {
+        groupFiltersCount += 1
+        if (event.groupIds.includes(group.id)) {
+          return true
+        }
+      }
+    }
+    return groupFiltersCount === 0
   })
 }
 
 
-export const fetchCalendarEvents = createAsyncThunk('calendarEvents/fetchCalendarEvents', async (payload: SelectCalendarEventsPayload = {}): Promise<CalendarEvent[] | null> => {
+export const fetchCalendarEvents = createAsyncThunk('calendarEvents/fetchCalendarEvents', async (payload: CalendarEventFetchPayload = {}): Promise<CalendarEvent[] | null> => {
   const rangeKey = `${payload.startsAt}-${payload.endsAt}`
   if (fetchedRanges.has(rangeKey)) {
     return null

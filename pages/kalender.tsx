@@ -2,17 +2,23 @@ import CalendarEventForm from '@/components/Calendar/Event/CalendarEventForm'
 import CalendarEventList from '@/components/Calendar/Event/List/CalendarEventList'
 import Page from '@/components/Page/Page'
 import UiButton from '@/components/Ui/Button/UiButton'
+import UiToggle from '@/components/Ui/Toggle/UiToggle'
 import UiDrawer from '@/components/Ui/UiDrawer'
 import UiIcon from '@/components/Ui/UiIcon'
 import UiTitle from '@/components/Ui/UiTitle'
 import useBool from '@/hooks/useBool'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import LocalDate from '@/models/base/LocalDate'
-import { fetchCalendarEvents, selectCalendarEvents } from '@/store/calendar/events/calendarEvents.slice'
+import { allGroups, GroupId } from '@/models/Group'
+import {
+  CalendarEventFetchPayload,
+  fetchCalendarEvents,
+  selectCalendarEvents,
+} from '@/store/calendar/events/calendarEvents.slice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import theme from '@/theme-utils'
 import { GetServerSideProps, NextPage } from 'next'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSearchParam } from 'react-use'
 import styled from 'styled-components'
 
@@ -41,7 +47,38 @@ const Kalender: NextPage<Props> = ({ ssrYear }) => {
     window.history.pushState({ path: url }, '', url)
   }, [])
 
-  const eventFilter = useMemo(() => {
+  const [filters, setFilters] = useState<Filters>(() => {
+    if (typeof window === 'undefined') {
+      return {}
+    }
+    const params = new URLSearchParams(window.location.search)
+    const filters: Filters = {}
+    if (params.has('filter[isInternal]')) {
+      filters.isInternal = true
+    }
+    for (const group of allGroups) {
+      if (params.has(`filter[${group.id}]`)) {
+        filters[group.id] = true
+      }
+    }
+    return filters
+  })
+  const setFilter = (name: keyof Filters) => (value: boolean) => {
+    setFilters((filters) => ({ ...filters, [name]: value }))
+
+    const params = new URLSearchParams(window.location.search)
+    const paramName = `filter[${name}]`
+    if (value) {
+      params.set(paramName, 'true')
+    } else {
+      params.delete(paramName)
+    }
+    const url = window.location.protocol + '//' + window.location.host + window.location.pathname + '?' + params.toString()
+    window.history.pushState({ path: url }, '', url)
+  }
+
+
+  const fetchPayload: CalendarEventFetchPayload = useMemo(() => {
     const startsAt = LocalDate.from(currentYear, 1, 1)
     const endsAt = LocalDate.from(currentYear + 1, 1, 1) - 1
     return { startsAt, endsAt }
@@ -49,10 +86,10 @@ const Kalender: NextPage<Props> = ({ ssrYear }) => {
 
   const dispatch = useAppDispatch()
   useEffect(() => {
-    dispatch(fetchCalendarEvents(eventFilter))
-  }, [currentYear, dispatch, eventFilter])
+    dispatch(fetchCalendarEvents(fetchPayload))
+  }, [currentYear, dispatch, fetchPayload])
 
-  const events = useAppSelector(selectCalendarEvents(eventFilter))
+  const events = useAppSelector(selectCalendarEvents(filters))
   const [isCreating, setCreating] = useBool()
 
   return (
@@ -84,6 +121,19 @@ const Kalender: NextPage<Props> = ({ ssrYear }) => {
         </YearNav>
       </Heading>
 
+      <Filters>
+        <FilterLabel>
+          <UiToggle value={filters.isInternal ?? false} onChange={setFilter('isInternal')} />
+          Rover-Events
+        </FilterLabel>
+        {allGroups.map((group) => (
+          <FilterLabel key={group.id}>
+            <UiToggle value={filters[group.id] ?? false} onChange={setFilter(group.id)} />
+            {group.shortName ?? group.name}
+          </FilterLabel>
+        ))}
+      </Filters>
+
       {currentUser !== null && (
         <React.Fragment>
           <CreateEventButton color="secondary" onClick={setCreating.on} title="Neues Ereignis erstellen">
@@ -99,11 +149,16 @@ const Kalender: NextPage<Props> = ({ ssrYear }) => {
           )}</UiDrawer>
         </React.Fragment>
       )}
+
       <CalendarEventList events={events} />
     </Page>
   )
 }
 export default Kalender
+
+type Filters =
+  & { isInternal?: boolean }
+  & { [K in GroupId]?: boolean }
 
 const parseYearParam = (param: string | null | undefined, fallback: number): number => {
   const year = Number(param ?? NaN)
@@ -148,4 +203,17 @@ const CreateEventButton = styled(UiButton)`
   width: 100%;
   padding-block: calc(${theme.spacing(1)} - 1px);
   margin-bottom: ${theme.spacing(2)};
+`
+const Filters = styled.div`
+  display: flex;
+  gap: ${theme.spacing(2)};
+  margin-block: ${theme.spacing(1)} ${theme.spacing(2)};
+`
+const FilterLabel = styled.label`
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: ${theme.spacing(1)};
+  font-size: 0.9em;
+  font-weight: bold;
 `

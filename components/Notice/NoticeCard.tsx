@@ -1,3 +1,5 @@
+import GroupLabel from '@/components/Group/GroupLabel'
+import GroupLabelList from '@/components/Group/GroupLabelList'
 import NoticeForm from '@/components/Notice/NoticeForm'
 import UiActionButton from '@/components/Ui/Button/UiActionButton'
 import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
@@ -69,11 +71,7 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
       </TitleRow>
       <GroupRow>
         {groups.map((group) => (
-          <Link key={group.id} href={`/stufen/${group.id}`} passHref>
-            <GroupName>
-              {group.shortName}
-            </GroupName>
-          </Link>
+          <GroupLabel key={group.id} group={group} />
         ))}
       </GroupRow>
       <Divider />
@@ -163,24 +161,9 @@ const ActionButtons = styled.div`
   align-items: center;
   gap: ${theme.spacing(1)};
 `
-const GroupRow = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: ${theme.spacing(1)};
+const GroupRow = styled(GroupLabelList)`
   margin-block: ${theme.spacing(0.75)};
-`
-const GroupName = styled.a`
-  padding: ${theme.spacing(0.25)} ${theme.spacing(0.5)};
-  text-decoration: none;
-  color: ${theme.colors.primary.contrast};
-  background-color: ${theme.colors.primary};
-  
-  transition: ${theme.transitions.fade};
-  transition-property: filter;
-  :hover {
-    filter: brightness(0.75);
-  }
+  justify-content: center;
 `
 const InfoBox = styled.div`
 `
