@@ -1,6 +1,7 @@
 import LocalDate from '@/models/base/LocalDate'
-import Model from '@/models/base/Model'
+import Model, { ModelData } from '@/models/base/Model'
 import { GroupId } from '@/models/Group'
+import { createValidator, validate } from '@daniel-va/validate'
 
 export default interface CalendarEvent extends Model {
   name: string
@@ -10,4 +11,14 @@ export default interface CalendarEvent extends Model {
   isInternal: boolean
 }
 
-
+export const validateCalendarEvent = createValidator<ModelData<CalendarEvent>>({
+  name: [
+    validate.notBlank(),
+  ],
+  startsAt: [],
+  endsAt: [
+    (endsAt, record) => (record.startsAt?.days ?? 0) - (endsAt?.days ?? 0) <= 0 || 'Beginn muss vor Ende liegen',
+  ],
+  groupIds: [],
+  isInternal: [],
+})
