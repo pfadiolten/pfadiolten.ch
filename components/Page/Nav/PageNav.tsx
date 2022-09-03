@@ -56,6 +56,7 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
       <Menu isOpen={isOpen}>
         <Links>
           <PageNavItem name="Stufen" href="/stufen" />
+          <PageNavItem name="Jahresprogramm" href="/kalender" />
           <PageNavItem name="Kontakt" href="/kontakt" />
 
           <MenuOffset>
