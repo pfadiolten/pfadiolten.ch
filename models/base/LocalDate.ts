@@ -27,6 +27,14 @@ export default class LocalDate {
     return new LocalDate(days)
   }
 
+  static fromString(value: string): LocalDate {
+    const parts = value.split('-')
+    if (parts.length !== 3) {
+      throw new Error(`invalid date string: ${value}`)
+    }
+    return LocalDate.from(Number(parts[0]), Number(parts[1]), Number(parts[2]))
+  }
+
   next(): LocalDate {
     return new LocalDate(this.days + 1)
   }

@@ -1,4 +1,5 @@
 import PageView from '@/components/Page/View/PageView'
+import LocalDate from '@/models/base/LocalDate'
 import theme from '@/theme-utils'
 import { localeDE, setLocale as setValidateLocale } from '@daniel-va/validate'
 import { SessionProvider } from 'next-auth/react'
@@ -10,6 +11,7 @@ import { defaultTheme } from '@/theme'
 import 'reset-css/reset.css'
 import { Provider as ReduxProvider } from 'react-redux'
 import store from '@/store'
+import * as superjson from 'superjson'
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -66,3 +68,12 @@ const GlobalStyle = createGlobalStyle`
     color: ${theme.colors.primary};
   }
 `
+
+superjson.registerCustom<LocalDate, string>(
+  {
+    isApplicable: (it): it is LocalDate => it instanceof LocalDate,
+    serialize: (it) => it.toString(),
+    deserialize: LocalDate.fromString,
+  },
+  'LocalDate'
+)
