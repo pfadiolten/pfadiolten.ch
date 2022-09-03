@@ -17,7 +17,7 @@ const UiLocalDateInput: React.FC<Props> = ({
     pushValue(date && LocalDate.fromDate(date))
   }, [pushValue])
 
-  const inputValue = useMemo(() => value?.toString() ?? '', [value])
+  const inputValue = useMemo(() => value === null ? '' : LocalDate.toString(value), [value])
 
   return (
     <UiInputField

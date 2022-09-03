@@ -30,7 +30,7 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
     allGroups.filter((group) => notice.groupIds.includes(group.id))
   ), [notice.groupIds])
 
-  const [isEdit, setEdit] = useBool()
+  const [isEditing, setEditing] = useBool()
 
   const dispatch = useAppDispatch()
   const handleDelete = useCallback(() => {
@@ -41,7 +41,6 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
 
   const author = useAppSelector(selectUser(notice.authorId))
 
-  // console.log(notice.description)
   return (
     <Box>
       <TitleRow>
@@ -57,7 +56,7 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
                 </UiActionButton>
               )}</UiDropdown.Activator>
               <UiDropdown.Menu label="Mehr zu dieser Aktivität">
-                <UiDropdown.Item onClick={setEdit.on}>
+                <UiDropdown.Item onClick={setEditing.on}>
                   Bearbeiten
                 </UiDropdown.Item>
                 <UiDropdown.Item onClick={handleDelete}>
@@ -119,7 +118,7 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
         </React.Fragment>
       )}
       {currentUser !== null && (
-        <UiDrawer isOpen={isEdit} onClose={setEdit.off}>{({ close }) => (
+        <UiDrawer isOpen={isEditing} onClose={setEditing.off}>{({ close }) => (
           <React.Fragment>
             <UiTitle level={2}>
               Aktivität bearbeiten

@@ -87,9 +87,9 @@ const Home: NextPage<Props> = ({ data }) => {
             />
           ))}
           {currentUser !== null && (
-            <NoticeCreateButton color="secondary" onClick={() => setNoticeCreationOpen(true)} title="Neue Aktivität erfassen">
+            <CreateNoticeButton color="secondary" onClick={() => setNoticeCreationOpen(true)} title="Neue Aktivität erfassen">
               <UiIcon name="recordAdd" size={1.5} />
-            </NoticeCreateButton>
+            </CreateNoticeButton>
           )}
         </NoticeCardList>
 
@@ -168,7 +168,7 @@ const MainText = styled.p`
   font-family: ${theme.fonts.serif};
   margin-top: ${theme.spacing(0.5)};
 `
-const NoticeCreateButton = styled(UiButton)`
+const CreateNoticeButton = styled(UiButton)`
   border: 2px solid ${theme.colors.secondary.contrast};
   min-height: ${theme.spacing(24)};
 `

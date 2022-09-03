@@ -17,7 +17,7 @@ export const validateCalendarEvent = createValidator<ModelData<CalendarEvent>>({
   ],
   startsAt: [],
   endsAt: [
-    (endsAt, record) => (record.startsAt?.days ?? 0) - (endsAt?.days ?? 0) <= 0 || 'Beginn muss vor Ende liegen',
+    (endsAt, record) => record.startsAt <= record.endsAt || 'Beginn muss vor Ende liegen',
   ],
   groupIds: [],
   isInternal: [],

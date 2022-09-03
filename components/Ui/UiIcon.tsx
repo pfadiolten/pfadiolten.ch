@@ -6,7 +6,7 @@ import {
   faBars,
   faBold,
   faCheck,
-  faChevronDown,
+  faChevronDown, faChevronLeft, faChevronRight,
   faClock,
   faEdit, faEllipsis,
   faFan,
@@ -90,6 +90,8 @@ const icons = {
   logoGithub: faGithub,
   spinner: faFan,
   location: faLocationDot,
+  slideLeft: faChevronLeft,
+  slideRight: faChevronRight,
   more: faEllipsis,
 }
 

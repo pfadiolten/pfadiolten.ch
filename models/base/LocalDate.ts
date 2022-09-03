@@ -1,82 +1,29 @@
 import StringHelper from '@/utils/helpers/StringHelper'
 
-export default class LocalDate {
-  private constructor(
-    readonly days: number,
-  ) {
-    this.date = new Date(days * MILLIS_PER_DAY)
-  }
+type LocalDate = number
 
-  private readonly date: Date
-
-  static from(year: number, month: number, day: number): LocalDate {
-    const days = Math.floor(Date.UTC(year, month + 1, day) / MILLIS_PER_DAY)
-    return new LocalDate(days)
-  }
-
-  static fromDays(value: number): LocalDate {
-    return new LocalDate(value)
-  }
-
-  static fromDate(value: Date): LocalDate {
+const LocalDate = {
+  from(year: number, month: number, day: number): LocalDate {
+    return Math.floor(Date.UTC(year, month - 1, day) / MILLIS_PER_DAY)
+  },
+  fromDate(value: Date): LocalDate {
     return LocalDate.fromTimestamp(value.getTime())
-  }
-
-  static fromTimestamp(value: number): LocalDate {
-    const days = Math.floor(value / MILLIS_PER_DAY)
-    return new LocalDate(days)
-  }
-
-  static fromString(value: string): LocalDate {
-    const parts = value.split('-')
-    if (parts.length !== 3) {
-      throw new Error(`invalid date string: ${value}`)
-    }
-    return LocalDate.from(Number(parts[0]), Number(parts[1]), Number(parts[2]))
-  }
-
-  next(): LocalDate {
-    return new LocalDate(this.days + 1)
-  }
-
-  compareTo(other: LocalDate): number {
-    return this.days - other.days
-  }
-
-  equals(other: LocalDate): boolean {
-    return this.days === other.days
-  }
-
-  isLessThan(other: LocalDate) {
-    return this.days < other.days
-  }
-
-  isLessThanOrEqualTo(other: LocalDate) {
-    return this.days <= other.days
-  }
-
-  isGreaterThan(other: LocalDate) {
-    return this.days > other.days
-  }
-
-  isGreaterThanOrEqualTo(other: LocalDate) {
-    return this.days >= other.days
-  }
-
-  toDate(): Date {
-    return new Date(this.date)
-  }
-
-  toTimestamp(): number {
-    return this.date.getTime()
-  }
-
-  toString(): string {
-    const year = this.date.getUTCFullYear()
-    const month = this.date.getUTCMonth() + 1
-    const day = this.date.getUTCDate()
+  },
+  fromTimestamp(value: number): LocalDate {
+    return Math.floor(value / MILLIS_PER_DAY)
+  },
+  toDate(date: LocalDate): Date {
+    return new Date(date * MILLIS_PER_DAY)
+  },
+  toString(date: LocalDate): string {
+    const value = LocalDate.toDate(date)
+    const year = value.getUTCFullYear()
+    const month = value.getUTCMonth() + 1
+    const day = value.getUTCDate()
     return `${year}-${StringHelper.pad2Zero(month)}-${StringHelper.pad2Zero(day)}`
-  }
+  },
 }
+
+export default LocalDate
 
 const MILLIS_PER_DAY = 1000 * 60 * 60 * 24

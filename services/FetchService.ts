@@ -34,22 +34,26 @@ class FetchService {
   }
 
   private async fetch<T>(path: string, options: Options & { method: string }): Promise<FetchResponse<T>> {
-    if (options.params) {
-      const params = new URLSearchParams()
-      for (const [key, value] of Object.entries(params)) {
-        if (value === true) {
-          params.set(key, '')
-        } else {
-          params.set(key, `${value}`)
+    const host = 'http://localhost:3000/api'
+    const url = new URL(path.startsWith('/') ? `${host}${path}` : `${host}/${path}`)
+    if (options.params !== undefined) {
+      for (const [key, value] of Object.entries(options.params)) {
+        switch (value) {
+        case undefined:
+        case null:
+          break
+        case true:
+          url.searchParams.set(key, '')
+          break
+        default:
+          url.searchParams.set(key, `${value}`)
         }
       }
     }
 
-    const host = 'http://localhost:3000/api'
-    const url = path.startsWith('/') ? `${host}${path}` : `${host}/${path}`
     const res = await fetch(url, {
       method: options.method,
-      body: isFormData(options.body) ? options.body : superjson.stringify(options.body),
+      body: options.body === undefined ? undefined : isFormData(options.body) ? options.body : superjson.stringify(options.body),
       mode: 'same-origin',
       headers: run(() => {
         const headers: Record<string, string> = {}
@@ -89,7 +93,7 @@ export class FetchError extends Error {
 
 interface Options {
   body?: unknown
-  params?: Record<string, string | number | true>
+  params?: Record<string, string | number | true | undefined | null>
 }
 
 const isFormData = (value: unknown): value is FormData => {

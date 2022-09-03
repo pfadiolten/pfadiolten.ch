@@ -13,6 +13,7 @@ import { useAppDispatch } from '@/store/hooks'
 import theme from '@/theme-utils'
 import { Form, FormField, useCancel, useForm, useSubmit, useValidate } from '@daniel-va/react-form'
 import React from 'react'
+import { useUpdateEffect } from 'react-use'
 import styled from 'styled-components'
 
 interface Props {
@@ -40,10 +41,22 @@ const CalendarEventForm: React.FC<Props> = ({ event = null, onClose: pushClose }
   })
   useCancel(form, pushClose)
 
+  useUpdateEffect(function adaptEndsAtToStartsAt() {
+    if (form.startsAt.value > form.endsAt.value) {
+      form.endsAt.setValue(form.startsAt.value)
+    }
+  }, [form.startsAt.value])
+
+  useUpdateEffect(function adaptStartsAtToEndsAt() {
+    if (form.endsAt.value < form.startsAt.value) {
+      form.startsAt.setValue(form.endsAt.value)
+    }
+  }, [form.endsAt.value])
+
   return (
     <Form state={form}>
       <FormField field={form.name}>{(inputProps) => (
-        <UiTextInput {...inputProps} label="Name" />
+        <UiTextInput {...inputProps} label="Name" hasAutoFocus />
       )}</FormField>
       <UiGrid gap={1}>
         <UiGrid.Col>

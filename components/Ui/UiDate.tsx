@@ -1,46 +1,77 @@
 import UiClientOnly from '@/components/Ui/UiClientOnly'
 import LocalDate from '@/models/base/LocalDate'
 import { run } from '@/utils/control-flow'
+import DateHelper from '@/utils/helpers/DateHelper'
 import { ElementProps } from '@/utils/props'
 import React, { useMemo } from 'react'
 
 interface Props extends ElementProps<HTMLSpanElement> {
   value: LocalDate | Date
-  format: 'date' | 'time' | 'datetime'
+  format: 'date' | { date: DateFormat } | 'time' | 'datetime'
 }
 
-const UiDate: React.FC<Props> = ({ value, format, ...props }) => {
+type DateFormat = { year?: boolean, month?: 'long' | 'short' | boolean }
+
+const UiDate: React.FC<Props> = ({
+  value,
+  format,
+  ...props
+}) => {
   const date = useMemo(() => (
     value instanceof Date
       ? value
-      : value.toDate()
+      : LocalDate.toDate(value)
   ), [value])
-  return useMemo(() => {
-    const day = pad(date.getDate())
-    const month = pad(date.getMonth())
+  const children = useMemo(() => {
     const hours = pad(date.getHours())
     const minutes = pad(date.getMinutes())
 
-    const children = run(() => {
-      switch (format) {
-      case 'date':
-        return `${day}.${month}.${date.getFullYear()}`
-      case 'time':
-        return `${hours}:${minutes}`
-      case 'datetime':
-        return `${day}.${month}.${date.getFullYear()} ${hours}:${minutes}`
+    const [formatName, dateFormat] = typeof format === 'object'
+      ? [Object.keys(format)[0], format.date]
+      : [format, {}]
+
+    const formatDate = () => {
+      const day = pad(date.getDate())
+      const year = dateFormat.year !== false
+        ? date.getFullYear()
+        : null
+      const month = run(() => {
+        switch (dateFormat.month ?? true) {
+        case 'long':
+          return ` ${DateHelper.getNameOfMonth(date)}${year === null ? '' : ` ${year}`}`
+        case 'short':
+          return ` ${DateHelper.getNameOfMonth(date).slice(0, 3)}${year === null ? '' : ` ${year}`}`
+        case true:
+          return `${pad(date.getMonth())}${year === null ? '' : `.${year}`}`
+        case false:
+          return null
+        }
+      })
+      let result = `${day}.`
+      if (month !== null) {
+        result += month
       }
-    })
-    return (
-      // Timezone differences between server and client may cause hydration errors,
-      // so we render the dates only on the client side.
-      <UiClientOnly>{() => (
-        <span {...props}>
-          {children}
-        </span>
-      )}</UiClientOnly>
-    )
+      return result
+    }
+
+    switch (formatName) {
+    case 'date':
+      return formatDate()
+    case 'time':
+      return `${hours}:${minutes}`
+    case 'datetime':
+      return `${formatDate()} ${hours}:${minutes}`
+    }
   }, [date, format])
+  return (
+    // Timezone differences between server and client may cause hydration errors,
+    // so we render the dates only on the client side.
+    <UiClientOnly>{() => (
+      <span {...props}>
+        {children}
+      </span>
+    )}</UiClientOnly>
+  )
 }
 export default UiDate
 
