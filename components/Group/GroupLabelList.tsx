@@ -1,14 +1,15 @@
 import theme from '@/theme-utils'
+import { StyleProps } from '@/utils/props'
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
-interface Props {
+interface Props extends StyleProps {
   children: ReactNode
 }
 
-const GroupLabelList: React.FC<Props> = ({ children }) => {
+const GroupLabelList: React.FC<Props> = ({ children, className, style }) => {
   return (
-    <Box>
+    <Box className={className} style={style}>
       {children}
     </Box>
   )
