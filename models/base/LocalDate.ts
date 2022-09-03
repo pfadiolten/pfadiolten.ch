@@ -39,6 +39,22 @@ export default class LocalDate {
     return this.days === other.days
   }
 
+  isLessThan(other: LocalDate) {
+    return this.days < other.days
+  }
+
+  isLessThanOrEqualTo(other: LocalDate) {
+    return this.days <= other.days
+  }
+
+  isGreaterThan(other: LocalDate) {
+    return this.days > other.days
+  }
+
+  isGreaterThanOrEqualTo(other: LocalDate) {
+    return this.days >= other.days
+  }
+
   toDate(): Date {
     return new Date(this.date)
   }
