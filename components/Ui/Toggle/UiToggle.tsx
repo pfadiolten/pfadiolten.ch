@@ -17,11 +17,15 @@ const UiToggle: React.FC<Props> = ({
   isDisabled = false,
   onChange: pushChange,
 }) => {
-  const handleToggle: React.KeyboardEventHandler = useCallback((e) => {
-    if (e.code === 'Space') {
-      pushChange(!value)
-    }
+  const handleToggle = useCallback(() => {
+    pushChange(!value)
   }, [pushChange, value])
+
+  const handleKeyPress: React.KeyboardEventHandler = useCallback((e) => {
+    if (e.code === 'Space') {
+      handleToggle()
+    }
+  }, [handleToggle])
 
   return (
     <Box
@@ -32,7 +36,7 @@ const UiToggle: React.FC<Props> = ({
       color={color}
       isActive={value}
       onClick={handleToggle}
-      onKeyDown={handleToggle}
+      onKeyDown={handleKeyPress}
     >
       <Slider color={color} isActive={value} />
     </Box>
