@@ -74,7 +74,7 @@ export const defaultTheme: Theme = {
       contrast: [ 56,  54,  89],
     },
     success: {
-      value:    [  4, 120,  87],
+      value:    [ 40, 167,  69],
       contrast: [220, 215, 209],
     },
     info: {
