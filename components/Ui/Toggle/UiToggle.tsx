@@ -17,8 +17,10 @@ const UiToggle: React.FC<Props> = ({
   isDisabled = false,
   onChange: pushChange,
 }) => {
-  const handleToggle = useCallback(() => {
-    pushChange(!value)
+  const handleToggle: React.KeyboardEventHandler = useCallback((e) => {
+    if (e.code === 'Space') {
+      pushChange(!value)
+    }
   }, [pushChange, value])
 
   return (
