@@ -4,11 +4,7 @@ import NoticeForm from '@/components/Notice/NoticeForm'
 import UiActionButton from '@/components/Ui/Button/UiActionButton'
 import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
 import UiDate from '@/components/Ui/UiDate'
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
-import { KitDrawer } from '@pfadiolten/react-kit'
-import { KitIcon } from '@pfadiolten/react-kit'
 import UiRichText from '@/components/Ui/UiRichText'
-import { KitHeading } from '@pfadiolten/react-kit'
 import useBool from '@/hooks/useBool'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import { isEmptyRichText } from '@/models/base/RichText'
@@ -17,7 +13,7 @@ import Notice from '@/models/Notice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { deleteNotice } from '@/store/notices/notices.slice'
 import { selectUser } from '@/store/users/users.slice'
-import { theme } from '@pfadiolten/react-kit'
+import { KitDrawer, KitHeading, KitIcon, theme } from '@pfadiolten/react-kit'
 import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -54,7 +50,7 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
             <UiDropdown>
               <UiDropdown.Activator>{({ toggle }) => (
                 <UiActionButton title="Mehr" color="secondary" onClick={toggle}>
-                  <KitIcon icon={faEllipsis} />
+                  <KitIcon.More />
                 </UiActionButton>
               )}</UiDropdown.Activator>
               <UiDropdown.Menu label="Mehr zu dieser Aktivität">

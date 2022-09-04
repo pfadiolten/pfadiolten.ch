@@ -12,7 +12,6 @@ import { allGroups } from '@/models/Group'
 import { deleteCalendarEvent } from '@/store/calendar/events/calendarEvents.slice'
 import { useAppDispatch } from '@/store/hooks'
 import DateHelper from '@/utils/helpers/DateHelper'
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
 import { KitDrawer, KitHeading, KitIcon, theme } from '@pfadiolten/react-kit'
 import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
@@ -64,7 +63,7 @@ const CalendarEventListItem: React.FC<Props> = ({ event }) => {
           <UiDropdown>
             <UiDropdown.Activator>{({ toggle }) => (
               <UiActionButton title="Mehr" color="secondary" onClick={toggle}>
-                <KitIcon icon={faEllipsis} />
+                <KitIcon.More />
               </UiActionButton>
             )}</UiDropdown.Activator>
             <UiDropdown.Menu label="Mehr zu dieser Aktivität">
