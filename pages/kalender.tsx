@@ -77,7 +77,6 @@ const Kalender: NextPage<Props> = ({ ssrYear }) => {
     window.history.pushState({ path: url }, '', url)
   }
 
-
   const fetchPayload: CalendarEventFetchPayload = useMemo(() => {
     const startsAt = LocalDate.from(currentYear, 1, 1)
     const endsAt = LocalDate.from(currentYear + 1, 1, 1) - 1

@@ -7,7 +7,6 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
-import 'reset-css/reset.css'
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (

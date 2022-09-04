@@ -1,8 +1,7 @@
 import PageContext, { PageState } from '@/components/Page/Context/PageContext'
 import PageFooter from '@/components/Page/Footer/PageFooter'
 import PageNav from '@/components/Page/Nav/PageNav'
-import { KitContainer } from '@pfadiolten/react-kit'
-import { theme } from '@pfadiolten/react-kit'
+import { KitContainer, theme } from '@pfadiolten/react-kit'
 import Head from 'next/head'
 import React, { ReactNode, useState } from 'react'
 import styled from 'styled-components'
@@ -20,7 +19,7 @@ const PageView: React.FC<Props> = ({ children }) => {
     },
   }))
   return (
-    <Container>
+    <Box>
       <Head>
         <title key="title">
           {state.title ? (
@@ -31,26 +30,23 @@ const PageView: React.FC<Props> = ({ children }) => {
         </title>
       </Head>
       <PageNav noBackground={state.noBackground} />
-      <Main>
-        <KitContainer>
-          <PageContext.Provider value={state}>
-            {children}
-          </PageContext.Provider>
-        </KitContainer>
+      <Main as="main">
+        <PageContext.Provider value={state}>
+          {children}
+        </PageContext.Provider>
       </Main>
       <PageFooter state={state} />
-    </Container>
+    </Box>
   )
 }
 export default PageView
 
-const Container = styled.div`
+const Box = styled.div`
   position: relative;
   overflow-x: hidden;
   min-height: 100vh;
 `
-
-const Main = styled.main`
+const Main = styled(KitContainer)`
   --main-height: calc(100vh - 4rem - 1em);
   
   position: relative;
