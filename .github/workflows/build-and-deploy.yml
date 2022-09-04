@@ -1,5 +1,9 @@
 name: "Build and Deploy"
 on: [push]
+permissions:
+  contents: read
+  metadata: read
+  packages: read
 jobs:
   build:
     name: "Lint, Test, Build"
