@@ -1,7 +1,7 @@
-import UiButton from '@/components/Ui/Button/UiButton'
+import { KitButton } from '@pfadiolten/react-kit'
 import styled from 'styled-components'
 
-const UiActionButton = styled(UiButton)`
+const UiActionButton = styled(KitButton)`
   position: relative;
   border-radius: 50%;
   width: 24px;

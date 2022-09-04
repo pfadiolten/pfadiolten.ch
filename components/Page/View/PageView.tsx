@@ -1,8 +1,8 @@
 import PageContext, { PageState } from '@/components/Page/Context/PageContext'
 import PageFooter from '@/components/Page/Footer/PageFooter'
 import PageNav from '@/components/Page/Nav/PageNav'
-import UiContainer from '@/components/Ui/UiContainer'
-import theme from '@/theme-utils'
+import { KitContainer } from '@pfadiolten/react-kit'
+import { theme } from '@pfadiolten/react-kit'
 import Head from 'next/head'
 import React, { ReactNode, useState } from 'react'
 import styled from 'styled-components'
@@ -32,11 +32,11 @@ const PageView: React.FC<Props> = ({ children }) => {
       </Head>
       <PageNav noBackground={state.noBackground} />
       <Main>
-        <UiContainer>
+        <KitContainer>
           <PageContext.Provider value={state}>
             {children}
           </PageContext.Provider>
-        </UiContainer>
+        </KitContainer>
       </Main>
       <PageFooter state={state} />
     </Container>

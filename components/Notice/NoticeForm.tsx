@@ -2,7 +2,7 @@ import UiDateInput from '@/components/Ui/Input/UiDateInput'
 import UiRichTextInput from '@/components/Ui/Input/UiRichTextInput'
 import UiSelectInput from '@/components/Ui/Input/UiSelectInput'
 import UiTextInput from '@/components/Ui/Input/UiTextInput'
-import UiGrid from '@/components/Ui/UiGrid'
+import { KitGrid } from '@pfadiolten/react-kit'
 import UiSubmit from '@/components/Ui/UiSubmit'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import { ModelData } from '@/models/base/Model'
@@ -70,30 +70,30 @@ const NoticeForm: React.FC<Props> = ({
       <FormField field={form.description}>{(inputProps) => (
         <UiRichTextInput {...inputProps} label="Beschreibung" />
       )}</FormField>
-      <UiGrid gap={1}>
-        <UiGrid.Col size="auto">
+      <KitGrid gap={1}>
+        <KitGrid.Col size="auto">
           <FormField field={form.startsAt}>{(inputProps) => (
             <UiDateInput {...inputProps} label="Beginn" />
           )}</FormField>
-        </UiGrid.Col>
-        <UiGrid.Col>
+        </KitGrid.Col>
+        <KitGrid.Col>
           <FormField field={form.startLocation}>{(inputProps) => (
             <UiTextInput {...inputProps} label="Treffpunkt" />
           )}</FormField>
-        </UiGrid.Col>
-      </UiGrid>
-      <UiGrid gap={1}>
-        <UiGrid.Col size="auto">
+        </KitGrid.Col>
+      </KitGrid>
+      <KitGrid gap={1}>
+        <KitGrid.Col size="auto">
           <FormField field={form.endsAt}>{(inputProps) => (
             <UiDateInput {...inputProps} label="Ende" />
           )}</FormField>
-        </UiGrid.Col>
-        <UiGrid.Col>
+        </KitGrid.Col>
+        <KitGrid.Col>
           <FormField field={form.endLocation}>{(inputProps) => (
             <UiTextInput {...inputProps} label="Schlusspunkt" placeholder={form.startLocation.value} />
           )}</FormField>
-        </UiGrid.Col>
-      </UiGrid>
+        </KitGrid.Col>
+      </KitGrid>
       <FormField field={form.authorId}>{(inputProps) => (
         <UiSelectInput
           {...inputProps}

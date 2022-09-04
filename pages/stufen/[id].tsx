@@ -1,5 +1,5 @@
 import Page from '@/components/Page/Page'
-import UiTitle from '@/components/Ui/UiTitle'
+import { KitHeading } from '@pfadiolten/react-kit'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
 import Group, { allUnits, UnitId } from '@/models/Group'
@@ -37,13 +37,13 @@ const Stufe: NextPage<Props> = ({ group, members: initialMembers }) => {
   const [members, setMembers] = useState(initialMembers)
   return (
     <Page title={`${group.name}`}>
-      <UiTitle level={1}>
+      <KitHeading level={1}>
         die {group.name}
-      </UiTitle>
+      </KitHeading>
       <section>
-        <UiTitle level={2}>
+        <KitHeading level={2}>
           Leitungsteam
-        </UiTitle>
+        </KitHeading>
         <UserCardList>
           {members.map((member, i) => (
             <UserCard

@@ -1,6 +1,5 @@
 import UiDropdownContext from '@/components/Ui/Dropdown/UiDropdownContext'
-import { ColorName } from '@/theme'
-import theme from '@/theme-utils'
+import { ColorName, theme } from '@pfadiolten/react-kit'
 import { labelFrom, LabelledProps } from '@/utils/props'
 import React, { ReactNode, useContext, useRef } from 'react'
 import { useEffectOnce, useIsomorphicLayoutEffect } from 'react-use'

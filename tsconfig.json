@@ -18,8 +18,12 @@
     "downlevelIteration": true,
     "paths": {
       "@/*": ["*"]
-    }
+    },
+    "typeRoots": [
+      "node_modules/@types",
+      "typings"
+    ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "node_modules/immer/src/core/proxy.ts"]
 }

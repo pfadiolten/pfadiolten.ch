@@ -1,6 +1,6 @@
 import { Error, Label, LookAndFeelProps, Wrapper } from '@/components/Ui/Input/UiInputField'
-import UiIcon from '@/components/Ui/UiIcon'
-import theme from '@/theme-utils'
+import { KitIcon } from '@pfadiolten/react-kit'
+import { theme } from '@pfadiolten/react-kit'
 import { noop } from '@/utils/fns'
 import { InputProps } from '@daniel-va/react-form'
 import React, { useCallback, useMemo } from 'react'
@@ -81,14 +81,14 @@ const UiSelectInput = <T, TOption, TMultiple extends boolean = false>({
 
             return (
               <span {...innerProps} onMouseDown={handleMouseDown} onTouchEnd={handleTouchEnd} className="select__indicator">
-                <UiIcon name="cancel" />
+                <KitIcon.Cancel />
               </span>
             )
           },
           DropdownIndicator: ({ innerProps }) => {
             return (
               <span {...innerProps} className="select__indicator">
-                <UiIcon name="dropdown" />
+                <KitIcon.PullDown />
               </span>
             )
           },

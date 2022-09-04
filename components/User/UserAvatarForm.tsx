@@ -1,11 +1,11 @@
-import UiIcon from '@/components/Ui/UiIcon'
+import { KitIcon } from '@pfadiolten/react-kit'
 import UiSubmit from '@/components/Ui/UiSubmit'
 import UserCard from '@/components/User/UserCard'
 import UploadedImage, { allowedImageTypes } from '@/models/base/UploadedImage'
 import { GroupId } from '@/models/Group'
 import User from '@/models/User'
 import FetchService from '@/services/FetchService'
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import { also } from '@/utils/control-flow'
 import React, { EventHandler, useCallback, useState } from 'react'
 import styled, { css } from 'styled-components'
@@ -124,7 +124,7 @@ const UserAvatarForm: React.FC<Props> = ({
           onDragLeave={deactivateDrop}
           isDropReady={isDropReady}
         >
-          <UiIcon name="upload" size={4} />
+          <KitIcon.Upload size={4} />
           <input type="file" accept={allowedImageTypes.join(',')} onChange={handleChange} />
         </FileInputLabel>
         <PreviewBox>
@@ -161,7 +161,7 @@ const readyState = css`
   background-color: unset;
   outline-offset: -1rem;
 
-  ${UiIcon} {
+  ${KitIcon} {
     transform: scale(1.1);
   }
 `
@@ -190,7 +190,7 @@ const FileInputLabel = styled.label<{ isDropReady: boolean }>`
     display: none;
   }
 
-  ${UiIcon} {
+  ${KitIcon} {
     transition: 150ms ease-out;
     transition-property: transform;
     will-change: transform;

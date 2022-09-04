@@ -1,6 +1,3 @@
-import UiDrawer from '@/components/Ui/UiDrawer'
-import UiIcon, { UiIconName } from '@/components/Ui/UiIcon'
-import UiTitle from '@/components/Ui/UiTitle'
 import UserAvatar from '@/components/User/UserAvatar'
 import UserAvatarForm from '@/components/User/UserAvatarForm'
 import usePolicy from '@/hooks/usePolicy'
@@ -8,8 +5,7 @@ import UploadedImage from '@/models/base/UploadedImage'
 import { GroupId } from '@/models/Group'
 import User from '@/models/User'
 import UserPolicy from '@/policies/UserPolicy'
-import { ColorName } from '@/theme'
-import theme from '@/theme-utils'
+import { ColorName, KitDrawer, KitHeading, KitIcon, KitIconComponent, theme } from '@pfadiolten/react-kit'
 import React, { ReactNode, useCallback, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
@@ -52,7 +48,7 @@ const UserCard: React.FC<Props> = ({
       : undefined
   }, [pushResetAvatar, pushRemoveAvatar, canEdit, pushChange, openAvatarForm])
 
-  const avatarOverlay: { color: ColorName, icon: UiIconName } | null = useMemo(() => {
+  const avatarOverlay = useMemo<{ color: ColorName, Icon: KitIconComponent } | null>(() => {
     if (!canEdit) {
       return null
     }
@@ -60,11 +56,11 @@ const UserCard: React.FC<Props> = ({
     case undefined:
       return null
     case pushResetAvatar:
-      return { color: 'success', icon: 'reset' }
+      return { color: 'success', Icon: KitIcon.Reset }
     case pushRemoveAvatar:
-      return { color: 'error', icon: 'cancel' }
+      return { color: 'error', Icon: KitIcon.Cancel }
     case openAvatarForm:
-      return { color: 'secondary', icon: 'recordEdit' }
+      return { color: 'secondary', Icon: KitIcon.Edit }
     default:
       throw new Error(`unexpected callback: ${handleAvatarClick}`)
     }
@@ -79,14 +75,14 @@ const UserCard: React.FC<Props> = ({
       >
         {avatarOverlay !== null && (
           <AvatarOverlay color={avatarOverlay.color}>
-            <UiIcon name={avatarOverlay.icon} size={2} />
+            <avatarOverlay.Icon size={2} />
           </AvatarOverlay>
         )}
       </Avatar>
       <div>
-        <UiTitle level={5}>
+        <KitHeading level={5}>
           {title ?? user.name}
-        </UiTitle>
+        </KitHeading>
         <Roles>
           {group === null ? (
             user.roles.map((role) => (
@@ -111,18 +107,18 @@ const UserCard: React.FC<Props> = ({
       </div>
 
       {(pushChange && canEdit) && (
-        <UiDrawer size="fixed" isOpen={isAvatarFormVisible} onClose={() => setIsAvatarFormVisible(false)}>
+        <KitDrawer size="fixed" isOpen={isAvatarFormVisible} onClose={() => setIsAvatarFormVisible(false)}>
           <AvatarFormBox>
-            <UiTitle level={2}>
+            <KitHeading level={2}>
               Avatar ändern
-            </UiTitle>
+            </KitHeading>
             <UserAvatarForm
               user={user}
               onChange={pushChange}
               onClose={() => setIsAvatarFormVisible(false)}
             />
           </AvatarFormBox>
-        </UiDrawer>
+        </KitDrawer>
       )}
     </Box>
   )

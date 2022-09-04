@@ -1,8 +1,8 @@
 import UiLocalDateInput from '@/components/Ui/Input/UiLocalDateInput'
 import UiSelectInput from '@/components/Ui/Input/UiSelectInput'
 import UiTextInput from '@/components/Ui/Input/UiTextInput'
-import UiToggle from '@/components/Ui/Toggle/UiToggle'
-import UiGrid from '@/components/Ui/UiGrid'
+import { KitToggle } from '@pfadiolten/react-kit'
+import { KitGrid } from '@pfadiolten/react-kit'
 import UiSubmit from '@/components/Ui/UiSubmit'
 import LocalDate from '@/models/base/LocalDate'
 import { ModelData } from '@/models/base/Model'
@@ -10,7 +10,7 @@ import CalendarEvent, { validateCalendarEvent } from '@/models/CalendarEvent'
 import { allGroups } from '@/models/Group'
 import { createCalendarEvent, updateCalendarEvent } from '@/store/calendar/events/calendarEvents.slice'
 import { useAppDispatch } from '@/store/hooks'
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import { Form, FormField, useCancel, useForm, useSubmit, useValidate } from '@daniel-va/react-form'
 import React from 'react'
 import { useUpdateEffect } from 'react-use'
@@ -58,8 +58,8 @@ const CalendarEventForm: React.FC<Props> = ({ event = null, onClose: pushClose }
       <FormField field={form.name}>{(inputProps) => (
         <UiTextInput {...inputProps} label="Name" hasAutoFocus />
       )}</FormField>
-      <UiGrid gap={1}>
-        <UiGrid.Col>
+      <KitGrid gap={1}>
+        <KitGrid.Col>
           <FormField field={form.groupIds}>{(inputProps) => (
             <UiSelectInput
               {...inputProps}
@@ -70,30 +70,30 @@ const CalendarEventForm: React.FC<Props> = ({ event = null, onClose: pushClose }
               hasMultiple
             />
           )}</FormField>
-        </UiGrid.Col>
-        <UiGrid.Col size="auto">
+        </KitGrid.Col>
+        <KitGrid.Col size="auto">
           <FormField field={form.isInternal}>{({ value, onChange }) => (
             <InternalLabel>
               <div>
                 Rover-Event?
               </div>
-              <UiToggle value={value ?? false} onChange={onChange} />
+              <KitToggle value={value ?? false} onChange={onChange} />
             </InternalLabel>
           )}</FormField>
-        </UiGrid.Col>
-      </UiGrid>
-      <UiGrid gap={1}>
-        <UiGrid.Col>
+        </KitGrid.Col>
+      </KitGrid>
+      <KitGrid gap={1}>
+        <KitGrid.Col>
           <FormField field={form.startsAt}>{(inputProps) => (
             <UiLocalDateInput {...inputProps} label="Beginn" />
           )}</FormField>
-        </UiGrid.Col>
-        <UiGrid.Col>
+        </KitGrid.Col>
+        <KitGrid.Col>
           <FormField field={form.endsAt}>{(inputProps) => (
             <UiLocalDateInput {...inputProps} label="Ende" />
           )}</FormField>
-        </UiGrid.Col>
-      </UiGrid>
+        </KitGrid.Col>
+      </KitGrid>
       <UiSubmit />
     </Form>
   )

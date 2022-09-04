@@ -1,4 +1,4 @@
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 

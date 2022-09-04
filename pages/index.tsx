@@ -2,10 +2,10 @@ import NoticeCard from '@/components/Notice/NoticeCard'
 import NoticeCardList from '@/components/Notice/NoticeCardList'
 import NoticeForm from '@/components/Notice/NoticeForm'
 import Page from '@/components/Page/Page'
-import UiButton from '@/components/Ui/Button/UiButton'
-import UiDrawer from '@/components/Ui/UiDrawer'
-import UiIcon from '@/components/Ui/UiIcon'
-import UiTitle from '@/components/Ui/UiTitle'
+import { KitButton } from '@pfadiolten/react-kit'
+import { KitDrawer } from '@pfadiolten/react-kit'
+import { KitIcon } from '@pfadiolten/react-kit'
+import { KitHeading } from '@pfadiolten/react-kit'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import useSsrEffect from '@/hooks/useSsrEffect'
 import Notice from '@/models/Notice'
@@ -16,7 +16,7 @@ import UserRepo from '@/repos/UserRepo'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { saveNotices, selectActiveNotices } from '@/store/notices/notices.slice'
 import { saveUsers } from '@/store/users/users.slice'
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import { GetServerSideProps, NextPage } from 'next'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -65,9 +65,9 @@ const Home: NextPage<Props> = ({ data }) => {
         <ContentCard>
           <HeadingArticle>
             <Image src={logo} alt="Logo der Pfadi Olten" width={128} height={128} />
-            <UiTitle level={1}>
+            <KitHeading level={1}>
               Willkommen bei der <span>Pfadi Olten!</span>
-            </UiTitle>
+            </KitHeading>
             <Subtitle>
               Hier entsteht unsere neue Homepage.
             </Subtitle>
@@ -88,22 +88,22 @@ const Home: NextPage<Props> = ({ data }) => {
           ))}
           {currentUser !== null && (
             <CreateNoticeButton color="secondary" onClick={() => setNoticeCreationOpen(true)} title="Neue Aktivität erfassen">
-              <UiIcon name="recordAdd" size={1.5} />
+              <KitIcon.Add size={1.5} />
             </CreateNoticeButton>
           )}
         </NoticeCardList>
 
         {currentUser !== null && (
           <>
-            <UiDrawer
+            <KitDrawer
               isOpen={isNoticeCreationOpen}
               onClose={() => { setNoticeCreationOpen(false) }}
             >
-              <UiTitle level={2}>
+              <KitHeading level={2}>
                 Neue Aktivität erfassen
-              </UiTitle>
+              </KitHeading>
               <NoticeForm onClose={() => setNoticeCreationOpen(false)} />
-            </UiDrawer>
+            </KitDrawer>
           </>
         )}
       </Content>
@@ -168,7 +168,7 @@ const MainText = styled.p`
   font-family: ${theme.fonts.serif};
   margin-top: ${theme.spacing(0.5)};
 `
-const CreateNoticeButton = styled(UiButton)`
+const CreateNoticeButton = styled(KitButton)`
   border: 2px solid ${theme.colors.secondary.contrast};
   min-height: ${theme.spacing(24)};
 `

@@ -1,13 +1,9 @@
 import CalendarEventForm from '@/components/Calendar/Event/CalendarEventForm'
 import GroupLabel from '@/components/Group/GroupLabel'
 import GroupLabelList from '@/components/Group/GroupLabelList'
-import NoticeForm from '@/components/Notice/NoticeForm'
 import UiActionButton from '@/components/Ui/Button/UiActionButton'
 import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
 import UiDate from '@/components/Ui/UiDate'
-import UiDrawer from '@/components/Ui/UiDrawer'
-import UiIcon from '@/components/Ui/UiIcon'
-import UiTitle from '@/components/Ui/UiTitle'
 import useBool from '@/hooks/useBool'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import LocalDate from '@/models/base/LocalDate'
@@ -15,9 +11,9 @@ import CalendarEvent from '@/models/CalendarEvent'
 import { allGroups } from '@/models/Group'
 import { deleteCalendarEvent } from '@/store/calendar/events/calendarEvents.slice'
 import { useAppDispatch } from '@/store/hooks'
-import { deleteNotice } from '@/store/notices/notices.slice'
-import theme from '@/theme-utils'
 import DateHelper from '@/utils/helpers/DateHelper'
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
+import { KitDrawer, KitHeading, KitIcon, theme } from '@pfadiolten/react-kit'
 import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -68,7 +64,7 @@ const CalendarEventListItem: React.FC<Props> = ({ event }) => {
           <UiDropdown>
             <UiDropdown.Activator>{({ toggle }) => (
               <UiActionButton title="Mehr" color="secondary" onClick={toggle}>
-                <UiIcon name="more" />
+                <KitIcon icon={faEllipsis} />
               </UiActionButton>
             )}</UiDropdown.Activator>
             <UiDropdown.Menu label="Mehr zu dieser Aktivität">
@@ -80,14 +76,14 @@ const CalendarEventListItem: React.FC<Props> = ({ event }) => {
               </UiDropdown.Item>
             </UiDropdown.Menu>
           </UiDropdown>
-          <UiDrawer size="fixed" isOpen={isEditing} onClose={setEditing.off}>{({ close }) => (
+          <KitDrawer size="fixed" isOpen={isEditing} onClose={setEditing.off}>{({ close }) => (
             <React.Fragment>
-              <UiTitle level={2}>
+              <KitHeading level={2}>
                 Ereignis bearbeiten
-              </UiTitle>
+              </KitHeading>
               <CalendarEventForm event={event} onClose={close} />
             </React.Fragment>
-          )}</UiDrawer>
+          )}</KitDrawer>
         </React.Fragment>
       )}
       <GroupRow>

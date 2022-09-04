@@ -1,7 +1,6 @@
 import UploadedImage from '@/models/base/UploadedImage'
 import User from '@/models/User'
-import { Theme } from '@/theme'
-import theme from '@/theme-utils'
+import { Theme, theme } from '@pfadiolten/react-kit'
 import { StyleProps } from '@/utils/props'
 import Image from 'next/image'
 import React, { EventHandler, ReactNode, useMemo } from 'react'

@@ -1,4 +1,4 @@
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import { StyleProps } from '@/utils/props'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import {
@@ -26,12 +26,12 @@ import React, { useMemo } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 interface Props extends StyleProps {
-  name: UiIconName
+  name: KitIconName
   size?: number
   isSpinner?: boolean
 }
 
-const UiIcon: React.FC<Props> = ({
+const KitIcon: React.FC<Props> = ({
   name,
   size = 1,
   isSpinner = false,
@@ -64,7 +64,7 @@ const UiIcon: React.FC<Props> = ({
     </Svg>
   )
 }
-export default styled(UiIcon)``
+export default styled(KitIcon)``
 
 const icons = {
   menu: faBars,
@@ -95,7 +95,7 @@ const icons = {
   more: faEllipsis,
 }
 
-export type UiIconName = keyof typeof icons
+export type KitIconName = keyof typeof icons
 
 
 const SpinAnimation = keyframes`

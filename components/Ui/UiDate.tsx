@@ -1,4 +1,4 @@
-import UiClientOnly from '@/components/Ui/UiClientOnly'
+import { KitClientOnly } from '@pfadiolten/react-kit'
 import LocalDate from '@/models/base/LocalDate'
 import { run } from '@/utils/control-flow'
 import DateHelper from '@/utils/helpers/DateHelper'
@@ -66,11 +66,11 @@ const UiDate: React.FC<Props> = ({
   return (
     // Timezone differences between server and client may cause hydration errors,
     // so we render the dates only on the client side.
-    <UiClientOnly>{() => (
+    <KitClientOnly>{() => (
       <span {...props}>
         {children}
       </span>
-    )}</UiClientOnly>
+    )}</KitClientOnly>
   )
 }
 export default UiDate

@@ -1,11 +1,11 @@
 import CalendarEventForm from '@/components/Calendar/Event/CalendarEventForm'
 import CalendarEventList from '@/components/Calendar/Event/List/CalendarEventList'
 import Page from '@/components/Page/Page'
-import UiButton from '@/components/Ui/Button/UiButton'
-import UiToggle from '@/components/Ui/Toggle/UiToggle'
-import UiDrawer from '@/components/Ui/UiDrawer'
-import UiIcon from '@/components/Ui/UiIcon'
-import UiTitle from '@/components/Ui/UiTitle'
+import { KitButton } from '@pfadiolten/react-kit'
+import { KitToggle } from '@pfadiolten/react-kit'
+import { KitDrawer } from '@pfadiolten/react-kit'
+import { KitIcon } from '@pfadiolten/react-kit'
+import { KitHeading } from '@pfadiolten/react-kit'
 import useBool from '@/hooks/useBool'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import LocalDate from '@/models/base/LocalDate'
@@ -16,7 +16,7 @@ import {
   selectCalendarEvents,
 } from '@/store/calendar/events/calendarEvents.slice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSearchParam } from 'react-use'
@@ -95,27 +95,27 @@ const Kalender: NextPage<Props> = ({ ssrYear }) => {
   return (
     <Page title={`Jahresprogramm ${currentYear}`}>
       <Heading>
-        <UiTitle level={1}>
+        <KitHeading level={1}>
           Jahresprogramm {currentYear}
-        </UiTitle>
+        </KitHeading>
         <YearNav aria-label="Jahresauswahl">
           <ul>
             <li>
-              <UiButton color="secondary" onClick={() => selectYear(currentYear - 1)}>
-                <UiIcon name="slideLeft" />
+              <KitButton color="secondary" onClick={() => selectYear(currentYear - 1)}>
+                <KitIcon.PullLeft />
                 &nbsp;
                 {currentYear - 1}
-              </UiButton>
+              </KitButton>
             </li>
             <li>
               {currentYear}
             </li>
             <li>
-              <UiButton color="secondary" onClick={() => selectYear(currentYear + 1)}>
+              <KitButton color="secondary" onClick={() => selectYear(currentYear + 1)}>
                 {currentYear + 1}
                 &nbsp;
-                <UiIcon name="slideRight" />
-              </UiButton>
+                <KitIcon.PullRight />
+              </KitButton>
             </li>
           </ul>
         </YearNav>
@@ -123,12 +123,12 @@ const Kalender: NextPage<Props> = ({ ssrYear }) => {
 
       <Filters>
         <FilterLabel>
-          <UiToggle value={filters.isInternal ?? false} onChange={setFilter('isInternal')} />
+          <KitToggle value={filters.isInternal ?? false} onChange={setFilter('isInternal')} />
           Rover-Events
         </FilterLabel>
         {allGroups.map((group) => (
           <FilterLabel key={group.id}>
-            <UiToggle value={filters[group.id] ?? false} onChange={setFilter(group.id)} />
+            <KitToggle value={filters[group.id] ?? false} onChange={setFilter(group.id)} />
             {group.shortName ?? group.name}
           </FilterLabel>
         ))}
@@ -137,16 +137,16 @@ const Kalender: NextPage<Props> = ({ ssrYear }) => {
       {currentUser !== null && (
         <React.Fragment>
           <CreateEventButton color="secondary" onClick={setCreating.on} title="Neues Ereignis erstellen">
-            <UiIcon name="recordAdd" />
+            <KitIcon.Add />
           </CreateEventButton>
-          <UiDrawer size="fixed" isOpen={isCreating} onClose={setCreating.off}>{({ close }) => (
+          <KitDrawer size="fixed" isOpen={isCreating} onClose={setCreating.off}>{({ close }) => (
             <React.Fragment>
-              <UiTitle level={2}>
+              <KitHeading level={2}>
                 Ereignis erstellen
-              </UiTitle>
+              </KitHeading>
               <CalendarEventForm onClose={close} />
             </React.Fragment>
-          )}</UiDrawer>
+          )}</KitDrawer>
         </React.Fragment>
       )}
 
@@ -180,14 +180,14 @@ const YearNav = styled.nav`
       display: flex;
       align-items: center;
       
-      :first-child > ${UiButton} {
+      :first-child > ${KitButton} {
         padding-right: ${theme.spacing(2)};
         margin-right: ${theme.spacing(2)};
       }
       :nth-child(2) {
         font-weight: bold;
       }
-      :last-child > ${UiButton} {
+      :last-child > ${KitButton} {
         padding-left: ${theme.spacing(2)};
         margin-left: ${theme.spacing(2)};
       }
@@ -198,7 +198,7 @@ const YearNav = styled.nav`
     font-weight: bold;
   }
 `
-const CreateEventButton = styled(UiButton)`
+const CreateEventButton = styled(KitButton)`
   border: 2px solid ${theme.color.contrast};
   width: 100%;
   padding-block: calc(${theme.spacing(1)} - 1px);

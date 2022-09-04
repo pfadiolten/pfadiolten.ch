@@ -1,4 +1,4 @@
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import React, { ChangeEvent, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 

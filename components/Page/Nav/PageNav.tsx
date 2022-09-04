@@ -1,7 +1,6 @@
 import PageNavItem from '@/components/Page/Nav/Item/PageNavItem'
-import UiIcon from '@/components/Ui/UiIcon'
 import useCurrentUser from '@/hooks/useCurrentUser'
-import theme from '@/theme-utils'
+import { KitIcon, theme } from '@pfadiolten/react-kit'
 import { signIn, signOut } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -51,7 +50,7 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
         </Link>
       </Logo>
       <MenuToggle role="button" onClick={() => setOpen((open) => !open)}>
-        <UiIcon name="menu" />
+        <KitIcon.Menu />
       </MenuToggle>
       <Menu isOpen={isOpen}>
         <Links>
@@ -62,11 +61,11 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
           <MenuOffset>
             {user === null ? (
               <PageNavItem name="anmelden" onClick={() => signIn('midata')}>
-                <UiIcon name="sessionLogin" />
+                <KitIcon.Login />
               </PageNavItem>
             ) : (
               <PageNavItem name={user.name} onClick={() => signOut()}>
-                <UiIcon name="sessionLogout" />
+                <KitIcon.Logout />
               </PageNavItem>
             )}
           </MenuOffset>

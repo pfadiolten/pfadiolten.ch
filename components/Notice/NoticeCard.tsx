@@ -4,10 +4,11 @@ import NoticeForm from '@/components/Notice/NoticeForm'
 import UiActionButton from '@/components/Ui/Button/UiActionButton'
 import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
 import UiDate from '@/components/Ui/UiDate'
-import UiDrawer from '@/components/Ui/UiDrawer'
-import UiIcon from '@/components/Ui/UiIcon'
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
+import { KitDrawer } from '@pfadiolten/react-kit'
+import { KitIcon } from '@pfadiolten/react-kit'
 import UiRichText from '@/components/Ui/UiRichText'
-import UiTitle from '@/components/Ui/UiTitle'
+import { KitHeading } from '@pfadiolten/react-kit'
 import useBool from '@/hooks/useBool'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import { isEmptyRichText } from '@/models/base/RichText'
@@ -16,8 +17,7 @@ import Notice from '@/models/Notice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { deleteNotice } from '@/store/notices/notices.slice'
 import { selectUser } from '@/store/users/users.slice'
-import theme from '@/theme-utils'
-import Link from 'next/link'
+import { theme } from '@pfadiolten/react-kit'
 import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -46,15 +46,15 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
   return (
     <Box>
       <TitleRow>
-        <UiTitle level={4}>
+        <KitHeading level={4}>
           {notice.title}
-        </UiTitle>
+        </KitHeading>
         {currentUser !== null && (
           <ActionButtons>
             <UiDropdown>
               <UiDropdown.Activator>{({ toggle }) => (
                 <UiActionButton title="Mehr" color="secondary" onClick={toggle}>
-                  <UiIcon name="more" />
+                  <KitIcon icon={faEllipsis} />
                 </UiActionButton>
               )}</UiDropdown.Activator>
               <UiDropdown.Menu label="Mehr zu dieser Aktivität">
@@ -77,23 +77,23 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
       <Divider />
       <InfoBox aria-label="Zeit und Ort">
         <InfoRow>
-          <UiTitle level={5}>
+          <KitHeading level={5}>
             Beginn
-          </UiTitle>
-          <UiTitle level={5}>
+          </KitHeading>
+          <KitHeading level={5}>
             Ende
-          </UiTitle>
+          </KitHeading>
         </InfoRow>
         <InfoRow>
           <UiDate value={notice.startsAt} format="datetime" aria-label="Startzeit" />
-          <UiIcon name="clock" />
+          <KitIcon.Clock />
           <UiDate value={notice.endsAt} format="datetime" aria-label="Schlusszeit" />
         </InfoRow>
         <InfoRow>
           <span aria-label="Startort">
             {notice.startLocation}
           </span>
-          <UiIcon name="location" />
+          <KitIcon.Location />
           <span aria-label="Schlussort">
             {notice.endLocation ?? notice.startLocation}
           </span>
@@ -116,17 +116,17 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
         </React.Fragment>
       )}
       {currentUser !== null && (
-        <UiDrawer isOpen={isEditing} onClose={setEditing.off}>{({ close }) => (
+        <KitDrawer isOpen={isEditing} onClose={setEditing.off}>{({ close }) => (
           <React.Fragment>
-            <UiTitle level={2}>
+            <KitHeading level={2}>
               Aktivität bearbeiten
-            </UiTitle>
+            </KitHeading>
             <NoticeForm
               notice={notice}
               onClose={close}
             />
           </React.Fragment>
-        )}</UiDrawer>
+        )}</KitDrawer>
       )}
     </Box>
   )

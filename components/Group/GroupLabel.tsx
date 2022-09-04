@@ -1,6 +1,5 @@
 import Group from '@/models/Group'
-import { ColorName } from '@/theme'
-import theme from '@/theme-utils'
+import { ColorName, theme } from '@pfadiolten/react-kit'
 import Link from 'next/link'
 import React from 'react'
 import styled from 'styled-components'

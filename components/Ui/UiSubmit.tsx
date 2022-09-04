@@ -1,8 +1,7 @@
-import UiButton from '@/components/Ui/Button/UiButton'
-import UiIcon from '@/components/Ui/UiIcon'
+import { KitButton, KitGrid } from '@pfadiolten/react-kit'
+import { KitIcon } from '@pfadiolten/react-kit'
 import { useFormState } from '@daniel-va/react-form'
 import React from 'react'
-import UiGrid from './UiGrid'
 
 interface Props {
   isDisabled?: boolean
@@ -38,26 +37,26 @@ const UiSubmitCustom: React.FC<UiSubmitCustomProps> = ({
   onCancel: pushCancel,
 }) => {
   return (
-    <UiGrid gap={1} style={{ paddingTop: '1rem' }}>
-      <UiGrid.Col>
-        <UiButton color="success" isFull onClick={pushSubmit} isDisabled={!isValid}>
+    <KitGrid gap={1} style={{ paddingTop: '1rem' }}>
+      <KitGrid.Col>
+        <KitButton color="success" isFull onClick={pushSubmit} isDisabled={!isValid}>
           {isSubmitting ? (
-            <UiIcon name="spinner" isSpinner />
+            <KitIcon.Spinner isSpinner />
           ) : (
-            <UiIcon name="confirm" />
+            <KitIcon.Confirm />
           )}
-        </UiButton>
-      </UiGrid.Col>
-      <UiGrid.Col size={4}>
-        <UiButton color="error" isFull onClick={pushCancel}>
+        </KitButton>
+      </KitGrid.Col>
+      <KitGrid.Col size={4}>
+        <KitButton color="error" isFull onClick={pushCancel}>
           {isCancelling ? (
-            <UiIcon name="spinner" isSpinner />
+            <KitIcon.Spinner isSpinner />
           ) : (
-            <UiIcon name="cancel" />
+            <KitIcon.Cancel />
           )}
-        </UiButton>
-      </UiGrid.Col>
-    </UiGrid>
+        </KitButton>
+      </KitGrid.Col>
+    </KitGrid>
   )
 }
 

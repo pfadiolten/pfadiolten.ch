@@ -1,5 +1,5 @@
 import UiDropdownContext from '@/components/Ui/Dropdown/UiDropdownContext'
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import React, { ReactNode, useCallback, useContext } from 'react'
 import styled from 'styled-components'
 

@@ -1,8 +1,8 @@
 import CalendarEventListItem from '@/components/Calendar/Event/List/CalendarEventListItem'
-import UiTitle from '@/components/Ui/UiTitle'
+import { KitHeading } from '@pfadiolten/react-kit'
 import LocalDate from '@/models/base/LocalDate'
 import CalendarEvent from '@/models/CalendarEvent'
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import DateHelper from '@/utils/helpers/DateHelper'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
@@ -34,9 +34,9 @@ const CalendarEventList: React.FC<Props> = ({ events }) => {
     <Box>
       {eventsByMonth.map(([month, monthEvents]) => (
         <MonthBox key={`${month.getFullYear()}-${month.getMonth()}`}>
-          <UiTitle level={3}>
+          <KitHeading level={3}>
             {DateHelper.getNameOfMonth(month)} {month.getFullYear()}
-          </UiTitle>
+          </KitHeading>
           <MonthEventList>
             {monthEvents.map((event) => (
               <CalendarEventListItem key={event.id} event={event} />

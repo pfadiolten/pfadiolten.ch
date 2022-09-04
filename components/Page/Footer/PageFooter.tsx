@@ -1,8 +1,9 @@
 import { PageState } from '@/components/Page/Context/PageContext'
-import UiGrid from '@/components/Ui/UiGrid'
-import UiIcon from '@/components/Ui/UiIcon'
-import UiContainer from '@/components/Ui/UiContainer'
-import theme from '@/theme-utils'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
+import { KitGrid } from '@pfadiolten/react-kit'
+import { KitIcon } from '@pfadiolten/react-kit'
+import { KitContainer } from '@pfadiolten/react-kit'
+import { theme } from '@pfadiolten/react-kit'
 import React from 'react'
 import styled, { css } from 'styled-components'
 
@@ -13,17 +14,17 @@ interface Props {
 const PageFooter: React.FC<Props> = ({ state }) => {
   return (
     <Footer noBackground={state.noBackground}>
-      <UiContainer>
-        <UiGrid>
-          <UiGrid.Col>
+      <KitContainer>
+        <KitGrid>
+          <KitGrid.Col>
             &copy; Pfadi Olten, {year}
-          </UiGrid.Col>
-          <UiGrid.Col size="auto">
+          </KitGrid.Col>
+          <KitGrid.Col size="auto">
             Source Code @&nbsp;
-            <UiIcon name="logoGithub" />
-          </UiGrid.Col>
-        </UiGrid>
-      </UiContainer>
+            <KitIcon icon={faGithub} />
+          </KitGrid.Col>
+        </KitGrid>
+      </KitContainer>
     </Footer>
   )
 }

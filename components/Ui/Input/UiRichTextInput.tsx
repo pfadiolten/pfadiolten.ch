@@ -1,9 +1,10 @@
 import { LookAndFeelProps } from '@/components/Ui/Input/UiInputField'
-import UiButton from '@/components/Ui/Button/UiButton'
-import UiIcon from '@/components/Ui/UiIcon'
+import { faBold, faItalic, faListOl, faListUl, faRedo, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { KitButton } from '@pfadiolten/react-kit'
+import { KitIcon } from '@pfadiolten/react-kit'
 import UiRichText from '@/components/Ui/UiRichText'
 import RichText from '@/models/base/RichText'
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import { noop } from '@/utils/fns'
 import { InputProps } from '@daniel-va/react-form'
 import { Placeholder } from '@tiptap/extension-placeholder'
@@ -88,12 +89,12 @@ const UiRichTextInput = <T extends RichText | null>({
             <CommandButton
               onClick={() => editor.chain().focus().undo().run()}
             >
-              <UiIcon name="editorUndo" />
+              <KitIcon icon={faUndo} />
             </CommandButton>
             <CommandButton
               onClick={() => editor.chain().focus().redo().run()}
             >
-              <UiIcon name="editorRedo" />
+              <KitIcon icon={faRedo} />
             </CommandButton>
           </CommandButtonGroup>
           <CommandButtonGroup>
@@ -101,13 +102,13 @@ const UiRichTextInput = <T extends RichText | null>({
               onClick={() => editor.chain().focus().toggleBold().run()}
               isActive={editor.isActive('bold')}
             >
-              <UiIcon name="editorBold" />
+              <KitIcon icon={faBold} />
             </CommandButton>
             <CommandButton
               onClick={() => editor.chain().focus().toggleItalic().run()}
               isActive={editor.isActive('italic')}
             >
-              <UiIcon name="editorItalic" />
+              <KitIcon icon={faItalic} />
             </CommandButton>
           </CommandButtonGroup>
           <CommandButtonGroup>
@@ -115,13 +116,13 @@ const UiRichTextInput = <T extends RichText | null>({
               onClick={() => editor.chain().focus().toggleBulletList().run()}
               isActive={editor.isActive('bulletList')}
             >
-              <UiIcon name="editorListUl" />
+              <KitIcon icon={faListUl} />
             </CommandButton>
             <CommandButton
               onClick={() => editor.chain().focus().toggleOrderedList().run()}
               isActive={editor.isActive('orderedList')}
             >
-              <UiIcon name="editorListOl" />
+              <KitIcon icon={faListOl} />
             </CommandButton>
           </CommandButtonGroup>
         </Controls>
@@ -187,7 +188,7 @@ const Box = styled.div<{ isActive: boolean, isInvalid: boolean }>`
 const CommandButtonGroup = styled.div`
   
 `
-const CommandButton = styled(UiButton)<{ isActive?: boolean }>`
+const CommandButton = styled(KitButton)<{ isActive?: boolean }>`
   padding: ${theme.spacing(0.5)} ${theme.spacing(1)};
   color: ${theme.colors.secondary.contrast};
   background-color: transparent;

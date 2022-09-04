@@ -1,14 +1,14 @@
 import Page from '@/components/Page/Page'
-import UiClientOnly from '@/components/Ui/UiClientOnly'
-import UiIcon from '@/components/Ui/UiIcon'
-import UiTitle from '@/components/Ui/UiTitle'
+import { KitClientOnly } from '@pfadiolten/react-kit'
+import { KitIcon } from '@pfadiolten/react-kit'
+import { KitHeading } from '@pfadiolten/react-kit'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
 import useSsrState from '@/hooks/useSsrState'
 import { CommitteeId, GroupId } from '@/models/Group'
 import User from '@/models/User'
 import { compareUsers, mapUserFromMidata } from '@/repos/UserRepo'
-import theme from '@/theme-utils'
+import { theme } from '@pfadiolten/react-kit'
 import { createInMemoryCache } from '@/utils/InMemoryCache'
 import { MidataPeopleResponse, MidataPerson } from 'midata'
 import { GetServerSideProps, NextPage } from 'next'
@@ -50,9 +50,9 @@ const Kontakt: NextPage<Props> = ({ contactInfo }) => {
   const [president, setPresident] = useSsrState(contactInfo.president)
   return (
     <Page title="Kontakt">
-      <UiTitle level={1}>
+      <KitHeading level={1}>
         Kontakt
-      </UiTitle>
+      </KitHeading>
       <ContactList>
         {als.map((contact, i) => (
           <ContactCard
@@ -70,9 +70,9 @@ const Kontakt: NextPage<Props> = ({ contactInfo }) => {
       </ContactList>
 
       <section>
-        <UiTitle level={2}>
+        <KitHeading level={2}>
           Bankverbindung
-        </UiTitle>
+        </KitHeading>
         <p>
           Raiffeisenbank Olten, 4603 Olten
           <br />
@@ -105,22 +105,22 @@ const ContactCard: React.FC<ContactCardProps> = ({ contact, group, onChange: pus
       )}
       onChange={(user) => pushChange({ ...contact, user })}
     >
-      <UiClientOnly>{() => (
+      <KitClientOnly>{() => (
         <React.Fragment>
           <ContactDetail>
-            <UiIcon name="email" />
+            <KitIcon.Email />
             <a href={`mailto:${contact.user.name.toLowerCase()}@pfadiolten.ch`}>
               {contact.user.name.toLowerCase()}@pfadiolten.ch
             </a>
           </ContactDetail>
           {contact.phoneNumber !== null && (
             <ContactDetail>
-              <UiIcon name="phone" />
+              <KitIcon.Phone />
               {contact.phoneNumber}
             </ContactDetail>
           )}
         </React.Fragment>
-      )}</UiClientOnly>
+      )}</KitClientOnly>
     </UserCard>
   )
 }
@@ -137,7 +137,7 @@ const ContactDetail = styled.div`
     margin-top: ${theme.spacing(0.5)};
   }
   
-  ${UiIcon} {
+  ${KitIcon} {
     margin-right: ${theme.spacing(1)};
   }
 `

@@ -1,5 +1,5 @@
-import UiIcon from '@/components/Ui/UiIcon'
-import theme from '@/theme-utils'
+import { KitIcon } from '@pfadiolten/react-kit'
+import { theme } from '@pfadiolten/react-kit'
 import { run } from '@/utils/control-flow'
 import { StyleProps } from '@/utils/props'
 import Link from 'next/link'
@@ -59,12 +59,12 @@ const Wrapper = styled.li<{ isActive: boolean }>`
     &:hover {
       letter-spacing: var(--hover-letter-spacing);
 
-      ${LinkName} + ${UiIcon} {
+      ${LinkName} + ${KitIcon} {
         transform: translateX(3px);
       }
     }
     
-    ${LinkName} + ${UiIcon}:last-child {
+    ${LinkName} + ${KitIcon}:last-child {
       transition: 250ms ease-out;
       transition-property: transform;
       margin-left: 0.3rem;

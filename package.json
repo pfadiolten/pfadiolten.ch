@@ -12,6 +12,7 @@
     "@daniel-va/react-form": "^0.8.0",
     "@fortawesome/free-brands-svg-icons": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
+    "@pfadiolten/react-kit": "^0.0.1",
     "@reduxjs/toolkit": "^1.8.5",
     "@tiptap/extension-link": "^2.0.0-beta.43",
     "@tiptap/extension-placeholder": "^2.0.0-beta.53",
