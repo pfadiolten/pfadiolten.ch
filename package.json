@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint && tsc --noemit"
+    "lint": "npm run eslint && tsc --noemit",
+    "eslint": "next lint"
   },
   "dependencies": {
     "@daniel-va/react-form": "^0.8.0",
