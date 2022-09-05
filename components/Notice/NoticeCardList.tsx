@@ -18,7 +18,7 @@ export default NoticeCardList
 const Box = styled.ul`
   display: grid;
   gap: ${theme.spacing(2)};
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 
   ${theme.media.xs.only} {
     display: flex;

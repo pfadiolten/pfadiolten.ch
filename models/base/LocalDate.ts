@@ -3,6 +3,9 @@ import StringHelper from '@/utils/helpers/StringHelper'
 type LocalDate = number
 
 const LocalDate = {
+  today(): LocalDate {
+    return LocalDate.fromTimestamp(Date.now())
+  },
   from(year: number, month: number, day: number): LocalDate {
     return Math.floor(Date.UTC(year, month - 1, day) / MILLIS_PER_DAY)
   },

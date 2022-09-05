@@ -14,29 +14,21 @@ import { useAppDispatch } from '@/store/hooks'
 import DateHelper from '@/utils/helpers/DateHelper'
 import { KitDrawer, KitHeading, KitIcon, theme } from '@pfadiolten/react-kit'
 import React, { useCallback, useMemo } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 interface Props {
   event: CalendarEvent
+  isCompact?: boolean
 }
 
-const CalendarEventListItem: React.FC<Props> = ({ event }) => {
-  const currentUser = useCurrentUser()
+const CalendarEventListItem: React.FC<Props> = ({ event, isCompact = false }) => {
   const startDate = LocalDate.toDate(event.startsAt)
   const endDate = LocalDate.toDate(event.endsAt)
-
-  const dispatch = useAppDispatch()
-  const [isEditing, setEditing] = useBool()
-  const handleDelete = useCallback(() => {
-    if (confirm(`Willst du das Ereignis "${event.name}" wirklich löschen?`)) {
-      dispatch(deleteCalendarEvent(event.id))
-    }
-  }, [event, dispatch])
 
   const groups = useMemo(() => allGroups.filter(({ id }) => event.groupIds.includes(id)), [event.groupIds])
 
   return (
-    <Box>
+    <Box isCompact={isCompact}>
       {event.name}
       <div>
         {event.startsAt === event.endsAt ? (
@@ -49,40 +41,18 @@ const CalendarEventListItem: React.FC<Props> = ({ event }) => {
           </React.Fragment>
         )}
       </div>
-      <div>
-        {DateHelper.getNameOfWeekday(startDate).slice(0, 2)}
-        {event.startsAt !== event.endsAt && (
-          <React.Fragment>
-            -
-            {DateHelper.getNameOfWeekday(endDate).slice(0, 2)}
-          </React.Fragment>
-        )}
-      </div>
-      {currentUser === null ? <div /> : (
+      {!isCompact && (
         <React.Fragment>
-          <UiDropdown>
-            <UiDropdown.Activator>{({ toggle }) => (
-              <UiActionButton title="Mehr" color="secondary" onClick={toggle}>
-                <KitIcon.More />
-              </UiActionButton>
-            )}</UiDropdown.Activator>
-            <UiDropdown.Menu label="Mehr zu dieser Aktivität">
-              <UiDropdown.Item onClick={setEditing.on}>
-                Bearbeiten
-              </UiDropdown.Item>
-              <UiDropdown.Item onClick={handleDelete}>
-                Löschen
-              </UiDropdown.Item>
-            </UiDropdown.Menu>
-          </UiDropdown>
-          <KitDrawer size="fixed" isOpen={isEditing} onClose={setEditing.off}>{({ close }) => (
-            <React.Fragment>
-              <KitHeading level={2}>
-                Ereignis bearbeiten
-              </KitHeading>
-              <CalendarEventForm event={event} onClose={close} />
-            </React.Fragment>
-          )}</KitDrawer>
+          <div>
+            {DateHelper.getNameOfWeekday(startDate).slice(0, 2)}
+            {event.startsAt !== event.endsAt && (
+              <React.Fragment>
+                -
+                {DateHelper.getNameOfWeekday(endDate).slice(0, 2)}
+              </React.Fragment>
+            )}
+          </div>
+          <Actions event={event} />
         </React.Fragment>
       )}
       <GroupRow>
@@ -103,12 +73,61 @@ const CalendarEventListItem: React.FC<Props> = ({ event }) => {
 }
 export default CalendarEventListItem
 
-const Box = styled.li`
+const Actions: React.FC<{ event: CalendarEvent }> = ({ event }) => {
+  const dispatch = useAppDispatch()
+  const [isEditing, setEditing] = useBool()
+  const handleDelete = useCallback(() => {
+    if (confirm(`Willst du das Ereignis "${event.name}" wirklich löschen?`)) {
+      dispatch(deleteCalendarEvent(event.id))
+    }
+  }, [event, dispatch])
+
+  const currentUser = useCurrentUser()
+  if (currentUser === null) {
+    return <div />
+  }
+  return (
+    <React.Fragment>
+      <UiDropdown>
+        <UiDropdown.Activator>{({ toggle }) => (
+          <UiActionButton title="Mehr" color="secondary" onClick={toggle}>
+            <KitIcon.More />
+          </UiActionButton>
+        )}</UiDropdown.Activator>
+        <UiDropdown.Menu label="Mehr zu dieser Aktivität">
+          <UiDropdown.Item onClick={setEditing.on}>
+            Bearbeiten
+          </UiDropdown.Item>
+          <UiDropdown.Item onClick={handleDelete}>
+            Löschen
+          </UiDropdown.Item>
+        </UiDropdown.Menu>
+      </UiDropdown>
+      <KitDrawer size="fixed" isOpen={isEditing} onClose={setEditing.off}>{({ close }) => (
+        <React.Fragment>
+          <KitHeading level={2}>
+            Ereignis bearbeiten
+          </KitHeading>
+          <CalendarEventForm event={event} onClose={close} />
+        </React.Fragment>
+      )}</KitDrawer>
+    </React.Fragment>
+  )
+}
+
+const Box = styled.li<{ isCompact: boolean }>`
   display: grid;
   grid-template-areas:
     "a b c d"
     "e e e e";
   grid-template-columns: 2fr 1fr 1fr auto;
+  
+  ${({ isCompact }) => isCompact && css`
+    grid-template-areas:
+      "a b"
+      "e e";
+    grid-template-columns: 2fr 1fr;
+  `}
   
   padding: ${theme.spacing(1)};
   border: 1px solid ${theme.colors.secondary.contrast};
@@ -120,4 +139,5 @@ const Box = styled.li`
 const GroupRow = styled.div`
   grid-area: e;
   justify-content: start;
+  margin-top: ${theme.spacing(0.5)};
 `

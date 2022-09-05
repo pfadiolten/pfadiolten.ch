@@ -106,6 +106,24 @@ export const selectCalendarEvents = (filters: CalendarEventsFilter = {}) => (sta
   })
 }
 
+export const selectNextCalendarEvents = (dayOffset: number) => (state: RootState): CalendarEvent[] => {
+  const today = LocalDate.today()
+  const startIndex = state.calendarEvents.findIndex((event) => event.startsAt >= today)
+  if (startIndex === -1) {
+    return []
+  }
+  const lastDay = today + dayOffset
+  let endIndex = startIndex + 1
+  for (; endIndex < state.calendarEvents.length; endIndex++) {
+    const event = state.calendarEvents[endIndex]
+    if (event.startsAt > lastDay) {
+      endIndex -= 1
+      break
+    }
+  }
+  return state.calendarEvents.slice(startIndex, endIndex + 1)
+}
+
 
 export const fetchCalendarEvents = createAsyncThunk('calendarEvents/fetchCalendarEvents', async (payload: CalendarEventFetchPayload = {}): Promise<CalendarEvent[] | null> => {
   const rangeKey = `${payload.startsAt}-${payload.endsAt}`

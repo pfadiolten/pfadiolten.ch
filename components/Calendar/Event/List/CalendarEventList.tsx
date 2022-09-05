@@ -5,13 +5,14 @@ import CalendarEvent from '@/models/CalendarEvent'
 import { theme } from '@pfadiolten/react-kit'
 import DateHelper from '@/utils/helpers/DateHelper'
 import React, { useMemo } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 interface Props {
   events: CalendarEvent[]
+  isCompact?: boolean
 }
 
-const CalendarEventList: React.FC<Props> = ({ events }) => {
+const CalendarEventList: React.FC<Props> = ({ events, isCompact = false }) => {
   const eventsByMonth = useMemo(() => {
     const result = [] as Array<[Date, CalendarEvent[]]>
     for (const event of events) {
@@ -33,13 +34,15 @@ const CalendarEventList: React.FC<Props> = ({ events }) => {
   return (
     <Box>
       {eventsByMonth.map(([month, monthEvents]) => (
-        <MonthBox key={`${month.getFullYear()}-${month.getMonth()}`}>
-          <KitHeading level={3}>
-            {DateHelper.getNameOfMonth(month)} {month.getFullYear()}
-          </KitHeading>
+        <MonthBox key={`${month.getFullYear()}-${month.getMonth()}`} isCompact={isCompact}>
+          {!isCompact && (
+            <KitHeading level={3}>
+              {DateHelper.getNameOfMonth(month)} {month.getFullYear()}
+            </KitHeading>
+          )}
           <MonthEventList>
             {monthEvents.map((event) => (
-              <CalendarEventListItem key={event.id} event={event} />
+              <CalendarEventListItem key={event.id} event={event} isCompact={isCompact} />
             ))}
           </MonthEventList>
         </MonthBox>
@@ -50,13 +53,14 @@ const CalendarEventList: React.FC<Props> = ({ events }) => {
 export default CalendarEventList
 
 const Box = styled.ol`
-  
 `
 
-const MonthBox = styled.li`
-  :not(:first-child) {
-    margin-top: ${theme.spacing(2)};
-  }
+const MonthBox = styled.li<{ isCompact: boolean }>`
+  ${({ isCompact }) => !isCompact && css`
+    :not(:first-child) {
+      margin-top: ${theme.spacing(2)};
+    }
+  `}
 `
 const MonthEventList = styled.ol`
   

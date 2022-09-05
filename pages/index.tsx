@@ -1,8 +1,18 @@
+import CalendarEventList from '@/components/Calendar/Event/List/CalendarEventList'
 import NoticeCard from '@/components/Notice/NoticeCard'
 import NoticeCardList from '@/components/Notice/NoticeCardList'
 import NoticeForm from '@/components/Notice/NoticeForm'
 import Page from '@/components/Page/Page'
-import { KitButton } from '@pfadiolten/react-kit'
+import LocalDate from '@/models/base/LocalDate'
+import CalendarEvent from '@/models/CalendarEvent'
+import CalendarEventRepo from '@/repos/CalendarEventRepo'
+import {
+  saveCalendarEvent,
+  saveCalendarEvents,
+  selectNextCalendarEvents,
+} from '@/store/calendar/events/calendarEvents.slice'
+import { run } from '@/utils/control-flow'
+import { KitButton, KitGrid } from '@pfadiolten/react-kit'
 import { KitDrawer } from '@pfadiolten/react-kit'
 import { KitIcon } from '@pfadiolten/react-kit'
 import { KitHeading } from '@pfadiolten/react-kit'
@@ -27,17 +37,20 @@ interface Props {
   data: {
     notices: Notice[]
     users: User[]
+    nextEvents: CalendarEvent[]
   }
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const notices = await NoticeRepo.list()
   const users = await UserRepo.list()
+  const nextEvents = await CalendarEventRepo.list({ startsAt: LocalDate.today(), endsAt: LocalDate.today() + NEXT_EVENTS_DAY_OFFSET })
   return {
     props: {
       data: {
         notices,
         users,
+        nextEvents,
       },
     },
   }
@@ -48,10 +61,12 @@ const Home: NextPage<Props> = ({ data }) => {
   useSsrEffect(() => batch(() => {
     dispatch(saveUsers(data.users))
     dispatch(saveNotices(data.notices))
+    dispatch(saveCalendarEvents(data.nextEvents))
   }))
 
   const currentUser = useCurrentUser()
   const activeNotices = useAppSelector(selectActiveNotices)
+  const nextEvents = useAppSelector(selectNextCalendarEvents(NEXT_EVENTS_DAY_OFFSET))
 
   const [isNoticeCreationOpen, setNoticeCreationOpen] = useState(false)
 
@@ -79,19 +94,31 @@ const Home: NextPage<Props> = ({ data }) => {
           </HeadingArticle>
         </ContentCard>
 
-        <NoticeCardList>
-          {activeNotices.map((notice) => (
-            <NoticeCard
-              key={notice.id}
-              notice={notice}
-            />
-          ))}
-          {currentUser !== null && (
-            <CreateNoticeButton color="secondary" onClick={() => setNoticeCreationOpen(true)} title="Neue Aktivität erfassen">
-              <KitIcon.Add size={1.5} />
-            </CreateNoticeButton>
-          )}
-        </NoticeCardList>
+        <KitGrid>
+          <KitGrid.Col>
+            <NoticeCardList>
+              {activeNotices.map((notice) => (
+                <NoticeCard
+                  key={notice.id}
+                  notice={notice}
+                />
+              ))}
+              {currentUser !== null && (
+                <CreateNoticeButton color="secondary" onClick={() => setNoticeCreationOpen(true)} title="Neue Aktivität erfassen">
+                  <KitIcon.Add size={1.5} />
+                </CreateNoticeButton>
+              )}
+            </NoticeCardList>
+          </KitGrid.Col>
+          <KitGrid.Col size={{ xs: 12, md: 5, lg: 4, xl: 3 }}>
+            <ContentCard>
+              <KitHeading level={3}>
+                nächste Ereignisse
+              </KitHeading>
+              <CalendarEventList events={nextEvents} isCompact />
+            </ContentCard>
+          </KitGrid.Col>
+        </KitGrid>
 
         {currentUser !== null && (
           <>
@@ -111,6 +138,8 @@ const Home: NextPage<Props> = ({ data }) => {
   )
 }
 export default Home
+
+const NEXT_EVENTS_DAY_OFFSET = 62
 
 const Background = styled.div`
   position: fixed;
