@@ -7,6 +7,6 @@ export default ApiService.handleResource(CalendarEventRepo, {
   list(req, params) {
     const startsAt = ApiService.Params.getInt(req, 'startsAt')
     const endsAt = ApiService.Params.getInt(req, 'endsAt')
-    return CalendarEventRepo.listBetween({ startsAt, endsAt, limit: params.limit })
+    return CalendarEventRepo.list({ startsAt, endsAt, limit: params.limit })
   },
 })

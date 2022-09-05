@@ -9,7 +9,7 @@ class CalendarEventRepo extends MongoRepo<CalendarEvent> {
     return 'calendar-events'
   }
 
-  async listBetween(options: ListBetweenOptions = {}) {
+  list(options: ListCalendarEventsOptions = {}): Promise<CalendarEvent[]> {
     const {
       limit,
       startsAt = null,
@@ -38,7 +38,7 @@ class CalendarEventRepo extends MongoRepo<CalendarEvent> {
 }
 export default new CalendarEventRepo()
 
-interface ListBetweenOptions extends ListOptions<CalendarEvent> {
+interface ListCalendarEventsOptions extends ListOptions<CalendarEvent> {
   startsAt?: LocalDate | null
   endsAt?: LocalDate | null
 }
