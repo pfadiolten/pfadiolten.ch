@@ -9,7 +9,7 @@ import { noop } from '@/utils/fns'
 import { InputProps } from '@daniel-va/react-form'
 import { Placeholder } from '@tiptap/extension-placeholder'
 import { EditorContent, useEditor } from '@tiptap/react'
-import React, { useRef, useState } from 'react'
+import React, { MouseEventHandler, useRef, useState } from 'react'
 import { useUpdateEffect } from 'react-use'
 import styled, { css } from 'styled-components'
 import { Error, Label, Wrapper } from './UiInputField'
@@ -71,6 +71,12 @@ const UiRichTextInput = <T extends RichText | null>({
     }, 100)
   }, [editor?.isFocused])
 
+  const handleClick: MouseEventHandler = (e) => {
+    editor?.chain().focus().run()
+    e.stopPropagation()
+    e.preventDefault()
+  }
+
   if (editor === null) {
     return null
   }
@@ -79,7 +85,7 @@ const UiRichTextInput = <T extends RichText | null>({
   const wrapperTag = label === null ? 'div' : 'label'
 
   return (
-    <Wrapper as={wrapperTag} onClick={() => editor.chain().focus().run()}>
+    <Wrapper as={wrapperTag} onClick={handleClick}>
       {label && (
         <Label>{label}</Label>
       )}
@@ -186,7 +192,7 @@ const Box = styled.div<{ isActive: boolean, isInvalid: boolean }>`
   }
 `
 const CommandButtonGroup = styled.div`
-  
+  display: flex;
 `
 const CommandButton = styled(KitButton)<{ isActive?: boolean }>`
   padding: ${theme.spacing(0.5)} ${theme.spacing(1)};
