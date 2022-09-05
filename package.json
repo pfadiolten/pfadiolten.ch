@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "npm run eslint && tsc --noemit",
-    "eslint": "next lint"
+    "eslint": "next lint",
+    "deps": "npm install && docker compose run web npm install"
   },
   "dependencies": {
     "@daniel-va/react-form": "^0.8.0",
