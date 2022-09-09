@@ -35,7 +35,7 @@ export const getServerSideProps: GetServerSideProps<Props, Query> = async (ctx) 
 const Stufe: NextPage<Props> = ({ group, members: initialMembers }) => {
   const [members, setMembers] = useState(initialMembers)
   return (
-    <Page title={`${group.name}`}>
+    <Page title={group.name}>
       <KitHeading level={1}>
         die {group.name}
       </KitHeading>

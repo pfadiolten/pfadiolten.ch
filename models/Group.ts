@@ -100,13 +100,15 @@ export const allRotten: Group<GroupType.ROTTE>[] = [
   },
 ]
 
+export const vorstand: Group<GroupType.COMMITTEE> = {
+  id: CommitteeId.VORSTAND,
+  name: 'Vorstand',
+  shortName: null,
+  type: GroupType.COMMITTEE,
+}
+
 export const allCommittees: Group<GroupType.COMMITTEE>[] = [
-  {
-    id: CommitteeId.VORSTAND,
-    name: 'Vorstand',
-    shortName: null,
-    type: GroupType.COMMITTEE,
-  },
+  vorstand,
 ]
 
 export const als: Group<GroupType.OTHER> = {

@@ -1,47 +1,37 @@
 import Page from '@/components/Page/Page'
-import { KitHeading } from '@pfadiolten/react-kit'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
-import Group, { allGroups, allRotten, allUnits, RottenId, UnitId } from '@/models/Group'
+import { CommitteeId, UnitId, vorstand } from '@/models/Group'
 import User from '@/models/User'
 import UserRepo from '@/repos/UserRepo'
+import { KitHeading } from '@pfadiolten/react-kit'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useState } from 'react'
 
 interface Props {
-  group: Group
   members: User[]
 }
 
-type Query = {
-  id: UnitId
-}
-
-export const getServerSideProps: GetServerSideProps<Props, Query> = async (ctx) => {
-  const id = ctx.params!.id.toLowerCase() as RottenId
-  const group = allRotten.find((group) => group.id === id)
-  if (group === undefined) {
-    return { notFound: true }
-  }
-  const members = (await UserRepo.listGroup(id))!
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  const members = (await UserRepo.listGroup(CommitteeId.VORSTAND))!
   return {
     props: {
-      group,
       members,
     },
   }
 }
 
-const Rotte: NextPage<Props> = ({ group, members: initialMembers }) => {
+const Stufe: NextPage<Props> = ({ members: initialMembers }) => {
+  const group = vorstand
   const [members, setMembers] = useState(initialMembers)
   return (
-    <Page title={group.name}>
+    <Page title="Vorstand">
       <KitHeading level={1}>
-        die {group.name}
+        der Vorstand
       </KitHeading>
       <section>
         <KitHeading level={2}>
-          Team
+          Besetzung
         </KitHeading>
         <UserCardList>
           {members.map((member, i) => (
@@ -61,4 +51,4 @@ const Rotte: NextPage<Props> = ({ group, members: initialMembers }) => {
     </Page>
   )
 }
-export default Rotte
+export default Stufe
