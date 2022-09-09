@@ -1,7 +1,7 @@
 import Page from '@/components/Page/Page'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
-import { CommitteeId, UnitId, vorstand } from '@/models/Group'
+import { als, CommitteeId, UnitId, vorstand } from '@/models/Group'
 import User from '@/models/User'
 import UserRepo from '@/repos/UserRepo'
 import { KitHeading } from '@pfadiolten/react-kit'
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const members = (await UserRepo.listGroup(CommitteeId.VORSTAND))!
+  const members = (await UserRepo.listGroup('als'))!
   return {
     props: {
       members,
@@ -21,13 +21,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   }
 }
 
-const Vorstand: NextPage<Props> = ({ members: initialMembers }) => {
-  const group = vorstand
+const ALs: NextPage<Props> = ({ members: initialMembers }) => {
+  const group = als
   const [members, setMembers] = useState(initialMembers)
   return (
-    <Page title="Vorstand">
+    <Page title="Abteilungsleitung">
       <KitHeading level={1}>
-        der Vorstand
+        die Abteilungsleitung
       </KitHeading>
       <section>
         <KitHeading level={2}>
@@ -51,4 +51,4 @@ const Vorstand: NextPage<Props> = ({ members: initialMembers }) => {
     </Page>
   )
 }
-export default Vorstand
+export default ALs
