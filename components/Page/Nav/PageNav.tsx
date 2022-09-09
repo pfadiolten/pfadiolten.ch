@@ -66,6 +66,9 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
               <UiDropdown.Link href="/rotten">
                 Rotten
               </UiDropdown.Link>
+              <UiDropdown.Link href="/vorstand">
+                Vorstand
+              </UiDropdown.Link>
             </UiDropdown.Menu>
           </UiDropdown>
 
