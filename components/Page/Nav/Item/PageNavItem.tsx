@@ -11,10 +11,11 @@ interface Props extends StyleProps {
   name: string
   href?: string
   onClick?: () => void
+  isOpenDropdown?: boolean
   children?: ReactNode
 }
 
-const PageNavItem: React.FC<Props> = ({ name, href, onClick, children }) => {
+const PageNavItem: React.FC<Props> = ({ name, href, onClick, isOpenDropdown, children }) => {
   const path = useRouter().asPath.toLowerCase()
   const isActive = href === undefined
     ? false
@@ -36,6 +37,9 @@ const PageNavItem: React.FC<Props> = ({ name, href, onClick, children }) => {
           <LinkName data-name={name}>
             {name}
           </LinkName>
+          {isOpenDropdown !== undefined && (
+            <DropdownIcon isOpen={isOpenDropdown} size={0.75} />
+          )}
           {children}
         </span>
       )}
@@ -45,26 +49,33 @@ const PageNavItem: React.FC<Props> = ({ name, href, onClick, children }) => {
 export default PageNavItem
 
 const LinkName = styled.span``
+const DropdownIcon = styled(KitIcon.PullDown)<{ isOpen: boolean }>`
+  ${({ isOpen }) => isOpen && css`
+    transform: translateX(3px) rotate(180deg);
+  `}
+`
 const Wrapper = styled.li<{ isActive: boolean }>`
   --hover-letter-spacing: 0.05em;
-  
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
 
+  cursor: pointer;
+  
+  &, > span {
+    display: inline-flex;
+    align-items: center;
+  }
+  
   ${({ isActive }) => !isActive && css`
+    ${LinkName} + ${KitIcon} {
+      transition: ${theme.transitions.fade};
+      transition-property: transform;
+      margin-left: 0.1rem;
+    }
     &:hover {
       letter-spacing: var(--hover-letter-spacing);
 
-      ${LinkName} + ${KitIcon} {
+      ${LinkName} + ${KitIcon}:not(${DropdownIcon}) {
         transform: translateX(3px);
       }
-    }
-    
-    ${LinkName} + ${KitIcon}:last-child {
-      transition: 250ms ease-out;
-      transition-property: transform;
-      margin-left: 0.3rem;
     }
   `}
   

@@ -56,8 +56,8 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
       <Menu isOpen={isOpen}>
         <Links>
           <UiDropdown>
-            <UiDropdown.Activator>{({ open }) => (
-              <PageNavItem name="Abteilung" onClick={open} />
+            <UiDropdown.Activator>{({ toggle, isOpen }) => (
+              <PageNavItem name="Abteilung" onClick={toggle} isOpenDropdown={isOpen} />
             )}</UiDropdown.Activator>
             <UiDropdown.Menu label="Links zur Abteilung">
               <UiDropdown.Link href="/stufen">
