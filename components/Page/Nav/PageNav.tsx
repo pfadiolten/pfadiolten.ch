@@ -1,4 +1,5 @@
 import PageNavItem from '@/components/Page/Nav/Item/PageNavItem'
+import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import { KitIcon, theme } from '@pfadiolten/react-kit'
 import { signIn, signOut } from 'next-auth/react'
@@ -54,7 +55,20 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
       </MenuToggle>
       <Menu isOpen={isOpen}>
         <Links>
-          <PageNavItem name="Stufen" href="/stufen" />
+          <UiDropdown>
+            <UiDropdown.Activator>{({ open }) => (
+              <PageNavItem name="Abteilung" onClick={open} />
+            )}</UiDropdown.Activator>
+            <UiDropdown.Menu label="Links zur Abteilung">
+              <UiDropdown.Link href="/stufen">
+                Stufen
+              </UiDropdown.Link>
+              <UiDropdown.Link href="/rotten">
+                Rotten
+              </UiDropdown.Link>
+            </UiDropdown.Menu>
+          </UiDropdown>
+
           <PageNavItem name="Jahresprogramm" href="/kalender" />
           <PageNavItem name="Kontakt" href="/kontakt" />
 

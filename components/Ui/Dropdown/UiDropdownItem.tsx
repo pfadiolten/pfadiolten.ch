@@ -26,7 +26,7 @@ const UiDropdownItem: React.FC<Props> = ({
 }
 export default UiDropdownItem
 
-const Box = styled.li`
+const Box = styled.li.attrs((props) => ({ role: 'menuitem', ...props }))`
   padding: ${theme.spacing(1)};
   cursor: pointer;
   color: var(--color);
@@ -34,6 +34,9 @@ const Box = styled.li`
   
   transition: ${theme.transitions.fade};
   transition-property: filter;
+
+  word-break: keep-all;
+  white-space: nowrap;
   
   :hover {
     filter: brightness(0.9);
@@ -42,3 +45,6 @@ const Box = styled.li`
     filter: brightness(0.75);
   }
 `
+export {
+  Box as UiDropdownItemBox,
+}

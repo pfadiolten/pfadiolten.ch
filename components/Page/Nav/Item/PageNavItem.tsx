@@ -16,12 +16,9 @@ interface Props extends StyleProps {
 
 const PageNavItem: React.FC<Props> = ({ name, href, onClick, children }) => {
   const path = useRouter().asPath.toLowerCase()
-  const isActive = run(() => {
-    if (!href) {
-      return false
-    }
-    return path.startsWith(href.toLowerCase())
-  })
+  const isActive = href === undefined
+    ? false
+    : path.startsWith(href.toLowerCase())
 
   return (
     <Wrapper isActive={isActive}>

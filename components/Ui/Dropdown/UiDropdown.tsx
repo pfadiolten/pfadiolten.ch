@@ -1,6 +1,7 @@
 import UiDropdownActivator from '@/components/Ui/Dropdown/UiDropdownActivator'
 import UiDropdownContext, { UiDropdownContextState } from '@/components/Ui/Dropdown/UiDropdownContext'
 import UiDropdownItem from '@/components/Ui/Dropdown/UiDropdownItem'
+import UiDropdownLink from '@/components/Ui/Dropdown/UiDropdownLink'
 import UiDropdownMenu from '@/components/Ui/Dropdown/UiDropdownMenu'
 import React, { ReactNode, useMemo, useRef, useState } from 'react'
 import { useClickAway } from 'react-use'
@@ -37,8 +38,14 @@ export default Object.assign(UiDropdown, {
   Activator: UiDropdownActivator,
   Menu: UiDropdownMenu,
   Item: UiDropdownItem,
+  Link: UiDropdownLink,
 })
 
 const Box = styled.div`
   position: relative;
+  
+  > a {
+    color: currentColor;
+    text-decoration: none;
+  }
 `

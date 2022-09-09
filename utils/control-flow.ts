@@ -9,6 +9,9 @@ export const then = <T, R>(value: T, action: (value: T) => R): R => {
   return action(value)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const markAsUsed = (..._value: unknown[]) => {}
+
 export const raise = (error: Error | string): never => {
   if (typeof error === 'string') {
     throw new Error(error)
@@ -32,4 +35,10 @@ export const range = <T>(start: number, end: number, create: (i: number) => T): 
     result[i - start] = create(i)
   }
   return result
+}
+
+export const sleep = (durationMs: number): Promise<void> => {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), durationMs)
+  })
 }

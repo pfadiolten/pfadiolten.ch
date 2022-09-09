@@ -8,6 +8,9 @@ export default interface Group<TType extends GroupType = GroupType> extends Mode
     TType extends GroupType.COMMITTEE
       ? CommitteeId
       :
+    TType extends GroupType.ROTTE
+      ? RottenId
+      :
     'als'
   name: string
   shortName: string | null
@@ -17,6 +20,7 @@ export default interface Group<TType extends GroupType = GroupType> extends Mode
 export type GroupId =
   | 'als'
   | UnitId
+  | RottenId
   | CommitteeId
 
 export enum UnitId {
@@ -27,12 +31,18 @@ export enum UnitId {
   ROVER = 'rover',
 }
 
+export enum RottenId {
+  SPASS = 'spass',
+  ABC = 'abc',
+}
+
 export enum CommitteeId {
   VORSTAND = 'vorstand',
 }
 
 export enum GroupType {
   UNIT,
+  ROTTE,
   COMMITTEE,
   OTHER,
 }
@@ -72,6 +82,21 @@ export const allUnits: Group<GroupType.UNIT>[] = [
     name: 'Roverstufe',
     shortName: 'Rover',
     type: GroupType.UNIT,
+  },
+]
+
+export const allRotten: Group<GroupType.ROTTE>[] = [
+  {
+    id: RottenId.SPASS,
+    name: 'Spassrotte',
+    shortName: 'Spass',
+    type: GroupType.ROTTE,
+  },
+  {
+    id: RottenId.ABC,
+    name: 'ABC-Rotte',
+    shortName: 'ABC',
+    type: GroupType.ROTTE,
   },
 ]
 

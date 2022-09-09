@@ -2,7 +2,7 @@ import Page from '@/components/Page/Page'
 import { KitHeading } from '@pfadiolten/react-kit'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
-import Group, { allUnits, UnitId } from '@/models/Group'
+import Group, { allGroups, allRotten, allUnits, RottenId, UnitId } from '@/models/Group'
 import User from '@/models/User'
 import UserRepo from '@/repos/UserRepo'
 import { GetServerSideProps, NextPage } from 'next'
@@ -18,8 +18,8 @@ type Query = {
 }
 
 export const getServerSideProps: GetServerSideProps<Props, Query> = async (ctx) => {
-  const id = ctx.params!.id.toLowerCase() as UnitId
-  const group = allUnits.find((group) => group.id === id)
+  const id = ctx.params!.id.toLowerCase() as RottenId
+  const group = allRotten.find((group) => group.id === id)
   if (group === undefined) {
     return { notFound: true }
   }
@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps<Props, Query> = async (ctx) 
   }
 }
 
-const Stufe: NextPage<Props> = ({ group, members: initialMembers }) => {
+const Rotte: NextPage<Props> = ({ group, members: initialMembers }) => {
   const [members, setMembers] = useState(initialMembers)
   return (
     <Page title={`${group.name}`}>
@@ -41,7 +41,7 @@ const Stufe: NextPage<Props> = ({ group, members: initialMembers }) => {
       </KitHeading>
       <section>
         <KitHeading level={2}>
-          Leitungsteam
+          Team
         </KitHeading>
         <UserCardList>
           {members.map((member, i) => (
@@ -61,4 +61,4 @@ const Stufe: NextPage<Props> = ({ group, members: initialMembers }) => {
     </Page>
   )
 }
-export default Stufe
+export default Rotte

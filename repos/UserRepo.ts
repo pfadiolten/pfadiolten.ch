@@ -145,6 +145,26 @@ const midataGroupConfigs: { [x in GroupId]: MidataGroupConfig } = {
     id: '2470',
     roles: [],
   },
+  spass: {
+    id: '8777',
+    roles: [
+      {
+        id: '7',
+        roleType: 'Leiter*in',
+        roleName: 'Mitglied',
+      },
+    ],
+  },
+  abc: {
+    id: '8776',
+    roles: [
+      {
+        id: '7',
+        roleType: 'Leiter*in',
+        roleName: 'Mitglied',
+      },
+    ],
+  },
   vorstand: {
     id: '5395',
     roles: [
