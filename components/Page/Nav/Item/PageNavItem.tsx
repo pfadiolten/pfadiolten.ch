@@ -22,7 +22,7 @@ const PageNavItem: React.FC<Props> = ({ name, href, onClick, isOpenDropdown, chi
     : path.startsWith(href.toLowerCase())
 
   return (
-    <Wrapper isActive={isActive}>
+    <Wrapper isActive={isActive} isOpenDropdown={isOpenDropdown ?? false}>
       {href ? (
         <Link href={href}>
           <a onClick={onClick}>
@@ -38,7 +38,7 @@ const PageNavItem: React.FC<Props> = ({ name, href, onClick, isOpenDropdown, chi
             {name}
           </LinkName>
           {isOpenDropdown !== undefined && (
-            <DropdownIcon isOpen={isOpenDropdown} size={0.75} />
+            <DropdownIcon size={0.75} />
           )}
           {children}
         </span>
@@ -49,12 +49,8 @@ const PageNavItem: React.FC<Props> = ({ name, href, onClick, isOpenDropdown, chi
 export default PageNavItem
 
 const LinkName = styled.span``
-const DropdownIcon = styled(KitIcon.PullDown)<{ isOpen: boolean }>`
-  ${({ isOpen }) => isOpen && css`
-    transform: translateX(3px) rotate(180deg);
-  `}
-`
-const Wrapper = styled.li<{ isActive: boolean }>`
+const DropdownIcon = styled(KitIcon.PullDown)``
+const Wrapper = styled.li<{ isActive: boolean, isOpenDropdown: boolean }>`
   --hover-letter-spacing: 0.05em;
 
   cursor: pointer;
@@ -76,6 +72,19 @@ const Wrapper = styled.li<{ isActive: boolean }>`
       ${LinkName} + ${KitIcon}:not(${DropdownIcon}) {
         transform: translateX(3px);
       }
+    }
+  `}
+  
+  ${({ isOpenDropdown }) => isOpenDropdown ? css`
+    ${DropdownIcon} {
+      transform: rotate(180deg);
+    }
+    :hover ${DropdownIcon} {
+      transform: translateX(3px) rotate(180deg);
+    }
+  ` : css`
+    :hover ${DropdownIcon} {
+      transform: translateX(3px);
     }
   `}
   
