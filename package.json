@@ -8,12 +8,16 @@
     "start": "next start",
     "lint": "npm run eslint && tsc --noemit",
     "eslint": "next lint",
-    "deps": "npm install && docker compose run web npm install"
+    "deps": "npm install && docker compose run web npm install",
+    "analyze": "cross-env ANALYZE=true next build",
+    "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
+    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
   },
   "dependencies": {
     "@daniel-va/react-form": "^0.8.0",
     "@fortawesome/free-brands-svg-icons": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
+    "@next/bundle-analyzer": "^12.3.1",
     "@pfadiolten/react-kit": "^0.0.5",
     "@reduxjs/toolkit": "^1.8.5",
     "@tiptap/extension-link": "^2.0.0-beta.43",
@@ -48,6 +52,7 @@
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
+    "cross-env": "^7.0.3",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.5",
     "typescript": "4.7.4"
