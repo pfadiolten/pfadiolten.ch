@@ -1,6 +1,6 @@
 import CalendarEventListItem from '@/components/Calendar/Event/List/CalendarEventListItem'
 import { KitHeading } from '@pfadiolten/react-kit'
-import LocalDate from '@/models/base/LocalDate'
+import { LocalDate } from '@pfadiolten/react-kit'
 import CalendarEvent from '@/models/CalendarEvent'
 import { theme } from '@pfadiolten/react-kit'
 import DateHelper from '@/utils/helpers/DateHelper'

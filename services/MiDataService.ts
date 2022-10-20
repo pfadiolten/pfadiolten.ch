@@ -1,4 +1,4 @@
-import Id from '@/models/base/Id'
+import { Id } from '@pfadiolten/react-kit'
 import SessionUser from '@/models/SessionUser'
 import StringHelper from '@/utils/helpers/StringHelper'
 import { User } from 'next-auth'

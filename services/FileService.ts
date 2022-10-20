@@ -1,4 +1,4 @@
-import Id from '@/models/base/Id'
+import { Id } from '@pfadiolten/react-kit'
 import { ReadStream } from 'fs'
 import * as fs from 'fs'
 

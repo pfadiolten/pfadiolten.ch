@@ -2,7 +2,6 @@ import GroupLabel from '@/components/Group/GroupLabel'
 import GroupLabelList from '@/components/Group/GroupLabelList'
 import NoticeForm from '@/components/Notice/NoticeForm'
 import UiActionButton from '@/components/Ui/Button/UiActionButton'
-import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
 import UiDate from '@/components/Ui/UiDate'
 import UiRichText from '@/components/Ui/UiRichText'
 import useBool from '@/hooks/useBool'
@@ -16,6 +15,7 @@ import { selectUser } from '@/store/users/users.slice'
 import { KitDrawer, KitHeading, KitIcon, theme } from '@pfadiolten/react-kit'
 import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
+import { KitDropdown } from '@pfadiolten/react-kit'
 
 interface Props {
   notice: Notice
@@ -47,21 +47,21 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
         </KitHeading>
         {currentUser !== null && (
           <ActionButtons>
-            <UiDropdown>
-              <UiDropdown.Activator>{({ toggle }) => (
+            <KitDropdown>
+              <KitDropdown.Activator>{({ toggle }) => (
                 <UiActionButton title="Mehr" color="secondary" onClick={toggle}>
                   <KitIcon.More />
                 </UiActionButton>
-              )}</UiDropdown.Activator>
-              <UiDropdown.Menu label="Mehr zu dieser Aktivität">
-                <UiDropdown.Item onClick={setEditing.on}>
+              )}</KitDropdown.Activator>
+              <KitDropdown.Menu label="Mehr zu dieser Aktivität">
+                <KitDropdown.Item onClick={setEditing.on}>
                   Bearbeiten
-                </UiDropdown.Item>
-                <UiDropdown.Item onClick={handleDelete}>
+                </KitDropdown.Item>
+                <KitDropdown.Item onClick={handleDelete}>
                   Löschen
-                </UiDropdown.Item>
-              </UiDropdown.Menu>
-            </UiDropdown>
+                </KitDropdown.Item>
+              </KitDropdown.Menu>
+            </KitDropdown>
           </ActionButtons>
         )}
       </TitleRow>

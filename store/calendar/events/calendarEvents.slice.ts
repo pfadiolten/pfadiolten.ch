@@ -1,6 +1,5 @@
-import Id from '@/models/base/Id'
-import LocalDate from '@/models/base/LocalDate'
-import { ModelData } from '@/models/base/Model'
+import { Id, LocalDate } from '@pfadiolten/react-kit'
+import { ModelData } from '@pfadiolten/react-kit'
 import CalendarEvent from '@/models/CalendarEvent'
 import { allGroups, GroupId } from '@/models/Group'
 import FetchService from '@/services/FetchService'

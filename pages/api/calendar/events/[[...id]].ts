@@ -5,8 +5,8 @@ import ApiService from '@/services/ApiService'
 export default ApiService.handleResource(CalendarEventRepo, {
   policy: CalendarEventPolicy,
   list(req, params) {
-    const startsAt = ApiService.Params.getInt(req, 'startsAt')
-    const endsAt = ApiService.Params.getInt(req, 'endsAt')
+    const startsAt = ApiService.Params.getLocalDate(req, 'startsAt')
+    const endsAt = ApiService.Params.getLocalDate(req, 'endsAt')
     return CalendarEventRepo.listBetween({ startsAt, endsAt, limit: params.limit })
   },
 })

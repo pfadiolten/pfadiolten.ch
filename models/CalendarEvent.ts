@@ -1,7 +1,6 @@
-import LocalDate from '@/models/base/LocalDate'
-import Model, { ModelData } from '@/models/base/Model'
 import { GroupId } from '@/models/Group'
 import { createValidator, validate } from '@daniel-va/validate'
+import { LocalDate, Model, ModelData } from '@pfadiolten/react-kit'
 
 export default interface CalendarEvent extends Model {
   name: string

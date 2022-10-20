@@ -1,10 +1,8 @@
-import Id from '@/models/base/Id'
-import { ModelData } from '@/models/base/Model'
 import Notice from '@/models/Notice'
 import FetchService from '@/services/FetchService'
 import { RootState } from '@/store'
 import { createModelSelectors } from '@/store/utils/model-utils'
-import DateHelper from '@/utils/helpers/DateHelper'
+import { Id, LocalDate, LocalDateTime, ModelData } from '@pfadiolten/react-kit'
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 type NoticesState = Record<Id<Notice>, Notice>
@@ -41,10 +39,9 @@ export default noticesSlice.reducer
 export const [selectNotices, selectNotice] = createModelSelectors('notices')
 
 export const selectActiveNotices = (state: RootState): Notice[] => {
-  const today = DateHelper.getToday()
   return selectNotices(state).filter((notice) => {
-    const endsAtDay = DateHelper.getToday(notice.endsAt)
-    return endsAtDay >= today
+    const endsAtDay = LocalDateTime.toLocalDate(notice.endsAt)
+    return endsAtDay >= LocalDate.today
   })
 }
 

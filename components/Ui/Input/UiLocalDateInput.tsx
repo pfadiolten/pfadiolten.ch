@@ -1,5 +1,5 @@
 import UiInputField, { LookAndFeelProps } from '@/components/Ui/Input/UiInputField'
-import LocalDate from '@/models/base/LocalDate'
+import { LocalDate } from '@pfadiolten/react-kit'
 import { noop } from '@/utils/fns'
 import { InputProps } from '@daniel-va/react-form'
 import React, { ChangeEvent, useCallback, useMemo } from 'react'

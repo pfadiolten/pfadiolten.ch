@@ -1,4 +1,3 @@
-import Model from '@/models/base/Model'
 import SessionUser from '@/models/SessionUser'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import {
@@ -31,9 +30,9 @@ import ApiErrorService, { ApiError } from '@/services/api/ApiErrorService'
 import ApiParamService from '@/services/api/ApiParamService'
 import { run } from '@/utils/control-flow'
 import { identity } from '@/utils/fns'
+import { Model } from '@pfadiolten/react-kit'
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import { unstable_getServerSession } from 'next-auth'
-import * as superjson from 'superjson'
 
 class ApiService {
   get Params() {
@@ -63,7 +62,7 @@ class ApiService {
           if (Object.keys(req.body).length === 0) {
             return null
           }
-          return superjson.deserialize(req.body)
+          return req.body
         }
         if (typeof req.body === 'string' && req.body.length === 0) {
           return null
@@ -82,10 +81,6 @@ class ApiService {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return base.apply(this, args as any)
         }
-      }
-      const jsonBase = res.json
-      res.json = (data, ...args) => {
-        return jsonBase(superjson.serialize(data), ...args)
       }
       return handle(serviceReq, res, data as I)
     })

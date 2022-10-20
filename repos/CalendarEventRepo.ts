@@ -1,7 +1,7 @@
-import LocalDate from '@/models/base/LocalDate'
 import CalendarEvent from '@/models/CalendarEvent'
 import MongoRepo, { Doc } from '@/repos/base/MongoRepo'
 import { ListOptions } from '@/repos/Repo'
+import { LocalDate } from '@pfadiolten/react-kit'
 import { Filter } from 'mongodb'
 
 class CalendarEventRepo extends MongoRepo<CalendarEvent> {

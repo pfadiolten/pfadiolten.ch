@@ -1,4 +1,4 @@
-import Id from '@/models/base/Id'
+import { Id } from '@pfadiolten/react-kit'
 import { RootState } from '@/store'
 
 export const createModelSelectors = <K extends keyof ModelSelectorKeys>(key: K) => {

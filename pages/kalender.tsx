@@ -1,14 +1,13 @@
 import CalendarEventForm from '@/components/Calendar/Event/CalendarEventForm'
 import CalendarEventList from '@/components/Calendar/Event/List/CalendarEventList'
 import Page from '@/components/Page/Page'
-import { KitButton } from '@pfadiolten/react-kit'
+import { KitButton, LocalDate } from '@pfadiolten/react-kit'
 import { KitToggle } from '@pfadiolten/react-kit'
 import { KitDrawer } from '@pfadiolten/react-kit'
 import { KitIcon } from '@pfadiolten/react-kit'
 import { KitHeading } from '@pfadiolten/react-kit'
 import useBool from '@/hooks/useBool'
 import useCurrentUser from '@/hooks/useCurrentUser'
-import LocalDate from '@/models/base/LocalDate'
 import { allGroups, GroupId } from '@/models/Group'
 import {
   CalendarEventFetchPayload,
@@ -78,8 +77,8 @@ const Kalender: NextPage<Props> = ({ ssrYear }) => {
   }
 
   const fetchPayload: CalendarEventFetchPayload = useMemo(() => {
-    const startsAt = LocalDate.from(currentYear, 1, 1)
-    const endsAt = LocalDate.from(currentYear + 1, 1, 1) - 1
+    const startsAt = LocalDate.at(currentYear, 1, 1)
+    const endsAt = LocalDate.from(LocalDate.at(currentYear + 1, 1, 1) - 1)
     return { startsAt, endsAt }
   }, [currentYear])
 
