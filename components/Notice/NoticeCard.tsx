@@ -48,8 +48,8 @@ const NoticeCard: React.FC<Props> = ({ notice }) => {
         {currentUser !== null && (
           <ActionButtons>
             <KitDropdown>
-              <KitDropdown.Activator>{({ toggle }) => (
-                <UiActionButton title="Mehr" color="secondary" onClick={toggle}>
+              <KitDropdown.Activator>{({ ref, toggle }) => (
+                <UiActionButton ref={ref} title="Mehr" color="secondary" onClick={toggle}>
                   <KitIcon.More />
                 </UiActionButton>
               )}</KitDropdown.Activator>
