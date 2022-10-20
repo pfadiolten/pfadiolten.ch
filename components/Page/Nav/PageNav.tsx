@@ -65,21 +65,21 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
                 </Link>
               </KitDropdown.Item>
               <KitDropdown.Item isLink>
-                <a href="/rotten">
+                <Link href="/rotten">
                   Rotten
-                </a>
+                </Link>
               </KitDropdown.Item>
               <KitDropdown.Item isLink>
-                <a href="/als">
+                <Link href="/als">
                   Abteilungsleitung
-                </a>
+                </Link>
               </KitDropdown.Item>
-              <KitDropdown.Item>
-                <a href="/vorstand">
+              <KitDropdown.Item isLink>
+                <Link href="/vorstand">
                   Vorstand
-                </a>
+                </Link>
               </KitDropdown.Item>
-              <KitDropdown.Item>
+              <KitDropdown.Item isLink>
                 <Link href="/organigram">
                   Organigram
                 </Link>
