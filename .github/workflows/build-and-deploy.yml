@@ -11,8 +11,6 @@ jobs:
   build:
     name: "Lint, Test, Build"
     runs-on: ubuntu-latest
-    env:
-      GITHUB_NPM_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -20,8 +18,20 @@ jobs:
           node-version: 18
           cache: 'npm'
 
+      - name: "List directory"
+        run: ls -latr
+        env:
+          GITHUB_NPM_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Cat .npmrc"
+        run: cat .npmrc
+        env:
+          GITHUB_NPM_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: "Install dependencies"
-        run: echo $GITHUB_NPM_ACCESS_TOKEN && npm ci
+        run: npm ci
+        env:
+          GITHUB_NPM_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Lint"
         run: npm run eslint
