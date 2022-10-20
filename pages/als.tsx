@@ -1,7 +1,7 @@
 import Page from '@/components/Page/Page'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
-import { als, CommitteeId, UnitId, vorstand } from '@/models/Group'
+import { als } from '@/models/Group'
 import User from '@/models/User'
 import UserRepo from '@/repos/UserRepo'
 import { KitHeading } from '@pfadiolten/react-kit'

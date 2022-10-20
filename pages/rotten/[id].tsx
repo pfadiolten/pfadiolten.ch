@@ -1,10 +1,10 @@
 import Page from '@/components/Page/Page'
-import { KitHeading } from '@pfadiolten/react-kit'
 import UserCard from '@/components/User/UserCard'
 import UserCardList from '@/components/User/UserCardList'
-import Group, { allGroups, allRotten, allUnits, RottenId, UnitId } from '@/models/Group'
+import Group, { allRotten, RottenId, UnitId } from '@/models/Group'
 import User from '@/models/User'
 import UserRepo from '@/repos/UserRepo'
+import { KitHeading } from '@pfadiolten/react-kit'
 import { GetServerSideProps, NextPage } from 'next'
 import React, { useState } from 'react'
 
