@@ -1,7 +1,6 @@
 import PageNavItem from '@/components/Page/Nav/Item/PageNavItem'
-import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
 import useCurrentUser from '@/hooks/useCurrentUser'
-import { KitIcon, theme } from '@pfadiolten/react-kit'
+import { KitDropdown, KitIcon, theme } from '@pfadiolten/react-kit'
 import { signIn, signOut } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -55,28 +54,38 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
       </MenuToggle>
       <Menu isOpen={isOpen}>
         <Links>
-          <UiDropdown>
-            <UiDropdown.Activator>{({ toggle, isOpen }) => (
-              <PageNavItem name="Abteilung" onClick={toggle} isOpenDropdown={isOpen} />
-            )}</UiDropdown.Activator>
-            <UiDropdown.Menu label="Links zur Abteilung">
-              <UiDropdown.Link href="/stufen">
-                Stufen
-              </UiDropdown.Link>
-              <UiDropdown.Link href="/rotten">
-                Rotten
-              </UiDropdown.Link>
-              <UiDropdown.Link href="/als">
-                Abteilungsleitung
-              </UiDropdown.Link>
-              <UiDropdown.Link href="/vorstand">
-                Vorstand
-              </UiDropdown.Link>
-              <UiDropdown.Link href="/organigram">
-                Organigram
-              </UiDropdown.Link>
-            </UiDropdown.Menu>
-          </UiDropdown>
+          <KitDropdown>
+            <KitDropdown.Activator>{({ ref, toggle, isOpen }) => (
+              <PageNavItem ref={ref} name="Abteilung" onClick={toggle} isOpenDropdown={isOpen} />
+            )}</KitDropdown.Activator>
+            <KitDropdown.Menu label="Links zur Abteilung">
+              <KitDropdown.Item isLink>
+                <Link href="/stufen">
+                  Stufen
+                </Link>
+              </KitDropdown.Item>
+              <KitDropdown.Item isLink>
+                <a href="/rotten">
+                  Rotten
+                </a>
+              </KitDropdown.Item>
+              <KitDropdown.Item isLink>
+                <a href="/als">
+                  Abteilungsleitung
+                </a>
+              </KitDropdown.Item>
+              <KitDropdown.Item>
+                <a href="/vorstand">
+                  Vorstand
+                </a>
+              </KitDropdown.Item>
+              <KitDropdown.Item>
+                <Link href="/organigram">
+                  Organigram
+                </Link>
+              </KitDropdown.Item>
+            </KitDropdown.Menu>
+          </KitDropdown>
 
           <PageNavItem name="Jahresprogramm" href="/kalender" />
           <PageNavItem name="Kontakt" href="/kontakt" />

@@ -2,10 +2,10 @@ import UiDateInput from '@/components/Ui/Input/UiDateInput'
 import UiRichTextInput from '@/components/Ui/Input/UiRichTextInput'
 import UiSelectInput from '@/components/Ui/Input/UiSelectInput'
 import UiTextInput from '@/components/Ui/Input/UiTextInput'
-import { KitGrid } from '@pfadiolten/react-kit'
+import { KitGrid, LocalDateTime } from '@pfadiolten/react-kit'
 import UiSubmit from '@/components/Ui/UiSubmit'
 import useCurrentUser from '@/hooks/useCurrentUser'
-import { ModelData } from '@/models/base/Model'
+import { ModelData } from '@pfadiolten/react-kit'
 import { emptyRichText } from '@/models/base/RichText'
 import { allGroups } from '@/models/Group'
 import Notice, { validateNotice } from '@/models/Notice'
@@ -33,8 +33,8 @@ const NoticeForm: React.FC<Props> = ({
     groupIds: [],
     startLocation: '',
     endLocation: null,
-    startsAt: NEXT_SATURDAY_START,
-    endsAt: NEXT_SATURDAY_END,
+    startsAt: LocalDateTime.fromDate(NEXT_SATURDAY_START),
+    endsAt: LocalDateTime.fromDate(NEXT_SATURDAY_END),
     authorId: currentUser.id,
   }))
 

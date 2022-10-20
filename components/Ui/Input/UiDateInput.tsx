@@ -1,9 +1,10 @@
 import UiInputField, { LookAndFeelProps } from '@/components/Ui/Input/UiInputField'
 import { noop } from '@/utils/fns'
 import { InputProps } from '@daniel-va/react-form'
+import { LocalDateTime } from '@pfadiolten/react-kit'
 import React, { ChangeEvent, useCallback, useMemo } from 'react'
 
-interface Props extends InputProps<Date | null>, LookAndFeelProps {
+interface Props extends InputProps<LocalDateTime | null>, LookAndFeelProps {
 }
 
 const UiDateInput: React.FC<Props> = ({
@@ -12,14 +13,16 @@ const UiDateInput: React.FC<Props> = ({
   ...otherProps
 }) => {
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    pushValue(e.target.valueAsDate)
+    const date = e.target.valueAsDate
+    pushValue(date === null ? null : LocalDateTime.fromDate(date))
   }, [pushValue])
 
   const inputValue = useMemo(() => {
     if (value === null) {
       return ''
     }
-    return (new Date(value.getTime() - value.getTimezoneOffset() * 60_000).toISOString()).slice(0, -1)
+    const date = LocalDateTime.toDate(value)
+    return (new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString()).slice(0, -1)
   }, [value])
 
   return (

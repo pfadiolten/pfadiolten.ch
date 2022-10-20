@@ -19,11 +19,6 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
-  experimental: {
-    swcPlugins: [
-      ['next-superjson-plugin', {}],
-    ],
-  },
 }
 
 module.exports = nextConfig

@@ -1,4 +1,4 @@
-import Id from '@/models/base/Id'
+import { Id } from '@pfadiolten/react-kit'
 import { allowedImageTypes } from '@/models/base/UploadedImage'
 import User from '@/models/User'
 import UserPolicy from '@/policies/UserPolicy'

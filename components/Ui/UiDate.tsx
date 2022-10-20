@@ -1,12 +1,12 @@
-import { KitClientOnly } from '@pfadiolten/react-kit'
-import LocalDate from '@/models/base/LocalDate'
+import { KitClientOnly, LocalDateTime, LocalTime } from '@pfadiolten/react-kit'
+import { LocalDate } from '@pfadiolten/react-kit'
 import { run } from '@/utils/control-flow'
 import DateHelper from '@/utils/helpers/DateHelper'
 import { ElementProps } from '@/utils/props'
 import React, { useMemo } from 'react'
 
 interface Props extends ElementProps<HTMLSpanElement> {
-  value: LocalDate | Date
+  value: LocalDate | LocalTime | LocalDateTime | Date
   format: 'date' | { date: DateFormat } | 'time' | 'datetime'
 }
 
@@ -17,11 +17,21 @@ const UiDate: React.FC<Props> = ({
   format,
   ...props
 }) => {
-  const date = useMemo(() => (
-    value instanceof Date
-      ? value
-      : LocalDate.toDate(value)
-  ), [value])
+  const date = useMemo(() => {
+    if (value instanceof Date) {
+      return value
+    }
+    switch (format) {
+    case 'date':
+      return LocalDate.toDate(LocalDate.from(value))
+    case 'time':
+      return LocalDateTime.toDate(LocalDateTime.fromLocal(LocalDate.today, LocalTime.from(value)))
+    case 'datetime':
+      return LocalDateTime.toDate(LocalDateTime.from(value))
+    default:
+      throw new Error(`unknown format: ${format}`)
+    }
+  }, [format, value])
   const children = useMemo(() => {
     const hours = pad(date.getHours())
     const minutes = pad(date.getMinutes())

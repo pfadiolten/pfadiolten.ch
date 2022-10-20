@@ -1,7 +1,6 @@
-import Id from '@/models/base/Id'
-import Model from '@/models/base/Model'
 import UploadedImage  from '@/models/base/UploadedImage'
 import { Role } from '@/models/Group'
+import { Id, Model } from '@pfadiolten/react-kit'
 
 export default interface User extends UserData {
   name: string

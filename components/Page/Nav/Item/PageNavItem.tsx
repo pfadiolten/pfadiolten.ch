@@ -1,7 +1,5 @@
-import { KitIcon } from '@pfadiolten/react-kit'
-import { theme } from '@pfadiolten/react-kit'
-import { run } from '@/utils/control-flow'
 import { StyleProps } from '@/utils/props'
+import { KitIcon, theme } from '@pfadiolten/react-kit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { ReactNode } from 'react'
@@ -15,14 +13,14 @@ interface Props extends StyleProps {
   children?: ReactNode
 }
 
-const PageNavItem: React.FC<Props> = ({ name, href, onClick, isOpenDropdown, children }) => {
+const PageNavItem = React.forwardRef<HTMLLIElement, Props>(function Inner({ name, href, onClick, isOpenDropdown, children }, ref) {
   const path = useRouter().asPath.toLowerCase()
   const isActive = href === undefined
     ? false
     : path.startsWith(href.toLowerCase())
 
   return (
-    <Wrapper isActive={isActive} isOpenDropdown={isOpenDropdown ?? false}>
+    <Wrapper ref={ref} isActive={isActive} isOpenDropdown={isOpenDropdown ?? false}>
       {href ? (
         <Link href={href}>
           <a onClick={onClick}>
@@ -45,7 +43,7 @@ const PageNavItem: React.FC<Props> = ({ name, href, onClick, isOpenDropdown, chi
       )}
     </Wrapper>
   )
-}
+})
 export default PageNavItem
 
 const LinkName = styled.span``

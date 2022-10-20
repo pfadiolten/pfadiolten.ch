@@ -1,6 +1,6 @@
-import Id from '@/models/base/Id'
 import User from '@/models/User'
 import { createModelSelectors } from '@/store/utils/model-utils'
+import { Id } from '@pfadiolten/react-kit'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 type UsersState = Record<Id<User>, User>

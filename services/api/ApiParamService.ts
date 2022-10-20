@@ -1,4 +1,5 @@
 import { ApiError } from '@/services/api/ApiErrorService'
+import { LocalDate } from '@pfadiolten/react-kit'
 import { NextApiRequest } from 'next'
 
 class ApiParamService {
@@ -34,6 +35,11 @@ class ApiParamService {
       throw new ApiError(422, `invalid parameter '${name}': not an integer`)
     }
     return value
+  }
+
+  getLocalDate(req: NextApiRequest, name: string): LocalDate | null {
+    const value = this.getInt(req, name)
+    return value == null ? null : LocalDate.from(value)
   }
 
   has(req: NextApiRequest, name: string): boolean {

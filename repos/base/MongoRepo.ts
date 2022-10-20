@@ -1,5 +1,4 @@
-import Id from '@/models/base/Id'
-import Model, { ModelData } from '@/models/base/Model'
+import { Id, Model, ModelData } from '@pfadiolten/react-kit'
 import { CreateRepo, DeleteRepo, ListOptions, ReadRepo, UpdateRepo } from '@/repos/Repo'
 import {
   Collection,

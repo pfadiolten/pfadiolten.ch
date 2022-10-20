@@ -1,9 +1,8 @@
-import Id from '@/models/base/Id'
-import Model, { ModelData } from '@/models/base/Model'
 import RichText from '@/models/base/RichText'
 import { GroupId } from '@/models/Group'
 import SessionUser from '@/models/SessionUser'
 import { createValidator, validate } from '@daniel-va/validate'
+import { Id, LocalDateTime, Model, ModelData } from '@pfadiolten/react-kit'
 
 export default interface Notice extends Model {
   title: string
@@ -11,8 +10,8 @@ export default interface Notice extends Model {
   groupIds: GroupId[]
   startLocation: string
   endLocation: string | null
-  startsAt: Date,
-  endsAt: Date,
+  startsAt: LocalDateTime,
+  endsAt: LocalDateTime,
   authorId: Id<SessionUser>
 }
 
@@ -30,7 +29,7 @@ export const validateNotice = createValidator<ModelData<Notice>>({
   ],
   startsAt: [],
   endsAt: [
-    (endsAt, record) => (record.startsAt?.getTime() ?? 0) - (endsAt?.getTime() ?? 0) <= 0 || 'Beginn muss vor Ende liegen',
+    (endsAt, record) => (record.startsAt ?? 0) - (endsAt ?? 0) <= 0 || 'Beginn muss vor Ende liegen',
   ],
   authorId: [],
 })

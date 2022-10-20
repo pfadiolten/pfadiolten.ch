@@ -1,5 +1,4 @@
-import Id from '@/models/base/Id'
-import Model, { ModelData } from '@/models/base/Model'
+import { Id, Model, ModelData } from '@pfadiolten/react-kit'
 
 export type Repo<T> =
   | ReadRepo<T>

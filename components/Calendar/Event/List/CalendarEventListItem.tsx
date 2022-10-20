@@ -2,17 +2,16 @@ import CalendarEventForm from '@/components/Calendar/Event/CalendarEventForm'
 import GroupLabel from '@/components/Group/GroupLabel'
 import GroupLabelList from '@/components/Group/GroupLabelList'
 import UiActionButton from '@/components/Ui/Button/UiActionButton'
-import UiDropdown from '@/components/Ui/Dropdown/UiDropdown'
 import UiDate from '@/components/Ui/UiDate'
 import useBool from '@/hooks/useBool'
 import useCurrentUser from '@/hooks/useCurrentUser'
-import LocalDate from '@/models/base/LocalDate'
+import { LocalDate } from '@pfadiolten/react-kit'
 import CalendarEvent from '@/models/CalendarEvent'
 import { allGroups } from '@/models/Group'
 import { deleteCalendarEvent } from '@/store/calendar/events/calendarEvents.slice'
 import { useAppDispatch } from '@/store/hooks'
 import DateHelper from '@/utils/helpers/DateHelper'
-import { KitDrawer, KitHeading, KitIcon, theme } from '@pfadiolten/react-kit'
+import { KitDrawer, KitDropdown, KitHeading, KitIcon, theme } from '@pfadiolten/react-kit'
 import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -60,21 +59,21 @@ const CalendarEventListItem: React.FC<Props> = ({ event }) => {
       </div>
       {currentUser === null ? <div /> : (
         <React.Fragment>
-          <UiDropdown>
-            <UiDropdown.Activator>{({ toggle }) => (
-              <UiActionButton title="Mehr" color="secondary" onClick={toggle}>
+          <KitDropdown>
+            <KitDropdown.Activator>{({ ref, toggle }) => (
+              <UiActionButton ref={ref} title="Mehr" color="secondary" onClick={toggle}>
                 <KitIcon.More />
               </UiActionButton>
-            )}</UiDropdown.Activator>
-            <UiDropdown.Menu label="Mehr zu dieser Aktivität">
-              <UiDropdown.Item onClick={setEditing.on}>
+            )}</KitDropdown.Activator>
+            <KitDropdown.Menu label="Mehr zu dieser Aktivität">
+              <KitDropdown.Item onClick={setEditing.on}>
                 Bearbeiten
-              </UiDropdown.Item>
-              <UiDropdown.Item onClick={handleDelete}>
+              </KitDropdown.Item>
+              <KitDropdown.Item onClick={handleDelete}>
                 Löschen
-              </UiDropdown.Item>
-            </UiDropdown.Menu>
-          </UiDropdown>
+              </KitDropdown.Item>
+            </KitDropdown.Menu>
+          </KitDropdown>
           <KitDrawer size="fixed" isOpen={isEditing} onClose={setEditing.off}>{({ close }) => (
             <React.Fragment>
               <KitHeading level={2}>

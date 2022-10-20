@@ -1,5 +1,5 @@
-import Id from '@/models/base/Id'
-import { ModelData } from '@/models/base/Model'
+import { Id } from '@pfadiolten/react-kit'
+import { ModelData } from '@pfadiolten/react-kit'
 import { createDefaultUserData, UserData } from '@/models/User'
 import MongoRepo from '@/repos/base/MongoRepo'
 import { FindRepo, UpdateRepo } from '@/repos/Repo'

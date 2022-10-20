@@ -1,4 +1,4 @@
-import Id from '@/models/base/Id'
+import { Id } from '@pfadiolten/react-kit'
 import { GroupId, Role } from '@/models/Group'
 import User, { createDefaultUserData } from '@/models/User'
 import { ListOptions, ReadRepo } from '@/repos/Repo'
