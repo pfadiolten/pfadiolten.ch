@@ -72,6 +72,9 @@ const PageNav: React.FC<Props> =  ({ noBackground }) => {
               <UiDropdown.Link href="/vorstand">
                 Vorstand
               </UiDropdown.Link>
+              <UiDropdown.Link href="/organigram">
+                Organigram
+              </UiDropdown.Link>
             </UiDropdown.Menu>
           </UiDropdown>
 
