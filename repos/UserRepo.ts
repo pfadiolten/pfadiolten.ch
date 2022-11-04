@@ -119,7 +119,7 @@ const midataGroupConfigs: { [x in GroupId]: MidataGroupConfig } = {
     id: '5993',
     roles: [
       {
-        id: '7',
+        id: '9',
         roleType: 'Leiter*in',
         roleName: 'Abteilungsleitung',
       },
@@ -127,19 +127,19 @@ const midataGroupConfigs: { [x in GroupId]: MidataGroupConfig } = {
   },
   biber: {
     id: '5045',
-    roles: makeGroupRoles('9', '10'),
+    roles: makeGroupRoles('11', '12'),
   },
   woelfli: {
     id: '2467',
-    roles: makeGroupRoles('13', '14'),
+    roles: makeGroupRoles('15', '16'),
   },
   pfadis: {
     id: '2468',
-    roles: makeGroupRoles('18', '19'),
+    roles: makeGroupRoles('20', '21'),
   },
   pios: {
     id: '2469',
-    roles: makeGroupRoles('23', '24'),
+    roles: makeGroupRoles('25', '26'),
   },
   rover: {
     id: '2470',
@@ -149,7 +149,7 @@ const midataGroupConfigs: { [x in GroupId]: MidataGroupConfig } = {
     id: '8777',
     roles: [
       {
-        id: '7',
+        id: '9',
         roleType: 'Leiter*in',
         roleName: 'Mitglied',
       },
@@ -159,7 +159,7 @@ const midataGroupConfigs: { [x in GroupId]: MidataGroupConfig } = {
     id: '8776',
     roles: [
       {
-        id: '7',
+        id: '9',
         roleType: 'Leiter*in',
         roleName: 'Mitglied',
       },
@@ -169,18 +169,18 @@ const midataGroupConfigs: { [x in GroupId]: MidataGroupConfig } = {
     id: '5395',
     roles: [
       {
-        id: '39',
+        id: '41',
         roleType: 'Präsident*in',
         roleName: 'Vereinspräsident:in',
       },
       {
-        id: '40',
+        id: '42',
         roleType: 'Mitglied',
         roleLabel: 'Abteilungsleitung',
         roleName: 'Abteilungsleitung',
       },
       {
-        id: '40',
+        id: '42',
         roleType: 'Mitglied',
         roleName: 'Mitglied',
       },
